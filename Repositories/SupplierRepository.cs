@@ -1,0 +1,45 @@
+﻿using JelycoWarehouse.Models;
+using JelycoWarehouse.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace JelycoWarehouse.Repositories
+{
+    public class SupplierRepository : ISupplierRepository
+    {
+        private readonly WarehouseContext _context;
+        public SupplierRepository(WarehouseContext context) => _context = context;
+
+        public async Task<IEnumerable<Supplier>> GetAllActiveAsync() =>
+            await _context.Suppliers
+                          .Include(s => s.Items)
+                          .Where(s => s.IsActive)
+                          .ToListAsync();
+
+        public async Task<Supplier?> GetByIdAsync(int id) =>
+            await _context.Suppliers
+                          .Include(s => s.Items)
+                          .FirstOrDefaultAsync(s => s.Id == id && s.IsActive);
+
+        public async Task AddAsync(Supplier supplier)
+        {
+            _context.Suppliers.Add(supplier);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Supplier supplier)
+        {
+            _context.Suppliers.Update(supplier);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeactivateAsync(int id)
+        {
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier != null)
+            {
+                supplier.IsActive = false;
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+}

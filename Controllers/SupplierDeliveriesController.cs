@@ -1,0 +1,38 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+[Route("api/[controller]")]
+[ApiController]
+public class SupplierDeliveriesController : ControllerBase
+{
+    private readonly SupplierDeliveryService _deliveryService;
+
+    public SupplierDeliveriesController(SupplierDeliveryService deliveryService)
+    {
+        _deliveryService = deliveryService;
+    }
+
+    // GET: api/supplierdeliveries
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<SupplierDeliveryDto>>> GetDeliveries()
+    {
+        var deliveries = await _deliveryService.GetAllAsync();
+        return Ok(deliveries);
+    }
+
+    // GET: api/supplierdeliveries/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SupplierDeliveryDto>> GetDelivery(int id)
+    {
+        var delivery = await _deliveryService.GetByIdAsync(id);
+        if (delivery == null) return NotFound();
+        return Ok(delivery);
+    }
+
+    // POST: api/supplierdeliveries
+    [HttpPost]
+    public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(SupplierDeliveryCreateDto dto)
+    {
+        var delivery = await _deliveryService.AddAsync(dto);
+        return CreatedAtAction(nameof(GetDelivery), new { id = delivery.Id }, delivery);
+    }
+}

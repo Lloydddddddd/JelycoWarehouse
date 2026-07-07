@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JelycoWarehouse</name>
+    </assembly>
+    <members>
+        <member name="T:JelycoWarehouse.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddSupplierTable">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddTransactionTable">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddItemBrandKindSize">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemBrandKindSize.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemBrandKindSize.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemBrandKindSize.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.WarehouseSchemaUpdate">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.WarehouseSchemaUpdate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.WarehouseSchemaUpdate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.WarehouseSchemaUpdate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddRefreshTokenFieldsToUser">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddRefreshTokenFieldsToUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddRefreshTokenFieldsToUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddRefreshTokenFieldsToUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddSupplierDeliveryTables">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.SeedSuppliersAndItems">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.SeedSuppliersAndItems.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.SeedSuppliersAndItems.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.SeedSuppliersAndItems.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

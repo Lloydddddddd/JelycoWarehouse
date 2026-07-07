@@ -1,0 +1,6 @@
+@JelycoWarehouse_HostAddress = http://localhost:5007
+
+GET {{JelycoWarehouse_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
