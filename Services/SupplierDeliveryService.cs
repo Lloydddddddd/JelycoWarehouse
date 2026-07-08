@@ -1,6 +1,7 @@
 ﻿using JelycoWarehouse.DTOs.SupplierDeliveries;
-using JelycoWarehouse.Models;
+using JelycoWarehouse.Enums;
 using JelycoWarehouse.Interfaces;
+using JelycoWarehouse.Models;
 
 public class SupplierDeliveryService
 {
@@ -75,7 +76,7 @@ public class SupplierDeliveryService
                 ItemId = item.ItemId,
                 LocationId = 1, // default warehouse location
                 Quantity = item.Quantity,
-                Type = "IN",
+                Type = TransactionType.IN,
                 Date = dto.DeliveryDate
             };
             await _transactionRepo.AddAsync(transaction);
