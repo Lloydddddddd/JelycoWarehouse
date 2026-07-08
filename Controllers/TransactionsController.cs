@@ -1,4 +1,6 @@
-﻿using JelycoWarehouse.DTOs.Transactions;
+﻿using JelycoWarehouse.DTOs.Dashboard;
+using JelycoWarehouse.DTOs.Transactions;
+using JelycoWarehouse.Enums;
 using JelycoWarehouse.Models;
 using JelycoWarehouse.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +33,7 @@ namespace JelycoWarehouse.Controllers
                 LocationId = t.LocationId,
                 LocationName = t.Location?.Name ?? string.Empty,
                 Quantity = t.Quantity,
-                Type = t.Type,
+                Type = t.Type.ToString(),
                 Date = t.Date
             });
             return Ok(dtos);
@@ -52,7 +54,7 @@ namespace JelycoWarehouse.Controllers
                 LocationId = transaction.LocationId,
                 LocationName = transaction.Location?.Name ?? string.Empty,
                 Quantity = transaction.Quantity,
-                Type = transaction.Type,
+                Type = transaction.Type.ToString(),
                 Date = transaction.Date
             };
             return Ok(dto);
@@ -67,8 +69,8 @@ namespace JelycoWarehouse.Controllers
                 ItemId = dto.ItemId,
                 LocationId = dto.LocationId,
                 Quantity = dto.Quantity,
-                Type = dto.Type ?? string.Empty,
-                Date = dto.Date
+                Type = dto.Type,
+                Date = DateTime.UtcNow
             };
 
             await _transactionService.AddAsync(transaction);
@@ -81,7 +83,7 @@ namespace JelycoWarehouse.Controllers
                 LocationId = transaction.LocationId,
                 LocationName = transaction.Location?.Name ?? string.Empty,
                 Quantity = transaction.Quantity,
-                Type = transaction.Type ?? string.Empty,
+                Type = transaction.Type.ToString(),
                 Date = transaction.Date
             };
 
@@ -103,6 +105,44 @@ namespace JelycoWarehouse.Controllers
 
             await _transactionService.UpdateAsync(transaction);
             return NoContent();
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> Filter(
+            int? itemId,
+            TransactionType? type,
+            DateTime? startDate,
+            DateTime? endDate)
+        {
+            var transactions = await _transactionService.GetFilteredAsync(itemId, type, startDate, endDate);
+
+            var result = transactions.Select(t => new TransactionDto
+            {
+                Id = t.Id,
+                ItemId = t.ItemId,
+                ItemName = t.Item?.Name ?? "",
+                LocationId = t.LocationId,
+                LocationName = t.Location?.Name ?? "",
+                Quantity = t.Quantity,
+                Type = t.Type.ToString(),
+                Date = t.Date
+            });
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _transactionService.DeleteAsync(id);
+            return NoContent();
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<ActionResult<DashboardDto>> GetDashboard()
+        {
+            var data = await _transactionService.GetDashboardAsync();
+            return Ok(data);
         }
     }
 }
