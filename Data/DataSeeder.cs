@@ -11,11 +11,11 @@ namespace JelycoWarehouse.Data
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager)
         {
-            // Apply migrations (schema only)
-            context.Database.Migrate();
+            await context.Database.MigrateAsync();
 
-            // --- Seed Roles ---
+            // Roles
             string[] roles = { "Admin", "Manager", "Staff", "Viewer" };
+
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -24,9 +24,10 @@ namespace JelycoWarehouse.Data
                 }
             }
 
-            // --- Seed Admin User ---
+            // Admin User
             var adminEmail = "admin@warehouse.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
@@ -40,8 +41,8 @@ namespace JelycoWarehouse.Data
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
 
-            // --- Seed Suppliers (only once) ---
-            if (!context.Suppliers.Any())
+            // Suppliers
+            if (!await context.Suppliers.AnyAsync())
             {
                 var suppliers = new List<Supplier>
                 {
@@ -52,18 +53,18 @@ namespace JelycoWarehouse.Data
                     new Supplier { Name = "TimberMart", ContactInfo = "0917-333-4444", Address = "202 Timber St", Email = "timbermart@warehouse.com" }
                 };
 
-                context.Suppliers.AddRange(suppliers);
-                context.SaveChanges();
+                await context.Suppliers.AddRangeAsync(suppliers);
+                await context.SaveChangesAsync();
             }
 
-            // --- Seed Items (only once) ---
-            if (!context.Items.Any())
+            // Items
+            if (!await context.Items.AnyAsync())
             {
-                var hammerSupplier = context.Suppliers.First(s => s.Name == "ABC Hardware");
-                var paintSupplier = context.Suppliers.First(s => s.Name == "ColorPro Supplies");
-                var screwdriverSupplier = context.Suppliers.First(s => s.Name == "ToolWorld");
-                var cementSupplier = context.Suppliers.First(s => s.Name == "BuildMax");
-                var timberSupplier = context.Suppliers.First(s => s.Name == "TimberMart");
+                var hammerSupplier = await context.Suppliers.FirstAsync(s => s.Name == "ABC Hardware");
+                var paintSupplier = await context.Suppliers.FirstAsync(s => s.Name == "ColorPro Supplies");
+                var screwdriverSupplier = await context.Suppliers.FirstAsync(s => s.Name == "ToolWorld");
+                var cementSupplier = await context.Suppliers.FirstAsync(s => s.Name == "BuildMax");
+                var timberSupplier = await context.Suppliers.FirstAsync(s => s.Name == "TimberMart");
 
                 var items = new List<Item>
                 {
@@ -74,8 +75,8 @@ namespace JelycoWarehouse.Data
                     new Item { Name = "Wood Plank", Brand = "TimberMart", Kind = "Pine Wood", Size = "2x4x8 ft", Category = "Materials", Quantity = 200, UnitPrice = 150, ReorderLevel = 30, SupplierId = timberSupplier.Id }
                 };
 
-                context.Items.AddRange(items);
-                context.SaveChanges();
+                await context.Items.AddRangeAsync(items);
+                await context.SaveChangesAsync();
             }
         }
     }
