@@ -45,6 +45,16 @@ namespace JelycoWarehouse.Controllers
             return Ok(dtos);
         }
 
+        // GET: api/suppliers/count
+        [HttpGet("count")]
+        [Produces("application/json")]
+        public async Task<ActionResult<int>> GetSupplierCount()
+        {
+            var suppliers = await _supplierService.GetAllAsync();
+            var count = suppliers.Count(s => s.IsActive);
+            return Ok(count);
+        }
+
         // GET: api/suppliers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SupplierDto>> GetSupplier(int id)
