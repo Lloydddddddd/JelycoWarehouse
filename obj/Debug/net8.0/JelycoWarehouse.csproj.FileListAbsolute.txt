@@ -212,4 +212,8 @@ C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\ob
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Debug\net8.0\ref\JelycoWarehouse.dll
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\package-lock.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\package.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Debug\net8.0\JelycoWarehouse.sourcelink.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.app.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.node.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
