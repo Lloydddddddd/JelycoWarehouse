@@ -100,5 +100,17 @@
         <member name="M:JelycoWarehouse.Migrations.SeedSuppliersAndItems.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:JelycoWarehouse.Migrations.AddTransactionTypeEnum">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTypeEnum.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTypeEnum.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddTransactionTypeEnum.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

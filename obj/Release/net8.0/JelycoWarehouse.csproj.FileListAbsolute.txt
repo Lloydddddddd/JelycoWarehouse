@@ -213,3 +213,7 @@ C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\ob
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\JelycoWarehouse.pdb
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\JelycoWarehouse.genruntimeconfig.cache
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\ref\JelycoWarehouse.dll
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\tsconfig.app.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\tsconfig.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\tsconfig.node.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\JelycoWarehouse.sourcelink.json
