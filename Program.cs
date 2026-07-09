@@ -46,13 +46,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Events.OnRedirectToLogin = context =>
     {
-        context.Response.StatusCode = 401;
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         return Task.CompletedTask;
     };
 
     options.Events.OnRedirectToAccessDenied = context =>
     {
-        context.Response.StatusCode = 403;
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
         return Task.CompletedTask;
     };
 });
@@ -62,60 +62,28 @@ builder.Services.ConfigureApplicationCookie(options =>
 var jwtKey = builder.Configuration["Jwt:Key"]
     ?? throw new InvalidOperationException("JWT Key missing.");
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-
-        IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-
-        RoleClaimType = ClaimTypes.Role,
-
-        ClockSkew = TimeSpan.Zero
-    };
-
-    // ===== JWT DEBUG =====
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            Console.WriteLine("========== JWT RECEIVED ==========");
-            Console.WriteLine(context.Request.Headers.Authorization.ToString());
-            return Task.CompletedTask;
-        },
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
-        OnTokenValidated = context =>
-        {
-            Console.WriteLine("========== JWT VALID ==========");
-            Console.WriteLine(context.Principal?.Identity?.Name);
-            return Task.CompletedTask;
-        },
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
 
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine("========== JWT FAILED ==========");
-            Console.WriteLine(context.Exception.ToString());
-            return Task.CompletedTask;
-        },
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
 
-        OnChallenge = context =>
-        {
-            Console.WriteLine("========== JWT CHALLENGE ==========");
-            Console.WriteLine(context.Error);
-            Console.WriteLine(context.ErrorDescription);
-            return Task.CompletedTask;
-        }
-    };
-});
+            RoleClaimType = ClaimTypes.Role,
+
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 
 // Swagger
@@ -178,10 +146,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://jelyco-warehouse.vercel.app"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
