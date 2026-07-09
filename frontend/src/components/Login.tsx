@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { API } from "../config/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login({ onLogin }: { onLogin: (token: string) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const API_URL = "https://localhost:7238/api/auth/login";
+  // Change this later if your backend URL changes
+  const API_URL = API.auth.login;
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -28,7 +32,8 @@ export default function Login({ onLogin }: { onLogin: (token: string) => void })
 
       localStorage.setItem("token", data.token);
       onLogin(data.token);
-
+      
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
     }
