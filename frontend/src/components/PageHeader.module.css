@@ -1,0 +1,23 @@
+.header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+}
+
+.header h2{
+    margin:0;
+
+    font-size:28px;
+
+    color:#111827;
+}
+
+.header p{
+    margin-top:6px;
+
+    color:#6b7280;
+}
