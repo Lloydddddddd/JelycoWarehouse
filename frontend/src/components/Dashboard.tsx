@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { API } from "../config/api";
+import StatCard from "./StatCard";
+import styles from "./Dashboard.module.css";
 
 interface DashboardData {
   totalItems: number;
@@ -10,21 +13,16 @@ interface DashboardData {
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
 
-  const API_URL = "https://localhost:7238/api/transactions/dashboard";
+  const API_URL = API.transactions.dashboard;
 
   useEffect(() => {
-    console.log("========== DASHBOARD DEBUG ==========");
 
     const token = localStorage.getItem("token");
-
-    console.log("Token from localStorage:", token);
 
     if (!token) {
       console.warn("❌ No token found.");
       return;
     }
-
-    console.log("🚀 Sending request to:", API_URL);
 
     fetch(API_URL, {
       headers: {
@@ -32,11 +30,8 @@ export default function Dashboard() {
       },
     })
       .then(async (res) => {
-        console.log("Response Status:", res.status);
 
         const text = await res.text();
-
-        console.log("Raw Response:", text);
 
         if (!res.ok) {
           throw new Error(`Error ${res.status}: ${text}`);
@@ -45,7 +40,6 @@ export default function Dashboard() {
         return JSON.parse(text);
       })
       .then((result) => {
-        console.log("Dashboard Data:", result);
         setData(result);
       })
       .catch((err) => {
@@ -58,16 +52,30 @@ export default function Dashboard() {
     return <p>Loading dashboard...</p>;
 
   return (
-    <div>
-      <h1>📦 Dashboard</h1>
+    <div className={styles.grid}>
+      <StatCard
+        title="Total Items"
+        value={data.totalItems}
+        icon="📦"
+      />
 
-      <p>Total Items: {data.totalItems}</p>
+      <StatCard
+        title="Total Stock"
+        value={data.totalStock}
+        icon="📊"
+      />
 
-      <p>Total Stock: {data.totalStock}</p>
+      <StatCard
+        title="Stock In"
+        value={data.totalIn}
+        icon="📥"
+      />
 
-      <p>Total IN: {data.totalIn}</p>
-
-      <p>Total OUT: {data.totalOut}</p>
+      <StatCard
+        title="Stock Out"
+        value={data.totalOut}
+        icon="📤"
+      />
     </div>
   );
 }
