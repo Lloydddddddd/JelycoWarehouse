@@ -1,0 +1,29 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+
+.table thead {
+    background: #f3f4f6;
+}
+
+.table th {
+    text-align: left;
+    padding: 16px;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 600;
+}
+
+.table td {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.table tbody tr:hover {
+    background: #f9fafb;
+}
