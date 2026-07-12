@@ -38,7 +38,7 @@ namespace JelycoWarehouse.Controllers
                     Name = i.Name,
                     Category = i.Category,
                     Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
+                    CostPrice = i.CostPrice,
                     IsActive = i.IsActive
                 }).ToList()
             });
@@ -76,7 +76,7 @@ namespace JelycoWarehouse.Controllers
                     Name = i.Name,
                     Category = i.Category,
                     Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
+                    CostPrice = i.CostPrice,
                     IsActive = i.IsActive
                 }).ToList()
             };

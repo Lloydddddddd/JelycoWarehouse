@@ -24,6 +24,7 @@ namespace JelycoWarehouse.Controllers
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems()
         {
             var items = await _itemService.GetAllAsync();
+
             var dtos = items.Select(i => new ItemDto
             {
                 Id = i.Id,
@@ -31,15 +32,17 @@ namespace JelycoWarehouse.Controllers
                 Brand = i.Brand,
                 Kind = i.Kind,
                 Size = i.Size,
+                Color = i.Color,
                 Category = i.Category,
                 Quantity = i.Quantity,
-                UnitPrice = i.UnitPrice,
+                CostPrice = i.CostPrice,
                 ReorderLevel = i.ReorderLevel,
                 ExpiryDate = i.ExpiryDate,
                 SupplierId = i.SupplierId,
                 SupplierName = i.Supplier?.Name ?? string.Empty,
                 IsActive = i.IsActive
             });
+
             return Ok(dtos);
         }
 
@@ -50,16 +53,19 @@ namespace JelycoWarehouse.Controllers
         {
             var items = await _itemService.GetAllAsync();
             var count = items.Count(i => i.IsActive);
+
             return Ok(count);
         }
 
-        // GET: api/items/5
+        // GET: api/items/{id}
         [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<ActionResult<ItemDto>> GetItem(int id)
         {
             var item = await _itemService.GetByIdAsync(id);
-            if (item == null) return NotFound();
+
+            if (item == null)
+                return NotFound();
 
             var dto = new ItemDto
             {
@@ -68,15 +74,17 @@ namespace JelycoWarehouse.Controllers
                 Brand = item.Brand,
                 Kind = item.Kind,
                 Size = item.Size,
+                Color = item.Color,
                 Category = item.Category,
                 Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice,
+                CostPrice = item.CostPrice,
                 ReorderLevel = item.ReorderLevel,
                 ExpiryDate = item.ExpiryDate,
                 SupplierId = item.SupplierId,
                 SupplierName = item.Supplier?.Name ?? string.Empty,
                 IsActive = item.IsActive
             };
+
             return Ok(dto);
         }
 
@@ -93,9 +101,10 @@ namespace JelycoWarehouse.Controllers
                 Brand = dto.Brand,
                 Kind = dto.Kind,
                 Size = dto.Size,
+                Color = dto.Color,
                 Category = dto.Category,
                 Quantity = dto.Quantity,
-                UnitPrice = dto.UnitPrice,
+                CostPrice = dto.CostPrice,
                 ReorderLevel = dto.ReorderLevel,
                 ExpiryDate = dto.ExpiryDate,
                 SupplierId = dto.SupplierId
@@ -110,19 +119,21 @@ namespace JelycoWarehouse.Controllers
                 Brand = item.Brand,
                 Kind = item.Kind,
                 Size = item.Size,
+                Color = item.Color,
                 Category = item.Category,
                 Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice,
+                CostPrice = item.CostPrice,
                 ReorderLevel = item.ReorderLevel,
                 ExpiryDate = item.ExpiryDate,
                 SupplierId = item.SupplierId,
-                SupplierName = item.Supplier?.Name ?? string.Empty
+                SupplierName = item.Supplier?.Name ?? string.Empty,
+                IsActive = item.IsActive
             };
 
             return CreatedAtAction(nameof(GetItem), new { id = item.Id }, itemDto);
         }
 
-        // PUT: api/items/5
+        // PUT: api/items/{id}
         [HttpPut("{id}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Manager")]
         [Consumes("application/json")]
@@ -130,33 +141,40 @@ namespace JelycoWarehouse.Controllers
         public async Task<IActionResult> PutItem(int id, [FromBody] ItemUpdateDto dto)
         {
             var item = await _itemService.GetByIdAsync(id);
-            if (item == null) return NotFound();
+
+            if (item == null)
+                return NotFound();
 
             item.Name = dto.Name;
             item.Brand = dto.Brand;
             item.Kind = dto.Kind;
             item.Size = dto.Size;
+            item.Color = dto.Color;
             item.Category = dto.Category;
             item.Quantity = dto.Quantity;
-            item.UnitPrice = dto.UnitPrice;
+            item.CostPrice = dto.CostPrice;
             item.ReorderLevel = dto.ReorderLevel;
             item.ExpiryDate = dto.ExpiryDate;
             item.SupplierId = dto.SupplierId;
 
             await _itemService.UpdateAsync(item);
+
             return NoContent();
         }
 
-        // DELETE: api/items/5
+        // DELETE: api/items/{id}
         [HttpDelete("{id}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         [Produces("application/json")]
         public async Task<IActionResult> DeleteItem(int id)
         {
             var item = await _itemService.GetByIdAsync(id);
-            if (item == null) return NotFound();
+
+            if (item == null)
+                return NotFound();
 
             await _itemService.DeactivateAsync(id);
+
             return NoContent();
         }
     }
