@@ -1,5 +1,4 @@
-export interface Item {
-  id: number;
+export interface CreateItemRequest {
   name: string;
   brand: string;
   kind: string;
@@ -11,6 +10,4 @@ export interface Item {
   reorderLevel: number;
   expiryDate: string | null;
   supplierId: number;
-  supplierName: string;
-  isActive: boolean;
 }
