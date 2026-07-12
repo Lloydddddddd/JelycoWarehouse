@@ -68,11 +68,11 @@ namespace JelycoWarehouse.Data
 
                 var items = new List<Item>
                 {
-                    new Item { Name = "Hammer", Brand = "Stanley", Kind = "Claw Hammer", Size = "16oz", Category = "Tools", Quantity = 50, UnitPrice = 250, ReorderLevel = 10, SupplierId = hammerSupplier.Id },
-                    new Item { Name = "Paint Bucket", Brand = "Boysen", Kind = "Latex Paint", Size = "4L", Category = "Paints", Quantity = 20, UnitPrice = 1200, ReorderLevel = 5, SupplierId = paintSupplier.Id, ExpiryDate = DateTime.Now.AddMonths(6) },
-                    new Item { Name = "Screwdriver Set", Brand = "Bosch", Kind = "Precision Set", Size = "10 pcs", Category = "Tools", Quantity = 15, UnitPrice = 800, ReorderLevel = 3, SupplierId = screwdriverSupplier.Id },
-                    new Item { Name = "Cement Bag", Brand = "Holcim", Kind = "Portland Cement", Size = "40kg", Category = "Construction", Quantity = 100, UnitPrice = 250, ReorderLevel = 20, SupplierId = cementSupplier.Id, ExpiryDate = DateTime.Now.AddMonths(3) },
-                    new Item { Name = "Wood Plank", Brand = "TimberMart", Kind = "Pine Wood", Size = "2x4x8 ft", Category = "Materials", Quantity = 200, UnitPrice = 150, ReorderLevel = 30, SupplierId = timberSupplier.Id }
+                    new Item { Name = "Hammer", Brand = "Stanley", Kind = "Claw Hammer", Size = "16oz", Category = "Tools", Quantity = 50, CostPrice  = 250, ReorderLevel = 10, SupplierId = hammerSupplier.Id },
+                    new Item { Name = "Paint Bucket", Brand = "Boysen", Kind = "Latex Paint", Size = "4L", Category = "Paints", Quantity = 20, CostPrice  = 1200, ReorderLevel = 5, SupplierId = paintSupplier.Id, ExpiryDate = DateTime.Now.AddMonths(6) },
+                    new Item { Name = "Screwdriver Set", Brand = "Bosch", Kind = "Precision Set", Size = "10 pcs", Category = "Tools", Quantity = 15, CostPrice  = 800, ReorderLevel = 3, SupplierId = screwdriverSupplier.Id },
+                    new Item { Name = "Cement Bag", Brand = "Holcim", Kind = "Portland Cement", Size = "40kg", Category = "Construction", Quantity = 100, CostPrice  = 250, ReorderLevel = 20, SupplierId = cementSupplier.Id, ExpiryDate = DateTime.Now.AddMonths(3) },
+                    new Item { Name = "Wood Plank", Brand = "TimberMart", Kind = "Pine Wood", Size = "2x4x8 ft", Category = "Materials", Quantity = 200, CostPrice  = 150, ReorderLevel = 30, SupplierId = timberSupplier.Id }
                 };
 
                 await context.Items.AddRangeAsync(items);
