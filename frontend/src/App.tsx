@@ -11,6 +11,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ItemsPage from "./pages/ItemsPage";
 import SuppliersPage from "./pages/SuppliersPage";
 import TransactionsPage from "./pages/TransactionsPage";
+import SupplierDeliveriesPage from "./pages/SupplierDeliveriesPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
@@ -47,6 +48,10 @@ export default function App() {
           <Route path="/items" element={<ItemsPage />} />
           <Route path="/suppliers" element={<SuppliersPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route
+            path="/supplier-deliveries"
+            element={<SupplierDeliveriesPage />}
+          />
         </Route>
 
         {/* Default */}
