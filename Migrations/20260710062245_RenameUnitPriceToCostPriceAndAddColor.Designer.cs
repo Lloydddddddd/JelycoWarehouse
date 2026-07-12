@@ -4,6 +4,7 @@ using JelycoWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JelycoWarehouse.Migrations
 {
     [DbContext(typeof(WarehouseContext))]
-    partial class WarehouseContextModelSnapshot : ModelSnapshot
+    [Migration("20260710062245_RenameUnitPriceToCostPriceAndAddColor")]
+    partial class RenameUnitPriceToCostPriceAndAddColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,9 +464,6 @@ namespace JelycoWarehouse.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("GrandTotal")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
@@ -490,12 +490,6 @@ namespace JelycoWarehouse.Migrations
 
                     b.Property<int>("SupplierDeliveryId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

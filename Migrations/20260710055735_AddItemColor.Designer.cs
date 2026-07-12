@@ -4,6 +4,7 @@ using JelycoWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JelycoWarehouse.Migrations
 {
     [DbContext(typeof(WarehouseContext))]
-    partial class WarehouseContextModelSnapshot : ModelSnapshot
+    [Migration("20260710055735_AddItemColor")]
+    partial class AddItemColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,9 +121,6 @@ namespace JelycoWarehouse.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("CostPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
 
@@ -151,6 +151,9 @@ namespace JelycoWarehouse.Migrations
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
@@ -164,14 +167,14 @@ namespace JelycoWarehouse.Migrations
                             Brand = "ToolCo",
                             Category = "Tools",
                             Color = "",
-                            CostPrice = 150.00m,
                             IsActive = true,
                             Kind = "Hand Tool",
                             Name = "Hammer",
                             Quantity = 50,
                             ReorderLevel = 10,
                             Size = "Medium",
-                            SupplierId = 1
+                            SupplierId = 1,
+                            UnitPrice = 150.00m
                         },
                         new
                         {
@@ -179,14 +182,14 @@ namespace JelycoWarehouse.Migrations
                             Brand = "FixIt",
                             Category = "Tools",
                             Color = "",
-                            CostPrice = 75.00m,
                             IsActive = true,
                             Kind = "Hand Tool",
                             Name = "Screwdriver",
                             Quantity = 100,
                             ReorderLevel = 20,
                             Size = "Small",
-                            SupplierId = 1
+                            SupplierId = 1,
+                            UnitPrice = 75.00m
                         },
                         new
                         {
@@ -194,14 +197,14 @@ namespace JelycoWarehouse.Migrations
                             Brand = "ColorMax",
                             Category = "Paints",
                             Color = "",
-                            CostPrice = 200.00m,
                             IsActive = false,
                             Kind = "Paint",
                             Name = "Expired Paint",
                             Quantity = 0,
                             ReorderLevel = 5,
                             Size = "1L",
-                            SupplierId = 2
+                            SupplierId = 2,
+                            UnitPrice = 200.00m
                         });
                 });
 
@@ -461,9 +464,6 @@ namespace JelycoWarehouse.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("GrandTotal")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
@@ -490,12 +490,6 @@ namespace JelycoWarehouse.Migrations
 
                     b.Property<int>("SupplierDeliveryId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
