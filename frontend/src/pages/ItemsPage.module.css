@@ -1,0 +1,33 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.categoryFilter {
+    height: 44px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: white;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
