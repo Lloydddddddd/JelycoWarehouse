@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
+import Button from "./ui/Button";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -11,13 +12,17 @@ export default function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      <h2 className={styles.logo}>Jelyco Warehouse</h2>
+      <h2 className={styles.logo}>
+        Jelyco Warehouse
+      </h2>
 
       <nav className={styles.nav}>
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
-            isActive ? styles.active : styles.link
+            isActive
+              ? styles.active
+              : styles.link
           }
         >
           Dashboard
@@ -26,7 +31,9 @@ export default function Sidebar() {
         <NavLink
           to="/items"
           className={({ isActive }) =>
-            isActive ? styles.active : styles.link
+            isActive
+              ? styles.active
+              : styles.link
           }
         >
           Items
@@ -35,7 +42,9 @@ export default function Sidebar() {
         <NavLink
           to="/suppliers"
           className={({ isActive }) =>
-            isActive ? styles.active : styles.link
+            isActive
+              ? styles.active
+              : styles.link
           }
         >
           Suppliers
@@ -44,19 +53,32 @@ export default function Sidebar() {
         <NavLink
           to="/transactions"
           className={({ isActive }) =>
-            isActive ? styles.active : styles.link
+            isActive
+              ? styles.active
+              : styles.link
           }
         >
           Transactions
         </NavLink>
+
+        <NavLink
+          to="/supplier-deliveries"
+          className={({ isActive }) =>
+            isActive
+              ? styles.active
+              : styles.link
+          }
+        >
+          Supplier Deliveries
+        </NavLink>
       </nav>
 
-      <button
-        className={styles.logout}
+      <Button
+        variant="danger"
         onClick={logout}
       >
         Logout
-      </button>
+      </Button>
     </aside>
   );
 }

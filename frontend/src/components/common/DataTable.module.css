@@ -27,3 +27,17 @@
 .table tbody tr:hover {
     background: #f9fafb;
 }
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: .2s;
+}
+
+.sortable:hover {
+    color: #2563eb;
+}
+
+.arrow {
+    font-size: 12px;
+}
