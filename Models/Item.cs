@@ -20,10 +20,17 @@ namespace JelycoWarehouse.Models
         [MaxLength(50)]
         public string Size { get; set; } = string.Empty;
 
+        [MaxLength(50)]
+        public string Color { get; set; } = string.Empty;
+
         public string Category { get; set; } = null!;
+
         public int Quantity { get; set; }
+
         public DateTime? ExpiryDate { get; set; }
-        public decimal UnitPrice { get; set; }
+
+        public decimal CostPrice { get; set; }
+
         public int ReorderLevel { get; set; }
 
         // Foreign key
