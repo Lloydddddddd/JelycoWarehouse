@@ -11,11 +11,18 @@ export const API = {
   items: {
     all: `${BASE_URL}/items`,
     count: `${BASE_URL}/items/count`,
+    byId: (id: number) => `${BASE_URL}/items/${id}`,
   },
 
   suppliers: {
     all: `${BASE_URL}/suppliers`,
     count: `${BASE_URL}/suppliers/count`,
+    byId: (id: number) => `${BASE_URL}/suppliers/${id}`,
+  },
+
+  locations: {
+    all: `${BASE_URL}/locations`,
+    byId: (id: number) => `${BASE_URL}/locations/${id}`,
   },
 
   transactions: {
@@ -25,6 +32,8 @@ export const API = {
   },
 
   supplierDeliveries: {
-    all: `${BASE_URL}/SupplierDeliveries`,
+    all: `${BASE_URL}/supplierdeliveries`,
+    byId: (id: number) =>
+      `${BASE_URL}/supplierdeliveries/${id}`,
   },
 };
