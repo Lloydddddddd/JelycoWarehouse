@@ -42,25 +42,35 @@ namespace JelycoWarehouse.Services
         // =========================
         public async Task AddAsync(Transaction transaction)
         {
-            using var dbTransaction = await _context.Database.BeginTransactionAsync();
+            using var dbTransaction =
+                await _context.Database.BeginTransactionAsync();
 
             try
             {
                 ValidateTransaction(transaction);
 
-                // Validate item
-                var item = await _context.Items.FindAsync(transaction.ItemId);
+                var item = await _context.Items
+                    .FindAsync(transaction.ItemId);
+
                 if (item == null)
                     throw new Exception("Item not found");
 
-                // Validate location
-                var location = await _context.Locations.FindAsync(transaction.LocationId);
+                var location = await _context.Locations
+                    .FindAsync(transaction.LocationId);
+
                 if (location == null)
                     throw new Exception("Location not found");
 
-                var stock = await GetOrCreateStock(transaction.ItemId, transaction.LocationId);
+                var stock =
+                    await GetOrCreateStock(
+                        transaction.ItemId,
+                        transaction.LocationId);
 
-                ApplyStockChange(stock, transaction.Type, transaction.Quantity);
+                ApplyStockChange(
+                    item,
+                    stock,
+                    transaction.Type,
+                    transaction.Quantity);
 
                 _context.Transactions.Add(transaction);
 
@@ -75,48 +85,100 @@ namespace JelycoWarehouse.Services
         }
 
         // =========================
-        // UPDATE TRANSACTION (FIXED)
+        // UPDATE TRANSACTION
         // =========================
         public async Task UpdateAsync(Transaction updated)
         {
-            var existing = await _context.Transactions
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Id == updated.Id);
-
-            if (existing == null)
-                throw new Exception("Transaction not found");
-
-            ValidateTransaction(updated);
-
-            // STEP 1: REVERSE OLD TRANSACTION EFFECT
-            var oldStock = await GetOrCreateStock(existing.ItemId, existing.LocationId);
-            ReverseStockChange(oldStock, existing.Type, existing.Quantity);
-
-            // STEP 2: APPLY NEW TRANSACTION EFFECT
-            var newStock = await GetOrCreateStock(updated.ItemId, updated.LocationId);
-            ApplyStockChange(newStock, updated.Type, updated.Quantity);
-
-            // STEP 3: UPDATE TRANSACTION
-            _context.Transactions.Update(updated);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            using var dbTransaction = await _context.Database.BeginTransactionAsync();
+            using var dbTransaction =
+                await _context.Database.BeginTransactionAsync();
 
             try
             {
-                var transaction = await _context.Transactions.FindAsync(id);
+                var existing =
+                    await _context.Transactions
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(
+                            t => t.Id == updated.Id);
+
+                if (existing == null)
+                    throw new Exception("Transaction not found");
+
+                ValidateTransaction(updated);
+
+                var oldItem =
+                    await _context.Items.FindAsync(existing.ItemId)
+                    ?? throw new Exception("Old item not found");
+
+                var newItem =
+                    await _context.Items.FindAsync(updated.ItemId)
+                    ?? throw new Exception("New item not found");
+
+                var oldStock =
+                    await GetOrCreateStock(
+                        existing.ItemId,
+                        existing.LocationId);
+
+                var newStock =
+                    await GetOrCreateStock(
+                        updated.ItemId,
+                        updated.LocationId);
+
+                ReverseStockChange(
+                    oldItem,
+                    oldStock,
+                    existing.Type,
+                    existing.Quantity);
+
+                ApplyStockChange(
+                    newItem,
+                    newStock,
+                    updated.Type,
+                    updated.Quantity);
+
+                _context.Transactions.Update(updated);
+
+                await _context.SaveChangesAsync();
+                await dbTransaction.CommitAsync();
+            }
+            catch
+            {
+                await dbTransaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        // =========================
+        // DELETE TRANSACTION
+        // =========================
+        public async Task DeleteAsync(int id)
+        {
+            using var dbTransaction =
+                await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var transaction =
+                    await _context.Transactions
+                        .FindAsync(id);
 
                 if (transaction == null)
                     throw new Exception("Transaction not found");
 
-                var stock = await GetOrCreateStock(transaction.ItemId, transaction.LocationId);
+                var item =
+                    await _context.Items
+                        .FindAsync(transaction.ItemId)
+                    ?? throw new Exception("Item not found");
 
-                // Reverse effect
-                ReverseStockChange(stock, transaction.Type, transaction.Quantity);
+                var stock =
+                    await GetOrCreateStock(
+                        transaction.ItemId,
+                        transaction.LocationId);
+
+                ReverseStockChange(
+                    item,
+                    stock,
+                    transaction.Type,
+                    transaction.Quantity);
 
                 _context.Transactions.Remove(transaction);
 
@@ -145,16 +207,20 @@ namespace JelycoWarehouse.Services
                 .AsQueryable();
 
             if (itemId.HasValue)
-                query = query.Where(t => t.ItemId == itemId.Value);
+                query = query.Where(
+                    t => t.ItemId == itemId.Value);
 
             if (type.HasValue)
-                query = query.Where(t => t.Type == type.Value);
+                query = query.Where(
+                    t => t.Type == type.Value);
 
             if (startDate.HasValue)
-                query = query.Where(t => t.Date >= startDate.Value);
+                query = query.Where(
+                    t => t.Date >= startDate.Value);
 
             if (endDate.HasValue)
-                query = query.Where(t => t.Date <= endDate.Value);
+                query = query.Where(
+                    t => t.Date <= endDate.Value);
 
             return await query
                 .OrderByDescending(t => t.Date)
@@ -166,21 +232,25 @@ namespace JelycoWarehouse.Services
         // =========================
         public async Task<DashboardDto> GetDashboardAsync()
         {
-            var totalItems = await _context.Items.CountAsync();
+            var totalItems =
+                await _context.Items.CountAsync();
 
-            var totalStock = await _context.StockLevels
-                .Select(s => (int?)s.Quantity)
-                .SumAsync() ?? 0;
+            var totalStock =
+                await _context.Items
+                    .Select(i => (int?)i.Quantity)
+                    .SumAsync() ?? 0;
 
-            var totalIn = await _context.Transactions
-                .Where(t => t.Type == TransactionType.IN)
-                .Select(t => (int?)t.Quantity)
-                .SumAsync() ?? 0;
+            var totalIn =
+                await _context.Transactions
+                    .Where(t => t.Type == TransactionType.IN)
+                    .Select(t => (int?)t.Quantity)
+                    .SumAsync() ?? 0;
 
-            var totalOut = await _context.Transactions
-                .Where(t => t.Type == TransactionType.OUT)
-                .Select(t => (int?)t.Quantity)
-                .SumAsync() ?? 0;
+            var totalOut =
+                await _context.Transactions
+                    .Where(t => t.Type == TransactionType.OUT)
+                    .Select(t => (int?)t.Quantity)
+                    .SumAsync() ?? 0;
 
             return new DashboardDto
             {
@@ -195,19 +265,31 @@ namespace JelycoWarehouse.Services
         // HELPERS
         // =========================
 
-        private void ValidateTransaction(Transaction transaction)
+        private void ValidateTransaction(
+            Transaction transaction)
         {
             if (transaction.Quantity <= 0)
-                throw new Exception("Quantity must be greater than zero");
+                throw new Exception(
+                    "Quantity must be greater than zero");
 
-            if (!Enum.IsDefined(typeof(TransactionType), transaction.Type))
-                throw new Exception("Invalid transaction type");
+            if (!Enum.IsDefined(
+                    typeof(TransactionType),
+                    transaction.Type))
+            {
+                throw new Exception(
+                    "Invalid transaction type");
+            }
         }
 
-        private async Task<StockLevel> GetOrCreateStock(int itemId, int locationId)
+        private async Task<StockLevel> GetOrCreateStock(
+            int itemId,
+            int locationId)
         {
-            var stock = await _context.StockLevels
-                .FirstOrDefaultAsync(s => s.ItemId == itemId && s.LocationId == locationId);
+            var stock =
+                await _context.StockLevels
+                    .FirstOrDefaultAsync(s =>
+                        s.ItemId == itemId &&
+                        s.LocationId == locationId);
 
             if (stock == null)
             {
@@ -224,36 +306,59 @@ namespace JelycoWarehouse.Services
             return stock;
         }
 
-        private void ApplyStockChange(StockLevel stock, TransactionType type, int quantity)
+        private void ApplyStockChange(
+            Item item,
+            StockLevel stock,
+            TransactionType type,
+            int quantity)
         {
             switch (type)
             {
                 case TransactionType.IN:
                     stock.Quantity += quantity;
+                    item.Quantity += quantity;
                     break;
 
                 case TransactionType.OUT:
+
                     if (stock.Quantity < quantity)
-                        throw new Exception($"Not enough stock. Available: {stock.Quantity}");
+                        throw new Exception(
+                            $"Not enough stock. Available: {stock.Quantity}");
+
+                    if (item.Quantity < quantity)
+                        throw new Exception(
+                            $"Not enough item quantity. Available: {item.Quantity}");
 
                     stock.Quantity -= quantity;
+                    item.Quantity -= quantity;
                     break;
             }
         }
 
-        private void ReverseStockChange(StockLevel stock, TransactionType type, int quantity)
+        private void ReverseStockChange(
+            Item item,
+            StockLevel stock,
+            TransactionType type,
+            int quantity)
         {
             switch (type)
             {
                 case TransactionType.IN:
-                    if (stock.Quantity < quantity)
-                        throw new Exception("Stock inconsistency detected");
+
+                    if (stock.Quantity < quantity ||
+                        item.Quantity < quantity)
+                    {
+                        throw new Exception(
+                            "Stock inconsistency detected");
+                    }
 
                     stock.Quantity -= quantity;
+                    item.Quantity -= quantity;
                     break;
 
                 case TransactionType.OUT:
                     stock.Quantity += quantity;
+                    item.Quantity += quantity;
                     break;
             }
         }
