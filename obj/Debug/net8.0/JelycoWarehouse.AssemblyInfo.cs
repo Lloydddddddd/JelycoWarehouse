@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JelycoWarehouse")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8020fb55dfd2467ea539336293a20dc682bce7d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ef9d67b730d1ed70e928af9647430cd3e053451")]
 [assembly: System.Reflection.AssemblyProductAttribute("JelycoWarehouse")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JelycoWarehouse")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

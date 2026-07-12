@@ -293,6 +293,84 @@
         }
       }
     },
+    "/api/Locations": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Locations/{id}": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/SupplierDeliveries": {
       "get": {
         "tags": [
@@ -1015,6 +1093,10 @@
             "type": "string",
             "nullable": true
           },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
           "category": {
             "type": "string",
             "nullable": true
@@ -1023,7 +1105,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "unitPrice": {
+          "costPrice": {
             "type": "number",
             "format": "double"
           },
@@ -1066,6 +1148,10 @@
             "type": "string",
             "nullable": true
           },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
           "category": {
             "type": "string",
             "nullable": true
@@ -1074,7 +1160,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "unitPrice": {
+          "costPrice": {
             "type": "number",
             "format": "double"
           },
@@ -1120,6 +1206,10 @@
             "type": "string",
             "nullable": true
           },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
           "category": {
             "type": "string",
             "nullable": true
@@ -1128,7 +1218,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "unitPrice": {
+          "costPrice": {
             "type": "number",
             "format": "double"
           },
@@ -1144,6 +1234,24 @@
           "supplierId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1260,6 +1368,10 @@
             "type": "string",
             "format": "date-time"
           },
+          "grandTotal": {
+            "type": "number",
+            "format": "double"
+          },
           "items": {
             "type": "array",
             "items": {
@@ -1277,9 +1389,21 @@
             "type": "integer",
             "format": "int32"
           },
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
           "quantity": {
             "type": "integer",
             "format": "int32"
+          },
+          "unitCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalCost": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

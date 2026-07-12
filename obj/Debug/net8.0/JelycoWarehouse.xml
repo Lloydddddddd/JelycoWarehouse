@@ -112,5 +112,41 @@
         <member name="M:JelycoWarehouse.Migrations.AddTransactionTypeEnum.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:JelycoWarehouse.Migrations.AddItemColor">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
