@@ -103,6 +103,7 @@ public class SupplierDeliveryService
             {
                 ItemId = item.ItemId,
                 LocationId = 1,
+                SupplierDeliveryId = delivery.Id,
                 Quantity = item.Quantity,
                 Type = TransactionType.IN,
                 Date = dto.DeliveryDate
@@ -129,5 +130,22 @@ public class SupplierDeliveryService
                 TotalCost = i.TotalCost
             }).ToList()
         };
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var delivery = await _deliveryRepo.GetByIdAsync(id);
+
+        if (delivery == null)
+            throw new Exception("Supplier delivery not found.");
+
+        // Reverse inventory by deleting the generated transactions
+        foreach (var transaction in delivery.Transactions.ToList())
+        {
+            await _transactionService.DeleteAsync(transaction.Id);
+        }
+
+        // Delete the supplier delivery
+        await _deliveryRepo.DeleteAsync(delivery);
     }
 }

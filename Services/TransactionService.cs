@@ -261,6 +261,17 @@ namespace JelycoWarehouse.Services
             };
         }
 
+        public async Task<int> GetCurrentStockAsync(int itemId)
+        {
+            var item = await _context.Items
+                .FirstOrDefaultAsync(i => i.Id == itemId);
+
+            if (item == null)
+                throw new Exception("Item not found");
+
+            return item.Quantity;
+        }
+
         // =========================
         // HELPERS
         // =========================
