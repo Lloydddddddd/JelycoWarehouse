@@ -76,6 +76,114 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "JelycoWarehouse.Controllers.DashboardController",
+    "Method": "GetDashboard",
+    "RelativePath": "api/Dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "JelycoWarehouse.DTOs.Dashboard.DashboardDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.InventoryAdjustmentsController",
+    "Method": "GetAdjustments",
+    "RelativePath": "api/InventoryAdjustments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[JelycoWarehouse.DTOs.InventoryAdjustments.InventoryAdjustmentDto, JelycoWarehouse, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.InventoryAdjustmentsController",
+    "Method": "PostAdjustment",
+    "RelativePath": "api/InventoryAdjustments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "JelycoWarehouse.DTOs.InventoryAdjustments.InventoryAdjustmentCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "JelycoWarehouse.DTOs.InventoryAdjustments.InventoryAdjustmentDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.InventoryAdjustmentsController",
+    "Method": "GetAdjustment",
+    "RelativePath": "api/InventoryAdjustments/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "JelycoWarehouse.DTOs.InventoryAdjustments.InventoryAdjustmentDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.InventoryAdjustmentsController",
+    "Method": "DeleteAdjustment",
+    "RelativePath": "api/InventoryAdjustments/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "JelycoWarehouse.Controllers.ItemsController",
     "Method": "GetItems",
     "RelativePath": "api/items",
@@ -313,6 +421,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "SupplierDeliveriesController",
+    "Method": "DeleteDelivery",
+    "RelativePath": "api/SupplierDeliveries/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "JelycoWarehouse.Controllers.SuppliersController",
@@ -602,6 +726,78 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[JelycoWarehouse.DTOs.Transactions.TransactionDto, JelycoWarehouse, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.WarehouseReleasesController",
+    "Method": "GetReleases",
+    "RelativePath": "api/WarehouseReleases",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[JelycoWarehouse.DTOs.WarehouseReleases.WarehouseReleaseDto, JelycoWarehouse, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.WarehouseReleasesController",
+    "Method": "PostRelease",
+    "RelativePath": "api/WarehouseReleases",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "JelycoWarehouse.DTOs.WarehouseReleases.WarehouseReleaseCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "JelycoWarehouse.DTOs.WarehouseReleases.WarehouseReleaseDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "JelycoWarehouse.Controllers.WarehouseReleasesController",
+    "Method": "GetRelease",
+    "RelativePath": "api/WarehouseReleases/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "JelycoWarehouse.DTOs.WarehouseReleases.WarehouseReleaseDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
