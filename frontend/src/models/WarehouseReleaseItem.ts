@@ -1,6 +1,5 @@
-export interface SupplierDeliveryItem {
+export interface WarehouseReleaseItem {
   itemId: number;
-
   itemName: string;
 
   quantity: number;
