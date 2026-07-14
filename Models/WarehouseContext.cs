@@ -15,6 +15,10 @@ namespace JelycoWarehouse.Models
         public DbSet<StockLevel> StockLevels { get; set; }
         public DbSet<SupplierDelivery> SupplierDeliveries { get; set; }
         public DbSet<SupplierDeliveryItem> SupplierDeliveryItems { get; set; }
+        public DbSet<WarehouseRelease> WarehouseReleases { get; set; }
+        public DbSet<WarehouseReleaseItem> WarehouseReleaseItems { get; set; }
+        public DbSet<InventoryAdjustment> InventoryAdjustments { get; set; }
+        public DbSet<InventoryAdjustmentItem> InventoryAdjustmentItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,6 +44,18 @@ namespace JelycoWarehouse.Models
                 .Property(i => i.TotalCost)
                 .HasColumnType("decimal(18,2)");
 
+            builder.Entity<WarehouseRelease>()
+                .Property(r => r.GrandTotal)
+                .HasColumnType("decimal(18,2)");
+
+            builder.Entity<WarehouseReleaseItem>()
+                .Property(i => i.UnitCost)
+                .HasColumnType("decimal(18,2)");
+
+            builder.Entity<WarehouseReleaseItem>()
+                .Property(i => i.TotalCost)
+                .HasColumnType("decimal(18,2)");
+
             // =========================
             // Relationships
             // =========================
@@ -49,6 +65,36 @@ namespace JelycoWarehouse.Models
                 .WithMany(s => s.Deliveries)
                 .HasForeignKey(sd => sd.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WarehouseReleaseItem>()
+                .HasOne(wri => wri.WarehouseRelease)
+                .WithMany(wr => wr.Items)
+                .HasForeignKey(wri => wri.WarehouseReleaseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WarehouseReleaseItem>()
+                .HasOne(wri => wri.Item)
+                .WithMany()
+                .HasForeignKey(wri => wri.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<InventoryAdjustmentItem>()
+                .HasOne(i => i.InventoryAdjustment)
+                .WithMany(a => a.Items)
+                .HasForeignKey(i => i.InventoryAdjustmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<InventoryAdjustmentItem>()
+                .HasOne(i => i.Item)
+                .WithMany()
+                .HasForeignKey(i => i.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Transaction>()
+                .HasOne(t => t.InventoryAdjustment)
+                .WithMany(a => a.Transactions)
+                .HasForeignKey(t => t.InventoryAdjustmentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<SupplierDeliveryItem>()
                 .HasOne(sdi => sdi.SupplierDelivery)
@@ -61,6 +107,18 @@ namespace JelycoWarehouse.Models
                 .WithMany()
                 .HasForeignKey(sdi => sdi.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Transaction>()
+                .HasOne(t => t.SupplierDelivery)
+                .WithMany(sd => sd.Transactions)
+                .HasForeignKey(t => t.SupplierDeliveryId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Transaction>()
+                .HasOne(t => t.WarehouseRelease)
+                .WithMany(wr => wr.Transactions)
+                .HasForeignKey(t => t.WarehouseReleaseId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // =========================
             // Seed Suppliers

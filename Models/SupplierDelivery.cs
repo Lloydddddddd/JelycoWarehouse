@@ -14,7 +14,14 @@ public class SupplierDelivery
     // Total amount of the entire delivery
     public decimal GrandTotal { get; set; }
 
-    public ICollection<SupplierDeliveryItem> Items { get; set; } = new List<SupplierDeliveryItem>();
+    // Delivery Items
+    public ICollection<SupplierDeliveryItem> Items { get; set; }
+        = new List<SupplierDeliveryItem>();
+
+    // NEW
+    // Transactions automatically created by this delivery
+    public ICollection<Transaction> Transactions { get; set; }
+        = new List<Transaction>();
 
     public Supplier? Supplier { get; set; }
 }
