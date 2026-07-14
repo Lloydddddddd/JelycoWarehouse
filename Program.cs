@@ -133,6 +133,15 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IStockLevelRepository, StockLevelRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ISupplierDeliveryRepository, SupplierDeliveryRepository>();
+builder.Services.AddScoped<
+    IWarehouseReleaseRepository,
+    WarehouseReleaseRepository>();
+builder.Services.AddScoped<
+    IInventoryAdjustmentRepository,
+    InventoryAdjustmentRepository>();
+builder.Services.AddScoped<
+    IDashboardRepository,
+    DashboardRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 
@@ -142,6 +151,9 @@ builder.Services.AddScoped<SupplierService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<SupplierDeliveryService>();
+builder.Services.AddScoped<WarehouseReleaseService>();
+builder.Services.AddScoped<InventoryAdjustmentService>();
+builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<AuthService>();
 
 
