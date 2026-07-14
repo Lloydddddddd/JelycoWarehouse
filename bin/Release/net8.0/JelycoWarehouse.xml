@@ -112,5 +112,89 @@
         <member name="M:JelycoWarehouse.Migrations.AddTransactionTypeEnum.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:JelycoWarehouse.Migrations.AddItemColor">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddItemColor.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RenameUnitPriceToCostPriceAndAddColor.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddSupplierDeliveryCosts.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.LinkTransactionsToSupplierDeliveries">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToSupplierDeliveries.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToSupplierDeliveries.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToSupplierDeliveries.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.AddWarehouseReleases">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddWarehouseReleases.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddWarehouseReleases.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.AddWarehouseReleases.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.LinkTransactionsToWarehouseReleases">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToWarehouseReleases.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToWarehouseReleases.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToWarehouseReleases.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:JelycoWarehouse.Migrations.LinkTransactionsToInventoryAdjustments">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToInventoryAdjustments.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToInventoryAdjustments.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToInventoryAdjustments.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
