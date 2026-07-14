@@ -4,6 +4,7 @@ using JelycoWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JelycoWarehouse.Migrations
 {
     [DbContext(typeof(WarehouseContext))]
-    partial class WarehouseContextModelSnapshot : ModelSnapshot
+    [Migration("20260713061935_LinkTransactionsToSupplierDeliveries")]
+    partial class LinkTransactionsToSupplierDeliveries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,63 +97,6 @@ namespace JelycoWarehouse.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AdjustmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdjustmentReference")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventoryAdjustments");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustmentItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActualQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Difference")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InventoryAdjustmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SystemQuantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryAdjustmentId");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("InventoryAdjustmentItems");
                 });
 
             modelBuilder.Entity("JelycoWarehouse.Models.Item", b =>
@@ -370,66 +316,6 @@ namespace JelycoWarehouse.Migrations
                         });
                 });
 
-            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseRelease", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Destination")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<decimal>("GrandTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReleaseReference")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WarehouseReleases");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseReleaseItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("WarehouseReleaseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("WarehouseReleaseId");
-
-                    b.ToTable("WarehouseReleaseItems");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -634,9 +520,6 @@ namespace JelycoWarehouse.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("InventoryAdjustmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
@@ -652,12 +535,7 @@ namespace JelycoWarehouse.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WarehouseReleaseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("InventoryAdjustmentId");
 
                     b.HasIndex("ItemId");
 
@@ -665,28 +543,7 @@ namespace JelycoWarehouse.Migrations
 
                     b.HasIndex("SupplierDeliveryId");
 
-                    b.HasIndex("WarehouseReleaseId");
-
                     b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustmentItem", b =>
-                {
-                    b.HasOne("JelycoWarehouse.Models.InventoryAdjustment", "InventoryAdjustment")
-                        .WithMany("Items")
-                        .HasForeignKey("InventoryAdjustmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("JelycoWarehouse.Models.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("InventoryAdjustment");
-
-                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("JelycoWarehouse.Models.Item", b =>
@@ -717,25 +574,6 @@ namespace JelycoWarehouse.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseReleaseItem", b =>
-                {
-                    b.HasOne("JelycoWarehouse.Models.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("JelycoWarehouse.Models.WarehouseRelease", "WarehouseRelease")
-                        .WithMany("Items")
-                        .HasForeignKey("WarehouseReleaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("WarehouseRelease");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -821,11 +659,6 @@ namespace JelycoWarehouse.Migrations
 
             modelBuilder.Entity("Transaction", b =>
                 {
-                    b.HasOne("JelycoWarehouse.Models.InventoryAdjustment", "InventoryAdjustment")
-                        .WithMany("Transactions")
-                        .HasForeignKey("InventoryAdjustmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("JelycoWarehouse.Models.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -843,27 +676,11 @@ namespace JelycoWarehouse.Migrations
                         .HasForeignKey("SupplierDeliveryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("JelycoWarehouse.Models.WarehouseRelease", "WarehouseRelease")
-                        .WithMany("Transactions")
-                        .HasForeignKey("WarehouseReleaseId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("InventoryAdjustment");
-
                     b.Navigation("Item");
 
                     b.Navigation("Location");
 
                     b.Navigation("SupplierDelivery");
-
-                    b.Navigation("WarehouseRelease");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustment", b =>
-                {
-                    b.Navigation("Items");
-
-                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("JelycoWarehouse.Models.Supplier", b =>
@@ -871,13 +688,6 @@ namespace JelycoWarehouse.Migrations
                     b.Navigation("Deliveries");
 
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseRelease", b =>
-                {
-                    b.Navigation("Items");
-
-                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("SupplierDelivery", b =>
