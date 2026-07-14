@@ -36,4 +36,16 @@ export const API = {
     byId: (id: number) =>
       `${BASE_URL}/supplierdeliveries/${id}`,
   },
+
+  warehouseReleases: {
+    all: `${BASE_URL}/warehousereleases`,
+    byId: (id: number) =>
+      `${BASE_URL}/warehousereleases/${id}`,
+  },
+
+  inventoryAdjustments: {
+    all: `${BASE_URL}/inventoryadjustments`,
+    byId: (id: number) =>
+      `${BASE_URL}/inventoryadjustments/${id}`,
+  },
 };
