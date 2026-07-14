@@ -8,22 +8,22 @@ import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
 import Button from "../components/ui/Button";
 
-import SupplierDeliveryForm from "../components/supplierDeliveries/SupplierDeliveryForm";
-import SupplierDeliveryDetails from "../components/supplierDeliveries/SupplierDeliveryDetails";
+import InventoryAdjustmentForm from "../components/inventoryAdjustments/InventoryAdjustmentForm";
+import InventoryAdjustmentDetails from "../components/inventoryAdjustments/InventoryAdjustmentDetails";
 
 import {
-  getSupplierDeliveries,
-  getSupplierDelivery,
-  createSupplierDelivery,
-  deleteSupplierDelivery,
-} from "../services/supplierDeliveryService";
+  getInventoryAdjustments,
+  getInventoryAdjustment,
+  createInventoryAdjustment,
+  deleteInventoryAdjustment,
+} from "../services/inventoryAdjustmentService";
 
-import type { SupplierDelivery } from "../models/SupplierDelivery";
-import type { CreateSupplierDeliveryRequest } from "../models/CreateSupplierDeliveryRequest";
+import type { InventoryAdjustment } from "../models/InventoryAdjustment";
+import type { CreateInventoryAdjustmentRequest } from "../models/CreateInventoryAdjustmentRequest";
 
-export default function SupplierDeliveriesPage() {
-  const [deliveries, setDeliveries] =
-    useState<SupplierDelivery[]>([]);
+export default function InventoryAdjustmentsPage() {
+  const [adjustments, setAdjustments] =
+    useState<InventoryAdjustment[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -34,8 +34,8 @@ export default function SupplierDeliveriesPage() {
   const [showModal, setShowModal] =
     useState(false);
 
-  const [selectedDelivery, setSelectedDelivery] =
-    useState<SupplierDelivery | null>(null);
+  const [selectedAdjustment, setSelectedAdjustment] =
+    useState<InventoryAdjustment | null>(null);
 
   const [showDetails, setShowDetails] =
     useState(false);
@@ -47,26 +47,7 @@ export default function SupplierDeliveriesPage() {
     useState("");
 
   const [toastType, setToastType] =
-    useState<"success" | "error">(
-      "success"
-    );
-
-  async function loadDeliveries() {
-    try {
-      const result =
-        await getSupplierDeliveries();
-
-      setDeliveries(result);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadDeliveries();
-  }, []);
+    useState<"success" | "error">("success");
 
   function showToast(
     message: string,
@@ -80,25 +61,42 @@ export default function SupplierDeliveriesPage() {
     }, 3000);
   }
 
+  async function loadAdjustments() {
+    try {
+      const result =
+        await getInventoryAdjustments();
+
+      setAdjustments(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadAdjustments();
+  }, []);
+
   async function handleCreate(
-    delivery: CreateSupplierDeliveryRequest
+    adjustment: CreateInventoryAdjustmentRequest
   ) {
     try {
-      await createSupplierDelivery(delivery);
+      await createInventoryAdjustment(adjustment);
 
-      await loadDeliveries();
+      await loadAdjustments();
 
       setShowModal(false);
 
       showToast(
-        "Supplier delivery added successfully!",
+        "Inventory adjustment created successfully!",
         "success"
       );
     } catch (error) {
       console.error(error);
 
       showToast(
-        "Failed to create supplier delivery.",
+        "Failed to create inventory adjustment.",
         "error"
       );
     }
@@ -106,83 +104,76 @@ export default function SupplierDeliveriesPage() {
 
   async function handleView(id: number) {
     try {
-      const delivery =
-        await getSupplierDelivery(id);
+      const adjustment =
+        await getInventoryAdjustment(id);
 
-      setSelectedDelivery(delivery);
+      setSelectedAdjustment(adjustment);
 
       setShowDetails(true);
     } catch (error) {
       console.error(error);
-
-      showToast(
-        "Failed to load supplier delivery.",
-        "error"
-      );
     }
   }
 
   async function handleDelete() {
-    if (!selectedDelivery) return;
+    if (!selectedAdjustment) return;
 
     try {
-      await deleteSupplierDelivery(
-        selectedDelivery.id
+      await deleteInventoryAdjustment(
+        selectedAdjustment.id
       );
 
-      await loadDeliveries();
+      await loadAdjustments();
 
       setShowDeleteDialog(false);
-      setSelectedDelivery(null);
+
+      setSelectedAdjustment(null);
 
       showToast(
-        "Supplier delivery deleted successfully!",
+        "Inventory adjustment deleted successfully!",
         "success"
       );
     } catch (error) {
       console.error(error);
 
       showToast(
-        "Failed to delete supplier delivery.",
+        "Failed to delete inventory adjustment.",
         "error"
       );
     }
   }
 
-  const filteredDeliveries =
-    deliveries.filter((delivery) => {
-      const searchText =
-        search.toLowerCase();
+  const filteredAdjustments =
+    adjustments.filter((adjustment) => {
+      const text = search.toLowerCase();
 
       return (
-        delivery.supplierName
+        adjustment.adjustmentReference
           .toLowerCase()
-          .includes(searchText) ||
-
-        delivery.deliveryReference
+          .includes(text) ||
+        adjustment.reason
           .toLowerCase()
-          .includes(searchText)
+          .includes(text)
       );
     });
 
   if (loading) {
     return (
-      <p>Loading supplier deliveries...</p>
+      <p>Loading inventory adjustments...</p>
     );
   }
 
   return (
     <>
       <PageHeader
-        title="Supplier Deliveries"
-        subtitle="Manage warehouse deliveries"
+        title="Inventory Adjustments"
+        subtitle="Adjust inventory after physical counting"
       />
 
       <div
         style={{
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
         }}
@@ -190,7 +181,7 @@ export default function SupplierDeliveriesPage() {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder="Search deliveries..."
+          placeholder="Search adjustments..."
         />
 
         <Button
@@ -198,84 +189,70 @@ export default function SupplierDeliveriesPage() {
             setShowModal(true)
           }
         >
-          + Add Delivery
+          + Add Adjustment
         </Button>
       </div>
 
-      {/* Add Delivery */}
-
       <Modal
         open={showModal}
-        title="Add Supplier Delivery"
+        title="Add Inventory Adjustment"
         onClose={() =>
           setShowModal(false)
         }
       >
-        <SupplierDeliveryForm
+        <InventoryAdjustmentForm
           onSubmit={handleCreate}
         />
       </Modal>
 
-      {/* View Details */}
-
       <Modal
         open={showDetails}
-        title="Supplier Delivery Details"
+        title="Inventory Adjustment Details"
         onClose={() => {
           setShowDetails(false);
-          setSelectedDelivery(null);
+          setSelectedAdjustment(null);
         }}
       >
-        {selectedDelivery && (
-          <SupplierDeliveryDetails
-            delivery={selectedDelivery}
+        {selectedAdjustment && (
+          <InventoryAdjustmentDetails
+            adjustment={selectedAdjustment}
           />
         )}
       </Modal>
 
-      {/* Delete Confirmation */}
-
       <ConfirmDialog
         open={showDeleteDialog}
-        title="Delete Supplier Delivery"
-        message="Are you sure you want to delete this supplier delivery? This will also remove all inventory added by this delivery."
+        title="Delete Inventory Adjustment"
+        message="Are you sure you want to delete this adjustment?"
         onConfirm={handleDelete}
         onCancel={() => {
           setShowDeleteDialog(false);
-          setSelectedDelivery(null);
+          setSelectedAdjustment(null);
         }}
       />
 
       <DataTable
         columns={[
           {
-            header: "ID",
-            accessor: "id",
-            sortable: true,
-          },
-          {
             header: "Reference",
-            accessor: "deliveryReference",
+            accessor: "adjustmentReference",
             sortable: true,
           },
           {
-            header: "Supplier",
-            accessor: "supplierName",
+            header: "Reason",
+            accessor: "reason",
             sortable: true,
           },
           {
             header: "Date",
-            accessor: "deliveryDate",
-            sortable: true,
-          },
-          {
-            header: "Grand Total",
-            render: (delivery) =>
-              `₱${delivery.grandTotal.toLocaleString()}`,
+            render: (adjustment) =>
+              new Date(
+                adjustment.adjustmentDate
+              ).toLocaleDateString(),
           },
           {
             header: "Actions",
-            render: (delivery) => (
+            render: (adjustment) => (
               <div
                 style={{
                   display: "flex",
@@ -285,7 +262,7 @@ export default function SupplierDeliveriesPage() {
                 <Button
                   onClick={() =>
                     handleView(
-                      delivery.id
+                      adjustment.id
                     )
                   }
                 >
@@ -295,8 +272,8 @@ export default function SupplierDeliveriesPage() {
                 <Button
                   variant="danger"
                   onClick={() => {
-                    setSelectedDelivery(
-                      delivery
+                    setSelectedAdjustment(
+                      adjustment
                     );
 
                     setShowDeleteDialog(
@@ -310,7 +287,7 @@ export default function SupplierDeliveriesPage() {
             ),
           },
         ]}
-        data={filteredDeliveries}
+        data={filteredAdjustments}
       />
 
       <Toast

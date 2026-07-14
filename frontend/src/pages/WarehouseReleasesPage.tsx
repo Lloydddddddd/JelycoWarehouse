@@ -8,22 +8,22 @@ import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
 import Button from "../components/ui/Button";
 
-import SupplierDeliveryForm from "../components/supplierDeliveries/SupplierDeliveryForm";
-import SupplierDeliveryDetails from "../components/supplierDeliveries/SupplierDeliveryDetails";
+import WarehouseReleaseForm from "../components/warehouseReleases/WarehouseReleaseForm";
+import WarehouseReleaseDetails from "../components/warehouseReleases/WarehouseReleaseDetails";
 
 import {
-  getSupplierDeliveries,
-  getSupplierDelivery,
-  createSupplierDelivery,
-  deleteSupplierDelivery,
-} from "../services/supplierDeliveryService";
+  getWarehouseReleases,
+  getWarehouseRelease,
+  createWarehouseRelease,
+  deleteWarehouseRelease,
+} from "../services/warehouseReleaseService";
 
-import type { SupplierDelivery } from "../models/SupplierDelivery";
-import type { CreateSupplierDeliveryRequest } from "../models/CreateSupplierDeliveryRequest";
+import type { WarehouseRelease } from "../models/WarehouseRelease";
+import type { CreateWarehouseReleaseRequest } from "../models/CreateWarehouseReleaseRequest";
 
-export default function SupplierDeliveriesPage() {
-  const [deliveries, setDeliveries] =
-    useState<SupplierDelivery[]>([]);
+export default function WarehouseReleasesPage() {
+  const [releases, setReleases] =
+    useState<WarehouseRelease[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -34,8 +34,8 @@ export default function SupplierDeliveriesPage() {
   const [showModal, setShowModal] =
     useState(false);
 
-  const [selectedDelivery, setSelectedDelivery] =
-    useState<SupplierDelivery | null>(null);
+  const [selectedRelease, setSelectedRelease] =
+    useState<WarehouseRelease | null>(null);
 
   const [showDetails, setShowDetails] =
     useState(false);
@@ -47,26 +47,7 @@ export default function SupplierDeliveriesPage() {
     useState("");
 
   const [toastType, setToastType] =
-    useState<"success" | "error">(
-      "success"
-    );
-
-  async function loadDeliveries() {
-    try {
-      const result =
-        await getSupplierDeliveries();
-
-      setDeliveries(result);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadDeliveries();
-  }, []);
+    useState<"success" | "error">("success");
 
   function showToast(
     message: string,
@@ -80,25 +61,42 @@ export default function SupplierDeliveriesPage() {
     }, 3000);
   }
 
+  async function loadReleases() {
+    try {
+      const result =
+        await getWarehouseReleases();
+
+      setReleases(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadReleases();
+  }, []);
+
   async function handleCreate(
-    delivery: CreateSupplierDeliveryRequest
+    release: CreateWarehouseReleaseRequest
   ) {
     try {
-      await createSupplierDelivery(delivery);
+      await createWarehouseRelease(release);
 
-      await loadDeliveries();
+      await loadReleases();
 
       setShowModal(false);
 
       showToast(
-        "Supplier delivery added successfully!",
+        "Warehouse release created successfully!",
         "success"
       );
     } catch (error) {
       console.error(error);
 
       showToast(
-        "Failed to create supplier delivery.",
+        "Failed to create warehouse release.",
         "error"
       );
     }
@@ -106,60 +104,56 @@ export default function SupplierDeliveriesPage() {
 
   async function handleView(id: number) {
     try {
-      const delivery =
-        await getSupplierDelivery(id);
+      const release =
+        await getWarehouseRelease(id);
 
-      setSelectedDelivery(delivery);
+      setSelectedRelease(release);
 
       setShowDetails(true);
     } catch (error) {
       console.error(error);
-
-      showToast(
-        "Failed to load supplier delivery.",
-        "error"
-      );
     }
   }
 
   async function handleDelete() {
-    if (!selectedDelivery) return;
+    if (!selectedRelease) return;
 
     try {
-      await deleteSupplierDelivery(
-        selectedDelivery.id
+      await deleteWarehouseRelease(
+        selectedRelease.id
       );
 
-      await loadDeliveries();
+      await loadReleases();
 
       setShowDeleteDialog(false);
-      setSelectedDelivery(null);
+
+      setSelectedRelease(null);
 
       showToast(
-        "Supplier delivery deleted successfully!",
+        "Warehouse release deleted successfully!",
         "success"
       );
     } catch (error) {
       console.error(error);
 
       showToast(
-        "Failed to delete supplier delivery.",
+        "Failed to delete warehouse release.",
         "error"
       );
     }
   }
 
-  const filteredDeliveries =
-    deliveries.filter((delivery) => {
+  const filteredReleases =
+    releases.filter((release) => {
       const searchText =
         search.toLowerCase();
 
       return (
-        delivery.supplierName
+        release.releaseReference
           .toLowerCase()
           .includes(searchText) ||
 
-        delivery.deliveryReference
+        release.destination
           .toLowerCase()
           .includes(searchText)
       );
@@ -167,22 +161,21 @@ export default function SupplierDeliveriesPage() {
 
   if (loading) {
     return (
-      <p>Loading supplier deliveries...</p>
+      <p>Loading warehouse releases...</p>
     );
   }
 
   return (
     <>
       <PageHeader
-        title="Supplier Deliveries"
-        subtitle="Manage warehouse deliveries"
+        title="Warehouse Releases"
+        subtitle="Manage stock released from the warehouse"
       />
 
       <div
         style={{
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
         }}
@@ -190,7 +183,7 @@ export default function SupplierDeliveriesPage() {
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder="Search deliveries..."
+          placeholder="Search releases..."
         />
 
         <Button
@@ -198,51 +191,45 @@ export default function SupplierDeliveriesPage() {
             setShowModal(true)
           }
         >
-          + Add Delivery
+          + Add Release
         </Button>
       </div>
 
-      {/* Add Delivery */}
-
       <Modal
         open={showModal}
-        title="Add Supplier Delivery"
+        title="Add Warehouse Release"
         onClose={() =>
           setShowModal(false)
         }
       >
-        <SupplierDeliveryForm
+        <WarehouseReleaseForm
           onSubmit={handleCreate}
         />
       </Modal>
 
-      {/* View Details */}
-
       <Modal
         open={showDetails}
-        title="Supplier Delivery Details"
+        title="Warehouse Release Details"
         onClose={() => {
           setShowDetails(false);
-          setSelectedDelivery(null);
+          setSelectedRelease(null);
         }}
       >
-        {selectedDelivery && (
-          <SupplierDeliveryDetails
-            delivery={selectedDelivery}
+        {selectedRelease && (
+          <WarehouseReleaseDetails
+            release={selectedRelease}
           />
         )}
       </Modal>
 
-      {/* Delete Confirmation */}
-
       <ConfirmDialog
         open={showDeleteDialog}
-        title="Delete Supplier Delivery"
-        message="Are you sure you want to delete this supplier delivery? This will also remove all inventory added by this delivery."
+        title="Delete Warehouse Release"
+        message="Are you sure you want to delete this warehouse release? This will restore all released inventory."
         onConfirm={handleDelete}
         onCancel={() => {
           setShowDeleteDialog(false);
-          setSelectedDelivery(null);
+          setSelectedRelease(null);
         }}
       />
 
@@ -255,27 +242,32 @@ export default function SupplierDeliveriesPage() {
           },
           {
             header: "Reference",
-            accessor: "deliveryReference",
+            accessor: "releaseReference",
             sortable: true,
           },
           {
-            header: "Supplier",
-            accessor: "supplierName",
+            header: "Destination",
+            accessor: "destination",
             sortable: true,
           },
           {
             header: "Date",
-            accessor: "deliveryDate",
-            sortable: true,
+            render: (release) =>
+              new Date(release.releaseDate)
+                .toLocaleDateString("en-PH", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }),
           },
           {
             header: "Grand Total",
-            render: (delivery) =>
-              `₱${delivery.grandTotal.toLocaleString()}`,
+            render: (release) =>
+              `₱${release.grandTotal.toLocaleString()}`,
           },
           {
             header: "Actions",
-            render: (delivery) => (
+            render: (release) => (
               <div
                 style={{
                   display: "flex",
@@ -284,9 +276,7 @@ export default function SupplierDeliveriesPage() {
               >
                 <Button
                   onClick={() =>
-                    handleView(
-                      delivery.id
-                    )
+                    handleView(release.id)
                   }
                 >
                   View
@@ -295,8 +285,8 @@ export default function SupplierDeliveriesPage() {
                 <Button
                   variant="danger"
                   onClick={() => {
-                    setSelectedDelivery(
-                      delivery
+                    setSelectedRelease(
+                      release
                     );
 
                     setShowDeleteDialog(
@@ -310,7 +300,7 @@ export default function SupplierDeliveriesPage() {
             ),
           },
         ]}
-        data={filteredDeliveries}
+        data={filteredReleases}
       />
 
       <Toast

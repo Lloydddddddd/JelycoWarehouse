@@ -12,6 +12,16 @@ export async function getSupplierDeliveries(): Promise<SupplierDelivery[]> {
   return response.json();
 }
 
+export async function getSupplierDelivery(
+  id: number
+): Promise<SupplierDelivery> {
+  const response = await apiClient(
+    API.supplierDeliveries.byId(id)
+  );
+
+  return response.json();
+}
+
 export async function createSupplierDelivery(
   delivery: CreateSupplierDeliveryRequest
 ) {
