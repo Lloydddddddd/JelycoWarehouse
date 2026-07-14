@@ -6,7 +6,8 @@ public class SupplierDeliveriesController : ControllerBase
 {
     private readonly SupplierDeliveryService _deliveryService;
 
-    public SupplierDeliveriesController(SupplierDeliveryService deliveryService)
+    public SupplierDeliveriesController(
+        SupplierDeliveryService deliveryService)
     {
         _deliveryService = deliveryService;
     }
@@ -24,15 +25,32 @@ public class SupplierDeliveriesController : ControllerBase
     public async Task<ActionResult<SupplierDeliveryDto>> GetDelivery(int id)
     {
         var delivery = await _deliveryService.GetByIdAsync(id);
-        if (delivery == null) return NotFound();
+
+        if (delivery == null)
+            return NotFound();
+
         return Ok(delivery);
     }
 
     // POST: api/supplierdeliveries
     [HttpPost]
-    public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(SupplierDeliveryCreateDto dto)
+    public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(
+        SupplierDeliveryCreateDto dto)
     {
         var delivery = await _deliveryService.AddAsync(dto);
-        return CreatedAtAction(nameof(GetDelivery), new { id = delivery.Id }, delivery);
+
+        return CreatedAtAction(
+            nameof(GetDelivery),
+            new { id = delivery.Id },
+            delivery);
+    }
+
+    // DELETE: api/supplierdeliveries/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDelivery(int id)
+    {
+        await _deliveryService.DeleteAsync(id);
+
+        return NoContent();
     }
 }
