@@ -1,14 +1,21 @@
 .layout {
     display: flex;
-    min-height: 100vh;
+
+    height: 100vh;
 
     background: #f8fafc;
+
+    overflow: hidden;
 }
 
 .content {
     flex: 1;
 
-    padding: 32px;
+    margin-left: 280px;
 
     overflow-y: auto;
+
+    padding: 32px;
+
+    background: #f8fafc;
 }
