@@ -11,8 +11,6 @@ namespace JelycoWarehouse.Models
         public DbSet<Item> Items { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<StockLevel> StockLevels { get; set; }
         public DbSet<SupplierDelivery> SupplierDeliveries { get; set; }
         public DbSet<SupplierDeliveryItem> SupplierDeliveryItems { get; set; }
         public DbSet<WarehouseRelease> WarehouseReleases { get; set; }

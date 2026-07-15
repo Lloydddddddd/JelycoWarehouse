@@ -7,8 +7,6 @@ public class Transaction
 
     public int ItemId { get; set; }
 
-    public int LocationId { get; set; }
-
     public int? SupplierDeliveryId { get; set; }
 
     public int? WarehouseReleaseId { get; set; }
@@ -24,8 +22,6 @@ public class Transaction
     // Navigation
 
     public Item? Item { get; set; }
-
-    public Location? Location { get; set; }
 
     public SupplierDelivery? SupplierDelivery { get; set; }
 
