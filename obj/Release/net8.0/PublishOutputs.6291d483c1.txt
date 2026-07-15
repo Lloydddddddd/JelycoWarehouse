@@ -6,6 +6,7 @@ C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\ob
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\frontend\tsconfig.app.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\frontend\tsconfig.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\frontend\tsconfig.node.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\frontend\vercel.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\libman.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\JelycoWarehouse.dll
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\PubTmp\Out\JelycoWarehouse.runtimeconfig.json

@@ -196,5 +196,17 @@
         <member name="M:JelycoWarehouse.Migrations.LinkTransactionsToInventoryAdjustments.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:JelycoWarehouse.Migrations.RemoveLocationAndStockLevel">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RemoveLocationAndStockLevel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RemoveLocationAndStockLevel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:JelycoWarehouse.Migrations.RemoveLocationAndStockLevel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

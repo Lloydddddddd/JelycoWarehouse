@@ -216,3 +216,4 @@ C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\ob
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.app.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\tsconfig.node.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Debug\net8.0\frontend\vercel.json

@@ -217,3 +217,4 @@ C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bi
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\tsconfig.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\tsconfig.node.json
 C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\obj\Release\net8.0\JelycoWarehouse.sourcelink.json
+C:\Users\krist\OneDrive\Desktop\Free Elective\JelycoWarehouse\JelycoWarehouse\bin\Release\net8.0\frontend\vercel.json
