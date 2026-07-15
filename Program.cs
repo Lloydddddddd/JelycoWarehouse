@@ -130,8 +130,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-builder.Services.AddScoped<IStockLevelRepository, StockLevelRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ISupplierDeliveryRepository, SupplierDeliveryRepository>();
 builder.Services.AddScoped<
     IWarehouseReleaseRepository,
@@ -149,7 +147,6 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<SupplierService>();
 builder.Services.AddScoped<TransactionService>();
-builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<SupplierDeliveryService>();
 builder.Services.AddScoped<WarehouseReleaseService>();
 builder.Services.AddScoped<InventoryAdjustmentService>();
