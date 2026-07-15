@@ -25,17 +25,17 @@ namespace JelycoWarehouse.Controllers
         public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactions()
         {
             var transactions = await _transactionService.GetAllAsync();
+
             var dtos = transactions.Select(t => new TransactionDto
             {
                 Id = t.Id,
                 ItemId = t.ItemId,
                 ItemName = t.Item?.Name ?? string.Empty,
-                LocationId = t.LocationId,
-                LocationName = t.Location?.Name ?? string.Empty,
                 Quantity = t.Quantity,
                 Type = t.Type.ToString(),
                 Date = t.Date
             });
+
             return Ok(dtos);
         }
 
@@ -44,30 +44,31 @@ namespace JelycoWarehouse.Controllers
         public async Task<ActionResult<TransactionDto>> GetTransaction(int id)
         {
             var transaction = await _transactionService.GetByIdAsync(id);
-            if (transaction == null) return NotFound();
+
+            if (transaction == null)
+                return NotFound();
 
             var dto = new TransactionDto
             {
                 Id = transaction.Id,
                 ItemId = transaction.ItemId,
                 ItemName = transaction.Item?.Name ?? string.Empty,
-                LocationId = transaction.LocationId,
-                LocationName = transaction.Location?.Name ?? string.Empty,
                 Quantity = transaction.Quantity,
                 Type = transaction.Type.ToString(),
                 Date = transaction.Date
             };
+
             return Ok(dto);
         }
 
         // POST: api/transactions
         [HttpPost]
-        public async Task<ActionResult<TransactionDto>> PostTransaction(TransactionCreateDto dto)
+        public async Task<ActionResult<TransactionDto>> PostTransaction(
+            TransactionCreateDto dto)
         {
             var transaction = new Transaction
             {
                 ItemId = dto.ItemId,
-                LocationId = dto.LocationId,
                 Quantity = dto.Quantity,
                 Type = dto.Type,
                 Date = DateTime.UtcNow
@@ -80,30 +81,36 @@ namespace JelycoWarehouse.Controllers
                 Id = transaction.Id,
                 ItemId = transaction.ItemId,
                 ItemName = transaction.Item?.Name ?? string.Empty,
-                LocationId = transaction.LocationId,
-                LocationName = transaction.Location?.Name ?? string.Empty,
                 Quantity = transaction.Quantity,
                 Type = transaction.Type.ToString(),
                 Date = transaction.Date
             };
 
-            return CreatedAtAction(nameof(GetTransaction), new { id = transaction.Id }, resultDto);
+            return CreatedAtAction(
+                nameof(GetTransaction),
+                new { id = transaction.Id },
+                resultDto);
         }
 
         // PUT: api/transactions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(int id, TransactionUpdateDto dto)
+        public async Task<IActionResult> PutTransaction(
+            int id,
+            TransactionUpdateDto dto)
         {
-            var transaction = await _transactionService.GetByIdAsync(id);
-            if (transaction == null) return NotFound();
+            var transaction =
+                await _transactionService.GetByIdAsync(id);
+
+            if (transaction == null)
+                return NotFound();
 
             transaction.ItemId = dto.ItemId;
-            transaction.LocationId = dto.LocationId;
             transaction.Quantity = dto.Quantity;
             transaction.Type = dto.Type;
             transaction.Date = dto.Date;
 
             await _transactionService.UpdateAsync(transaction);
+
             return NoContent();
         }
 
@@ -114,15 +121,18 @@ namespace JelycoWarehouse.Controllers
             DateTime? startDate,
             DateTime? endDate)
         {
-            var transactions = await _transactionService.GetFilteredAsync(itemId, type, startDate, endDate);
+            var transactions =
+                await _transactionService.GetFilteredAsync(
+                    itemId,
+                    type,
+                    startDate,
+                    endDate);
 
             var result = transactions.Select(t => new TransactionDto
             {
                 Id = t.Id,
                 ItemId = t.ItemId,
-                ItemName = t.Item?.Name ?? "",
-                LocationId = t.LocationId,
-                LocationName = t.Location?.Name ?? "",
+                ItemName = t.Item?.Name ?? string.Empty,
                 Quantity = t.Quantity,
                 Type = t.Type.ToString(),
                 Date = t.Date
@@ -135,13 +145,16 @@ namespace JelycoWarehouse.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _transactionService.DeleteAsync(id);
+
             return NoContent();
         }
 
         [HttpGet("dashboard")]
         public async Task<ActionResult<DashboardDto>> GetDashboard()
         {
-            var data = await _transactionService.GetDashboardAsync();
+            var data =
+                await _transactionService.GetDashboardAsync();
+
             return Ok(data);
         }
     }
