@@ -79,26 +79,21 @@ namespace JelycoWarehouse.Services
 
             foreach (var dtoItem in dto.Items)
             {
-                // Check current stock
                 var stock = await _transactionService
                     .GetCurrentStockAsync(dtoItem.ItemId);
 
                 if (stock < dtoItem.Quantity)
                 {
                     throw new Exception(
-                        $"Not enough stock for Item ID {dtoItem.ItemId}."
-                    );
+                        $"Not enough stock for Item ID {dtoItem.ItemId}.");
                 }
-
-                var totalCost =
-                    dtoItem.Quantity * dtoItem.UnitCost;
 
                 release.Items.Add(new WarehouseReleaseItem
                 {
                     ItemId = dtoItem.ItemId,
                     Quantity = dtoItem.Quantity,
                     UnitCost = dtoItem.UnitCost,
-                    TotalCost = totalCost
+                    TotalCost = dtoItem.Quantity * dtoItem.UnitCost
                 });
             }
 
@@ -107,19 +102,18 @@ namespace JelycoWarehouse.Services
 
             await _releaseRepo.AddAsync(release);
 
+            // Automatically create stock OUT transactions
             foreach (var item in release.Items)
             {
-                var transaction = new Transaction
-                {
-                    ItemId = item.ItemId,
-                    LocationId = 1,
-                    WarehouseReleaseId = release.Id,
-                    Quantity = item.Quantity,
-                    Type = TransactionType.OUT,
-                    Date = release.ReleaseDate
-                };
-
-                await _transactionService.AddAsync(transaction);
+                await _transactionService.AddAsync(
+                    new Transaction
+                    {
+                        ItemId = item.ItemId,
+                        WarehouseReleaseId = release.Id,
+                        Quantity = item.Quantity,
+                        Type = TransactionType.OUT,
+                        Date = release.ReleaseDate
+                    });
             }
 
             return new WarehouseReleaseDto
@@ -154,9 +148,7 @@ namespace JelycoWarehouse.Services
                     var numberPart = r.ReleaseReference
                         .Replace("WR-", "");
 
-                    return int.TryParse(
-                        numberPart,
-                        out var number)
+                    return int.TryParse(numberPart, out var number)
                         ? number
                         : 0;
                 })

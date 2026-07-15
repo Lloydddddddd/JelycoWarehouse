@@ -10,8 +10,8 @@ public class SupplierDeliveryService
     private readonly TransactionService _transactionService;
 
     public SupplierDeliveryService(
-    ISupplierDeliveryRepository deliveryRepo,
-    TransactionService transactionService)
+        ISupplierDeliveryRepository deliveryRepo,
+        TransactionService transactionService)
     {
         _deliveryRepo = deliveryRepo;
         _transactionService = transactionService;
@@ -80,14 +80,12 @@ public class SupplierDeliveryService
 
         foreach (var item in dto.Items)
         {
-            var totalCost = item.Quantity * item.UnitCost;
-
             delivery.Items.Add(new SupplierDeliveryItem
             {
                 ItemId = item.ItemId,
                 Quantity = item.Quantity,
                 UnitCost = item.UnitCost,
-                TotalCost = totalCost
+                TotalCost = item.Quantity * item.UnitCost
             });
         }
 
@@ -99,17 +97,15 @@ public class SupplierDeliveryService
         // Automatically create stock IN transactions
         foreach (var item in delivery.Items)
         {
-            var transaction = new Transaction
-            {
-                ItemId = item.ItemId,
-                LocationId = 1,
-                SupplierDeliveryId = delivery.Id,
-                Quantity = item.Quantity,
-                Type = TransactionType.IN,
-                Date = dto.DeliveryDate
-            };
-
-            await _transactionService.AddAsync(transaction);
+            await _transactionService.AddAsync(
+                new Transaction
+                {
+                    ItemId = item.ItemId,
+                    SupplierDeliveryId = delivery.Id,
+                    Quantity = item.Quantity,
+                    Type = TransactionType.IN,
+                    Date = dto.DeliveryDate
+                });
         }
 
         return new SupplierDeliveryDto
@@ -139,13 +135,11 @@ public class SupplierDeliveryService
         if (delivery == null)
             throw new Exception("Supplier delivery not found.");
 
-        // Reverse inventory by deleting the generated transactions
         foreach (var transaction in delivery.Transactions.ToList())
         {
             await _transactionService.DeleteAsync(transaction.Id);
         }
 
-        // Delete the supplier delivery
         await _deliveryRepo.DeleteAsync(delivery);
     }
 }

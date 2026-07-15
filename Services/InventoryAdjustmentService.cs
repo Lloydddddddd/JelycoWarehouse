@@ -65,7 +65,8 @@ namespace JelycoWarehouse.Services
             };
         }
 
-        public async Task<InventoryAdjustmentDto> AddAsync( InventoryAdjustmentCreateDto dto)
+        public async Task<InventoryAdjustmentDto> AddAsync(
+            InventoryAdjustmentCreateDto dto)
         {
             var adjustment = new InventoryAdjustment
             {
@@ -93,28 +94,23 @@ namespace JelycoWarehouse.Services
 
             await _adjustmentRepo.AddAsync(adjustment);
 
+            // Automatically create adjustment transactions
             foreach (var item in adjustment.Items)
             {
                 if (item.Difference == 0)
                     continue;
 
-                var transaction = new Transaction
-                {
-                    ItemId = item.ItemId,
-                    LocationId = 1,
-
-                    Quantity = Math.Abs(item.Difference),
-
-                    Type = item.Difference > 0
-                        ? TransactionType.IN
-                        : TransactionType.OUT,
-
-                    Date = adjustment.AdjustmentDate,
-
-                    InventoryAdjustmentId = adjustment.Id
-                };
-
-                await _transactionService.AddAsync(transaction);
+                await _transactionService.AddAsync(
+                    new Transaction
+                    {
+                        ItemId = item.ItemId,
+                        Quantity = Math.Abs(item.Difference),
+                        Type = item.Difference > 0
+                            ? TransactionType.IN
+                            : TransactionType.OUT,
+                        Date = adjustment.AdjustmentDate,
+                        InventoryAdjustmentId = adjustment.Id
+                    });
             }
 
             return new InventoryAdjustmentDto
