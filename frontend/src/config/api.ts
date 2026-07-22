@@ -14,15 +14,15 @@ export const API = {
     byId: (id: number) => `${BASE_URL}/items/${id}`,
   },
 
+  brands: {
+    all: `${BASE_URL}/brands`,
+    byId: (id: number) => `${BASE_URL}/brands/${id}`,
+  },
+
   suppliers: {
     all: `${BASE_URL}/suppliers`,
     count: `${BASE_URL}/suppliers/count`,
     byId: (id: number) => `${BASE_URL}/suppliers/${id}`,
-  },
-
-  locations: {
-    all: `${BASE_URL}/locations`,
-    byId: (id: number) => `${BASE_URL}/locations/${id}`,
   },
 
   transactions: {
