@@ -1,13 +1,14 @@
 ﻿using JelycoWarehouse.DTOs.WarehouseReleases;
 using JelycoWarehouse.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class WarehouseReleasesController : ControllerBase
     {
         private readonly WarehouseReleaseService _releaseService;
@@ -49,6 +50,15 @@ namespace JelycoWarehouse.Controllers
                 nameof(GetRelease),
                 new { id = release.Id },
                 release);
+        }
+
+        // DELETE: api/warehousereleases/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRelease(int id)
+        {
+            await _releaseService.DeleteAsync(id);
+
+            return NoContent();
         }
     }
 }

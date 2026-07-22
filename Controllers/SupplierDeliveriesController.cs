@@ -1,56 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JelycoWarehouse.DTOs.SupplierDeliveries;
+using JelycoWarehouse.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
-[ApiController]
-public class SupplierDeliveriesController : ControllerBase
+namespace JelycoWarehouse.Controllers
 {
-    private readonly SupplierDeliveryService _deliveryService;
-
-    public SupplierDeliveriesController(
-        SupplierDeliveryService deliveryService)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SupplierDeliveriesController : ControllerBase
     {
-        _deliveryService = deliveryService;
-    }
+        private readonly SupplierDeliveryService _deliveryService;
 
-    // GET: api/supplierdeliveries
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<SupplierDeliveryDto>>> GetDeliveries()
-    {
-        var deliveries = await _deliveryService.GetAllAsync();
-        return Ok(deliveries);
-    }
+        public SupplierDeliveriesController(
+            SupplierDeliveryService deliveryService)
+        {
+            _deliveryService = deliveryService;
+        }
 
-    // GET: api/supplierdeliveries/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SupplierDeliveryDto>> GetDelivery(int id)
-    {
-        var delivery = await _deliveryService.GetByIdAsync(id);
+        // GET: api/supplierdeliveries
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SupplierDeliveryDto>>> GetDeliveries()
+        {
+            var deliveries = await _deliveryService.GetAllAsync();
+            return Ok(deliveries);
+        }
 
-        if (delivery == null)
-            return NotFound();
+        // GET: api/supplierdeliveries/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SupplierDeliveryDto>> GetDelivery(int id)
+        {
+            var delivery = await _deliveryService.GetByIdAsync(id);
 
-        return Ok(delivery);
-    }
+            if (delivery == null)
+                return NotFound();
 
-    // POST: api/supplierdeliveries
-    [HttpPost]
-    public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(
-        SupplierDeliveryCreateDto dto)
-    {
-        var delivery = await _deliveryService.AddAsync(dto);
+            return Ok(delivery);
+        }
 
-        return CreatedAtAction(
-            nameof(GetDelivery),
-            new { id = delivery.Id },
-            delivery);
-    }
+        // POST: api/supplierdeliveries
+        [HttpPost]
+        public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(
+            SupplierDeliveryCreateDto dto)
+        {
+            var delivery = await _deliveryService.AddAsync(dto);
 
-    // DELETE: api/supplierdeliveries/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDelivery(int id)
-    {
-        await _deliveryService.DeleteAsync(id);
+            return CreatedAtAction(
+                nameof(GetDelivery),
+                new { id = delivery.Id },
+                delivery);
+        }
 
-        return NoContent();
+        // DELETE: api/supplierdeliveries/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDelivery(int id)
+        {
+            await _deliveryService.DeleteAsync(id);
+
+            return NoContent();
+        }
     }
 }

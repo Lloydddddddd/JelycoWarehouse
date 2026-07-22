@@ -1,13 +1,14 @@
 ﻿using JelycoWarehouse.DTOs.Dashboard;
 using JelycoWarehouse.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class DashboardController : ControllerBase
     {
         private readonly DashboardService _dashboardService;

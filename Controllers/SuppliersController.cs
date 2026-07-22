@@ -2,14 +2,15 @@
 using JelycoWarehouse.DTOs.Suppliers;
 using JelycoWarehouse.Models;
 using JelycoWarehouse.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class SuppliersController : ControllerBase
     {
         private readonly SupplierService _supplierService;
@@ -50,9 +51,7 @@ namespace JelycoWarehouse.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<int>> GetSupplierCount()
         {
-            var suppliers = await _supplierService.GetAllAsync();
-            var count = suppliers.Count(s => s.IsActive);
-            return Ok(count);
+            return Ok(await _supplierService.CountActiveAsync());
         }
 
         // GET: api/suppliers/5
