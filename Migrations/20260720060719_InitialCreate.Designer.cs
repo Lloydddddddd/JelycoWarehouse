@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JelycoWarehouse.Migrations
 {
     [DbContext(typeof(WarehouseContext))]
-    [Migration("20260710055735_AddItemColor")]
-    partial class AddItemColor
+    [Migration("20260720060719_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,6 +99,109 @@ namespace JelycoWarehouse.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("JelycoWarehouse.Models.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            Name = "Stanley"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsActive = true,
+                            Name = "Bosch"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsActive = true,
+                            Name = "Makita"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsActive = true,
+                            Name = "ToolCo"
+                        });
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AdjustmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdjustmentReference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InventoryAdjustments");
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustmentItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActualQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Difference")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InventoryAdjustmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SystemQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryAdjustmentId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("InventoryAdjustmentItems");
+                });
+
             modelBuilder.Entity("JelycoWarehouse.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -107,10 +210,8 @@ namespace JelycoWarehouse.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -120,6 +221,9 @@ namespace JelycoWarehouse.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("CostPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
@@ -140,21 +244,17 @@ namespace JelycoWarehouse.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReorderLevel")
-                        .HasColumnType("int");
-
                     b.Property<string>("Size")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("SupplierId")
+                    b.Property<int?>("SupplierId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
 
                     b.HasIndex("SupplierId");
 
@@ -164,94 +264,43 @@ namespace JelycoWarehouse.Migrations
                         new
                         {
                             Id = 1,
-                            Brand = "ToolCo",
+                            BrandId = 4,
                             Category = "Tools",
                             Color = "",
+                            CostPrice = 150.00m,
                             IsActive = true,
                             Kind = "Hand Tool",
                             Name = "Hammer",
                             Quantity = 50,
-                            ReorderLevel = 10,
-                            Size = "Medium",
-                            SupplierId = 1,
-                            UnitPrice = 150.00m
+                            Size = "Medium"
                         },
                         new
                         {
                             Id = 2,
-                            Brand = "FixIt",
+                            BrandId = 4,
                             Category = "Tools",
                             Color = "",
+                            CostPrice = 75.00m,
                             IsActive = true,
                             Kind = "Hand Tool",
                             Name = "Screwdriver",
                             Quantity = 100,
-                            ReorderLevel = 20,
-                            Size = "Small",
-                            SupplierId = 1,
-                            UnitPrice = 75.00m
+                            Size = "Small"
                         },
                         new
                         {
                             Id = 3,
-                            Brand = "ColorMax",
+                            BrandId = 4,
                             Category = "Paints",
                             Color = "",
+                            CostPrice = 200.00m,
+                            ExpiryDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             Kind = "Paint",
                             Name = "Expired Paint",
                             Quantity = 0,
-                            ReorderLevel = 5,
-                            Size = "1L",
-                            SupplierId = 2,
-                            UnitPrice = 200.00m
+                            Size = "1L"
                         });
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("JelycoWarehouse.Models.StockLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("StockLevels");
                 });
 
             modelBuilder.Entity("JelycoWarehouse.Models.Supplier", b =>
@@ -314,6 +363,66 @@ namespace JelycoWarehouse.Migrations
                             IsActive = false,
                             Name = "Inactive Supplier"
                         });
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseRelease", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal>("GrandTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReleaseReference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WarehouseReleases");
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseReleaseItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("WarehouseReleaseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("WarehouseReleaseId");
+
+                    b.ToTable("WarehouseReleaseItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -464,6 +573,9 @@ namespace JelycoWarehouse.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("GrandTotal")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
@@ -491,6 +603,12 @@ namespace JelycoWarehouse.Migrations
                     b.Property<int>("SupplierDeliveryId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ItemId");
@@ -511,55 +629,88 @@ namespace JelycoWarehouse.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ItemId")
+                    b.Property<int?>("InventoryAdjustmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocationId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SupplierDeliveryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WarehouseReleaseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InventoryAdjustmentId");
+
                     b.HasIndex("ItemId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("SupplierDeliveryId");
+
+                    b.HasIndex("WarehouseReleaseId");
 
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("JelycoWarehouse.Models.Item", b =>
+            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustmentItem", b =>
                 {
-                    b.HasOne("JelycoWarehouse.Models.Supplier", "Supplier")
+                    b.HasOne("JelycoWarehouse.Models.InventoryAdjustment", "InventoryAdjustment")
                         .WithMany("Items")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("InventoryAdjustmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Supplier");
+                    b.HasOne("JelycoWarehouse.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("InventoryAdjustment");
+
+                    b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("JelycoWarehouse.Models.StockLevel", b =>
+            modelBuilder.Entity("JelycoWarehouse.Models.Item", b =>
+                {
+                    b.HasOne("JelycoWarehouse.Models.Brand", "Brand")
+                        .WithMany("Items")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JelycoWarehouse.Models.Supplier", null)
+                        .WithMany("Items")
+                        .HasForeignKey("SupplierId");
+
+                    b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseReleaseItem", b =>
                 {
                     b.HasOne("JelycoWarehouse.Models.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("JelycoWarehouse.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("JelycoWarehouse.Models.WarehouseRelease", "WarehouseRelease")
+                        .WithMany("Items")
+                        .HasForeignKey("WarehouseReleaseId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Item");
 
-                    b.Navigation("Location");
+                    b.Navigation("WarehouseRelease");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -645,21 +796,46 @@ namespace JelycoWarehouse.Migrations
 
             modelBuilder.Entity("Transaction", b =>
                 {
+                    b.HasOne("JelycoWarehouse.Models.InventoryAdjustment", "InventoryAdjustment")
+                        .WithMany("Transactions")
+                        .HasForeignKey("InventoryAdjustmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("JelycoWarehouse.Models.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JelycoWarehouse.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SupplierDelivery", "SupplierDelivery")
+                        .WithMany("Transactions")
+                        .HasForeignKey("SupplierDeliveryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("JelycoWarehouse.Models.WarehouseRelease", "WarehouseRelease")
+                        .WithMany("Transactions")
+                        .HasForeignKey("WarehouseReleaseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("InventoryAdjustment");
 
                     b.Navigation("Item");
 
-                    b.Navigation("Location");
+                    b.Navigation("SupplierDelivery");
+
+                    b.Navigation("WarehouseRelease");
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.Brand", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("JelycoWarehouse.Models.InventoryAdjustment", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("JelycoWarehouse.Models.Supplier", b =>
@@ -669,9 +845,18 @@ namespace JelycoWarehouse.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("JelycoWarehouse.Models.WarehouseRelease", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Transactions");
+                });
+
             modelBuilder.Entity("SupplierDelivery", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }
