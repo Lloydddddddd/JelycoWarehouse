@@ -63,7 +63,12 @@ var jwtKey = builder.Configuration["Jwt:Key"]
     ?? throw new InvalidOperationException("JWT Key missing.");
 
 builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -128,29 +133,31 @@ builder.Services.AddSwaggerGen(c =>
 
 // Repositories
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ISupplierDeliveryRepository, SupplierDeliveryRepository>();
-builder.Services.AddScoped<
-    IWarehouseReleaseRepository,
-    WarehouseReleaseRepository>();
-builder.Services.AddScoped<
-    IInventoryAdjustmentRepository,
-    InventoryAdjustmentRepository>();
-builder.Services.AddScoped<
-    IDashboardRepository,
-    DashboardRepository>();
+builder.Services.AddScoped<IWarehouseReleaseRepository, WarehouseReleaseRepository>();
+builder.Services.AddScoped<IInventoryAdjustmentRepository, InventoryAdjustmentRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 
 // Services
 builder.Services.AddScoped<ItemService>();
+builder.Services.AddScoped<BrandService>();
 builder.Services.AddScoped<SupplierService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<SupplierDeliveryService>();
 builder.Services.AddScoped<WarehouseReleaseService>();
 builder.Services.AddScoped<InventoryAdjustmentService>();
 builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<InventoryReportService>();
+builder.Services.AddScoped<TransactionReportService>();
+builder.Services.AddScoped<LowStockReportService>();
+builder.Services.AddScoped<ExpiringItemsReportService>();
+builder.Services.AddScoped<SupplierDeliveryReportService>();
+builder.Services.AddScoped<WarehouseReleaseReportService>();
 builder.Services.AddScoped<AuthService>();
 
 
