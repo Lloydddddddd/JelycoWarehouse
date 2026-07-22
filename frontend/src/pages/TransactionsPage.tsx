@@ -49,9 +49,7 @@ export default function TransactionsPage() {
 
   async function loadTransactions() {
     try {
-      const result =
-        await getTransactions();
-
+      const result = await getTransactions();
       setTransactions(result);
     } catch (error) {
       console.error(error);
@@ -182,10 +180,6 @@ export default function TransactionsPage() {
           .toLowerCase()
           .includes(searchText) ||
 
-        transaction.locationName
-          .toLowerCase()
-          .includes(searchText) ||
-
         transaction.type
           .toLowerCase()
           .includes(searchText)
@@ -268,11 +262,6 @@ export default function TransactionsPage() {
           {
             header: "Item",
             accessor: "itemName",
-            sortable: true,
-          },
-          {
-            header: "Location",
-            accessor: "locationName",
             sortable: true,
           },
           {
