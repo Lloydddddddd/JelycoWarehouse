@@ -9,11 +9,21 @@ namespace JelycoWarehouse.Repositories
         private readonly WarehouseContext _context;
         public SupplierRepository(WarehouseContext context) => _context = context;
 
-        public async Task<IEnumerable<Supplier>> GetAllActiveAsync() =>
-            await _context.Suppliers
-                          .Include(s => s.Items)
-                          .Where(s => s.IsActive)
-                          .ToListAsync();
+        public async Task<IEnumerable<Supplier>> GetAllActiveAsync()
+        {
+            return await _context.Suppliers
+                .AsNoTracking()
+                .Include(s => s.Items)
+                .Where(s => s.IsActive)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountActiveAsync()
+        {
+            return await _context.Suppliers
+                .CountAsync(s => s.IsActive);
+        }
 
         public async Task<Supplier?> GetByIdAsync(int id) =>
             await _context.Suppliers

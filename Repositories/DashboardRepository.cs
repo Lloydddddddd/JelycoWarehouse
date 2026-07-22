@@ -9,37 +9,33 @@ namespace JelycoWarehouse.Repositories
     {
         private readonly WarehouseContext _context;
 
-        public DashboardRepository(
-            WarehouseContext context)
+        // Temporary global threshold for low stock
+        private const int LowStockThreshold = 10;
+
+        public DashboardRepository(WarehouseContext context)
         {
             _context = context;
         }
 
         public async Task<DashboardDto> GetDashboardAsync()
         {
-            var totalItems =
-                await _context.Items.CountAsync();
+            var totalItems = await _context.Items.CountAsync();
 
-            var totalStock =
-                await _context.Items.SumAsync(i => i.Quantity);
+            var totalStock = await _context.Items.SumAsync(i => i.Quantity);
 
-            var inventoryValue =
-                await _context.Items.SumAsync(i =>
-                    i.Quantity * i.CostPrice);
+            var inventoryValue = await _context.Items.SumAsync(i =>
+                i.Quantity * i.CostPrice);
 
-            var lowStockItems =
-                await _context.Items.CountAsync(i =>
-                    i.Quantity <= i.ReorderLevel);
+            var lowStockItems = await _context.Items.CountAsync(i =>
+                i.Quantity <= LowStockThreshold);
 
-            var totalIn =
-                await _context.Transactions
-                    .Where(t => t.Type == Enums.TransactionType.IN)
-                    .SumAsync(t => t.Quantity);
+            var totalIn = await _context.Transactions
+                .Where(t => t.Type == Enums.TransactionType.IN)
+                .SumAsync(t => t.Quantity);
 
-            var totalOut =
-                await _context.Transactions
-                    .Where(t => t.Type == Enums.TransactionType.OUT)
-                    .SumAsync(t => t.Quantity);
+            var totalOut = await _context.Transactions
+                .Where(t => t.Type == Enums.TransactionType.OUT)
+                .SumAsync(t => t.Quantity);
 
             return new DashboardDto
             {

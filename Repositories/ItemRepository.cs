@@ -1,5 +1,5 @@
-﻿using JelycoWarehouse.Models;
-using JelycoWarehouse.Interfaces;
+﻿using JelycoWarehouse.Interfaces;
+using JelycoWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace JelycoWarehouse.Repositories
@@ -7,18 +7,39 @@ namespace JelycoWarehouse.Repositories
     public class ItemRepository : IItemRepository
     {
         private readonly WarehouseContext _context;
-        public ItemRepository(WarehouseContext context) => _context = context;
 
-        public async Task<IEnumerable<Item>> GetAllActiveAsync() =>
-            await _context.Items
-                          .Include(i => i.Supplier)
-                          .Where(i => i.IsActive)
-                          .ToListAsync();
+        public ItemRepository(WarehouseContext context)
+        {
+            _context = context;
+        }
 
-        public async Task<Item?> GetByIdAsync(int id) =>
-            await _context.Items
-                          .Include(i => i.Supplier)
-                          .FirstOrDefaultAsync(i => i.Id == id && i.IsActive);
+        public async Task<IEnumerable<Item>> GetAllActiveAsync()
+        {
+            return await _context.Items
+                .AsNoTracking()
+                .Include(i => i.Brand)
+                .Where(i => i.IsActive)
+                .OrderBy(i => i.Name)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountActiveAsync()
+        {
+            return await _context.Items.CountAsync(i => i.IsActive);
+        }
+
+        public async Task<bool> BrandExistsAsync(int brandId)
+        {
+            return await _context.Brands
+                .AnyAsync(b => b.Id == brandId && b.IsActive);
+        }
+
+        public async Task<Item?> GetByIdAsync(int id)
+        {
+            return await _context.Items
+                .Include(i => i.Brand)
+                .FirstOrDefaultAsync(i => i.Id == id && i.IsActive);
+        }
 
         public async Task AddAsync(Item item)
         {
@@ -35,11 +56,13 @@ namespace JelycoWarehouse.Repositories
         public async Task DeactivateAsync(int id)
         {
             var item = await _context.Items.FindAsync(id);
-            if (item != null)
-            {
-                item.IsActive = false;
-                await _context.SaveChangesAsync();
-            }
+
+            if (item == null)
+                throw new KeyNotFoundException("Item not found.");
+
+            item.IsActive = false;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
