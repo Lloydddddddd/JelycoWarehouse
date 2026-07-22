@@ -1,16 +1,22 @@
 export interface Item {
   id: number;
+
   name: string;
+
+  brandId: number;
   brand: string;
+
   kind: string;
   size: string;
   color: string;
+
   category: string;
+
   quantity: number;
+
   costPrice: number;
-  reorderLevel: number;
+
   expiryDate: string | null;
-  supplierId: number;
-  supplierName: string;
+
   isActive: boolean;
 }

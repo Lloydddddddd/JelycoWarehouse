@@ -5,10 +5,6 @@ export interface Transaction {
 
   itemName: string;
 
-  locationId: number;
-
-  locationName: string;
-
   quantity: number;
 
   type: string;
