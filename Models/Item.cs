@@ -11,8 +11,9 @@ namespace JelycoWarehouse.Models
         [MaxLength(100)]
         public string Name { get; set; } = null!;
 
-        [MaxLength(50)]
-        public string Brand { get; set; } = string.Empty;
+        public int BrandId { get; set; }
+
+        public Brand? Brand { get; set; }
 
         [MaxLength(50)]
         public string Kind { get; set; } = string.Empty;
@@ -25,19 +26,15 @@ namespace JelycoWarehouse.Models
 
         public string Category { get; set; } = null!;
 
+        // Current stock quantity
         public int Quantity { get; set; }
+
+        // Minimum stock before the item is considered low stock
+        public int ReorderLevel { get; set; } = 10;
 
         public DateTime? ExpiryDate { get; set; }
 
         public decimal CostPrice { get; set; }
-
-        public int ReorderLevel { get; set; }
-
-        // Foreign key
-        public int SupplierId { get; set; }
-
-        // Navigation property
-        public Supplier Supplier { get; set; } = null!;
 
         public bool IsActive { get; set; } = true;
     }

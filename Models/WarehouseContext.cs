@@ -9,6 +9,7 @@ namespace JelycoWarehouse.Models
             : base(options) { }
 
         public DbSet<Item> Items { get; set; }
+        public DbSet<Brand> Brands { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<SupplierDelivery> SupplierDeliveries { get; set; }
@@ -94,6 +95,12 @@ namespace JelycoWarehouse.Models
                 .HasForeignKey(t => t.InventoryAdjustmentId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            builder.Entity<Item>()
+                .HasOne(i => i.Brand)
+                .WithMany(b => b.Items)
+                .HasForeignKey(i => i.BrandId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<SupplierDeliveryItem>()
                 .HasOne(sdi => sdi.SupplierDelivery)
                 .WithMany(sd => sd.Items)
@@ -117,6 +124,37 @@ namespace JelycoWarehouse.Models
                 .WithMany(wr => wr.Transactions)
                 .HasForeignKey(t => t.WarehouseReleaseId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            // =========================
+            // Seed Brands
+            // =========================
+
+            builder.Entity<Brand>().HasData(
+                new Brand
+                {
+                    Id = 1,
+                    Name = "Stanley",
+                    IsActive = true
+                },
+                new Brand
+                {
+                    Id = 2,
+                    Name = "Bosch",
+                    IsActive = true
+                },
+                new Brand
+                {
+                    Id = 3,
+                    Name = "Makita",
+                    IsActive = true
+                },
+                new Brand
+                {
+                    Id = 4,
+                    Name = "ToolCo",
+                    IsActive = true
+                }
+            );
 
             // =========================
             // Seed Suppliers
@@ -161,42 +199,42 @@ namespace JelycoWarehouse.Models
                 {
                     Id = 1,
                     Name = "Hammer",
-                    Brand = "ToolCo",
+                    BrandId = 4,
                     Kind = "Hand Tool",
                     Size = "Medium",
+                    Color = "",
                     Category = "Tools",
                     Quantity = 50,
                     CostPrice = 150.00m,
-                    ReorderLevel = 10,
-                    SupplierId = 1,
+                    ExpiryDate = null,
                     IsActive = true
                 },
                 new Item
                 {
                     Id = 2,
                     Name = "Screwdriver",
-                    Brand = "FixIt",
+                    BrandId = 4,
                     Kind = "Hand Tool",
                     Size = "Small",
+                    Color = "",
                     Category = "Tools",
                     Quantity = 100,
                     CostPrice = 75.00m,
-                    ReorderLevel = 20,
-                    SupplierId = 1,
+                    ExpiryDate = null,
                     IsActive = true
                 },
                 new Item
                 {
                     Id = 3,
                     Name = "Expired Paint",
-                    Brand = "ColorMax",
+                    BrandId = 4,
                     Kind = "Paint",
                     Size = "1L",
+                    Color = "",
                     Category = "Paints",
                     Quantity = 0,
                     CostPrice = 200.00m,
-                    ReorderLevel = 5,
-                    SupplierId = 2,
+                    ExpiryDate = new DateTime(2025, 1, 1),
                     IsActive = false
                 }
             );
