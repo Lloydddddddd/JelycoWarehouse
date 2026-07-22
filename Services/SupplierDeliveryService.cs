@@ -128,6 +128,10 @@ public class SupplierDeliveryService
         };
     }
 
+    // =========================
+    // DELETE
+    // =========================
+
     public async Task DeleteAsync(int id)
     {
         var delivery = await _deliveryRepo.GetByIdAsync(id);
@@ -135,11 +139,10 @@ public class SupplierDeliveryService
         if (delivery == null)
             throw new Exception("Supplier delivery not found.");
 
-        foreach (var transaction in delivery.Transactions.ToList())
-        {
-            await _transactionService.DeleteAsync(transaction.Id);
-        }
+        // Reverse stock by deleting the generated IN transactions
+        await _transactionService.DeleteBySupplierDeliveryAsync(id);
 
+        // Delete the supplier delivery and its items
         await _deliveryRepo.DeleteAsync(delivery);
     }
 }

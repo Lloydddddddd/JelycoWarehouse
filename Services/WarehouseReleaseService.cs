@@ -135,6 +135,24 @@ namespace JelycoWarehouse.Services
             };
         }
 
+        // =========================
+        // DELETE
+        // =========================
+
+        public async Task DeleteAsync(int id)
+        {
+            var release = await _releaseRepo.GetByIdAsync(id);
+
+            if (release == null)
+                throw new Exception("Warehouse release not found.");
+
+            // Reverse stock by deleting the generated OUT transactions
+            await _transactionService.DeleteByWarehouseReleaseAsync(id);
+
+            // Delete the warehouse release and its items
+            await _releaseRepo.DeleteAsync(release);
+        }
+
         private async Task<string> GenerateReleaseReferenceAsync()
         {
             var releases = await _releaseRepo.GetAllAsync();

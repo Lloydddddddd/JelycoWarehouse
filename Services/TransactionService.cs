@@ -164,6 +164,40 @@ namespace JelycoWarehouse.Services
         }
 
         // =========================
+        // DELETE BY WAREHOUSE RELEASE
+        // =========================
+
+        public async Task DeleteByWarehouseReleaseAsync(
+            int warehouseReleaseId)
+        {
+            var transactions = await _context.Transactions
+                .Where(t => t.WarehouseReleaseId == warehouseReleaseId)
+                .ToListAsync();
+
+            foreach (var transaction in transactions)
+            {
+                await DeleteAsync(transaction.Id);
+            }
+        }
+
+        // =========================
+        // DELETE BY SUPPLIER DELIVERY
+        // =========================
+
+        public async Task DeleteBySupplierDeliveryAsync(
+            int supplierDeliveryId)
+        {
+            var transactions = await _context.Transactions
+                .Where(t => t.SupplierDeliveryId == supplierDeliveryId)
+                .ToListAsync();
+
+            foreach (var transaction in transactions)
+            {
+                await DeleteAsync(transaction.Id);
+            }
+        }
+
+        // =========================
         // FILTER
         // =========================
 
