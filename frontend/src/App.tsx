@@ -14,6 +14,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 import SupplierDeliveriesPage from "./pages/SupplierDeliveriesPage";
 import WarehouseReleasesPage from "./pages/WarehouseReleasesPage";
 import InventoryAdjustmentsPage from "./pages/InventoryAdjustmentsPage";
+import BrandsPage from "./pages/BrandsPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
@@ -53,6 +54,11 @@ export default function App() {
           <Route
             path="/dashboard"
             element={<DashboardPage />}
+          />
+
+          <Route
+            path="/brands"
+            element={<BrandsPage />}
           />
 
           <Route
