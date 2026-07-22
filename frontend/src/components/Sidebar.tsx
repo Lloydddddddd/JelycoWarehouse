@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
   FiPackage,
+  FiTag,
   FiTruck,
   FiDownload,
   FiUpload,
@@ -51,6 +52,18 @@ export default function Sidebar() {
           >
             <FiHome />
             Dashboard
+          </NavLink>
+
+          <NavLink
+            to="/brands"
+            className={({ isActive }) =>
+              isActive
+                ? styles.active
+                : styles.link
+            }
+          >
+            <FiTag />
+            Brands
           </NavLink>
 
           <NavLink

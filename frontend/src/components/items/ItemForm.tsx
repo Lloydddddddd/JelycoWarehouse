@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import type { Supplier } from "../../models/Supplier";
-import type { Item } from "../../models/Item";
+import type { Brand } from "../../models/Brand";
 import type { CreateItemRequest } from "../../models/CreateItemRequest";
 
 import styles from "./ItemForm.module.css";
@@ -9,11 +8,10 @@ import styles from "./ItemForm.module.css";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import Select from "../ui/Select";
+import Toggle from "../ui/Toggle";
 
 interface ItemFormProps {
-  suppliers: Supplier[];
-
-  item?: Item | null;
+  brands: Brand[];
 
   onSubmit: (
     item: CreateItemRequest
@@ -22,45 +20,24 @@ interface ItemFormProps {
 
 const initialForm: CreateItemRequest = {
   name: "",
-  brand: "",
+  brandId: 0,
   kind: "",
   size: "",
   color: "",
   category: "",
-  quantity: 0,
   costPrice: 0,
-  reorderLevel: 0,
   expiryDate: null,
-  supplierId: 0,
 };
 
 export default function ItemForm({
-  suppliers,
-  item,
+  brands,
   onSubmit,
 }: ItemFormProps) {
   const [form, setForm] =
     useState<CreateItemRequest>(initialForm);
 
-  useEffect(() => {
-    if (item) {
-      setForm({
-        name: item.name,
-        brand: item.brand,
-        kind: item.kind,
-        size: item.size,
-        color: item.color,
-        category: item.category,
-        quantity: item.quantity,
-        costPrice: item.costPrice,
-        reorderLevel: item.reorderLevel,
-        expiryDate: item.expiryDate,
-        supplierId: item.supplierId,
-      });
-    } else {
-      setForm(initialForm);
-    }
-  }, [item]);
+  const [noExpiry, setNoExpiry] =
+    useState(false);
 
   function update<K extends keyof CreateItemRequest>(
     key: K,
@@ -80,6 +57,7 @@ export default function ItemForm({
     await onSubmit(form);
 
     setForm(initialForm);
+    setNoExpiry(false);
   }
 
   return (
@@ -98,13 +76,29 @@ export default function ItemForm({
           }
         />
 
-        <Input
+        <Select
           label="Brand"
-          value={form.brand}
+          value={form.brandId}
           onChange={(e) =>
-            update("brand", e.target.value)
+            update(
+              "brandId",
+              Number(e.target.value)
+            )
           }
-        />
+        >
+          <option value={0}>
+            Select Brand
+          </option>
+
+          {brands.map((brand) => (
+            <option
+              key={brand.id}
+              value={brand.id}
+            >
+              {brand.name}
+            </option>
+          ))}
+        </Select>
 
         <Input
           label="Category"
@@ -137,19 +131,6 @@ export default function ItemForm({
             update("color", e.target.value)
           }
         />
-      </div>
-
-      <h3>Inventory</h3>
-
-      <div className={styles.grid}>
-        <Input
-          label="Quantity"
-          type="number"
-          value={form.quantity}
-          onChange={(e) =>
-            update("quantity", Number(e.target.value))
-          }
-        />
 
         <Input
           label="Cost Price"
@@ -157,62 +138,60 @@ export default function ItemForm({
           step="0.01"
           value={form.costPrice}
           onChange={(e) =>
-            update("costPrice", Number(e.target.value))
-          }
-        />
-
-        <Input
-          label="Reorder Level"
-          type="number"
-          value={form.reorderLevel}
-          onChange={(e) =>
             update(
-              "reorderLevel",
+              "costPrice",
               Number(e.target.value)
             )
           }
         />
 
-        <Select
-          label="Supplier"
-          value={form.supplierId}
-          onChange={(e) =>
-            update(
-              "supplierId",
-              Number(e.target.value)
-            )
-          }
-        >
-          <option value={0}>
-            Select Supplier
-          </option>
+        <div>
+          <Toggle
+            label="No Expiry Date"
+            checked={noExpiry}
+            onChange={(checked) => {
+              setNoExpiry(checked);
 
-          {suppliers.map((supplier) => (
-            <option
-              key={supplier.id}
-              value={supplier.id}
+              if (checked) {
+                update("expiryDate", null);
+              }
+            }}
+          />
+
+          {noExpiry ? (
+            <div
+              style={{
+                marginTop: "12px",
+                padding: "12px",
+                background: "#f3f8ff",
+                border: "1px solid #c7ddff",
+                borderRadius: "8px",
+                color: "#2563eb",
+                fontSize: "14px",
+                fontWeight: 500,
+              }}
             >
-              {supplier.name}
-            </option>
-          ))}
-        </Select>
-
-        <Input
-          label="Expiry Date"
-          type="date"
-          value={form.expiryDate ?? ""}
-          onChange={(e) =>
-            update(
-              "expiryDate",
-              e.target.value || null
-            )
-          }
-        />
+              ✓ This item does not expire.
+            </div>
+          ) : (
+            <Input
+              label="Expiry Date"
+              type="date"
+              value={form.expiryDate ?? ""}
+              onChange={(e) =>
+                update(
+                  "expiryDate",
+                  e.target.value || null
+                )
+              }
+            />
+          )}
+        </div>
       </div>
 
       <div className={styles.actions}>
         <Button type="submit">
-          {item ? "Update Item" : "Save Item"}
+          Save Item
         </Button>
       </div>
     </form>

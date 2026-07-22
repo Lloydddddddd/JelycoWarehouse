@@ -5,10 +5,8 @@ import Input from "../ui/Input";
 import Select from "../ui/Select";
 
 import { getItems } from "../../services/itemService";
-import { getLocations } from "../../services/locationService";
 
 import type { Item } from "../../models/Item";
-import type { Location } from "../../models/Location";
 import type { CreateTransactionRequest } from "../../models/CreateTransactionRequest";
 import type { Transaction } from "../../models/Transaction";
 
@@ -22,7 +20,6 @@ interface TransactionFormProps {
 
 const initialForm: CreateTransactionRequest = {
   itemId: 0,
-  locationId: 0,
   quantity: 0,
   type: "IN",
 };
@@ -31,27 +28,15 @@ export default function TransactionForm({
   transaction,
   onSubmit,
 }: TransactionFormProps) {
-  const [items, setItems] =
-    useState<Item[]>([]);
-
-  const [locations, setLocations] =
-    useState<Location[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const [form, setForm] =
-    useState<CreateTransactionRequest>(
-      initialForm
-    );
+    useState<CreateTransactionRequest>(initialForm);
 
   useEffect(() => {
     async function loadData() {
-      const [itemData, locationData] =
-        await Promise.all([
-          getItems(),
-          getLocations(),
-        ]);
-
+      const itemData = await getItems();
       setItems(itemData);
-      setLocations(locationData);
     }
 
     loadData();
@@ -65,7 +50,6 @@ export default function TransactionForm({
 
     setForm({
       itemId: transaction.itemId,
-      locationId: transaction.locationId,
       quantity: transaction.quantity,
       type: transaction.type,
     });
@@ -105,9 +89,7 @@ export default function TransactionForm({
           )
         }
       >
-        <option value={0}>
-          Select Item
-        </option>
+        <option value={0}>Select Item</option>
 
         {items.map((item) => (
           <option
@@ -115,30 +97,6 @@ export default function TransactionForm({
             value={item.id}
           >
             {item.name}
-          </option>
-        ))}
-      </Select>
-
-      <Select
-        label="Location"
-        value={form.locationId}
-        onChange={(e) =>
-          update(
-            "locationId",
-            Number(e.target.value)
-          )
-        }
-      >
-        <option value={0}>
-          Select Location
-        </option>
-
-        {locations.map((location) => (
-          <option
-            key={location.id}
-            value={location.id}
-          >
-            {location.name}
           </option>
         ))}
       </Select>
@@ -153,13 +111,8 @@ export default function TransactionForm({
           )
         }
       >
-        <option value="IN">
-          IN
-        </option>
-
-        <option value="OUT">
-          OUT
-        </option>
+        <option value="IN">IN</option>
+        <option value="OUT">OUT</option>
       </Select>
 
       <Input
@@ -174,11 +127,7 @@ export default function TransactionForm({
         }
       />
 
-      <div
-        style={{
-          marginTop: "24px",
-        }}
-      >
+      <div style={{ marginTop: "24px" }}>
         <Button type="submit">
           Save Transaction
         </Button>
