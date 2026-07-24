@@ -8,11 +8,12 @@ namespace JelycoWarehouse.Interfaces
 
         Task<SupplierDelivery?> GetByIdAsync(int id);
 
+        Task<bool> ExistsByReferenceAsync(string reference, int? excludeId = null);
+
         Task AddAsync(SupplierDelivery delivery);
 
         Task UpdateAsync(SupplierDelivery delivery);
 
-        // NEW
         Task DeleteAsync(SupplierDelivery delivery);
     }
 }

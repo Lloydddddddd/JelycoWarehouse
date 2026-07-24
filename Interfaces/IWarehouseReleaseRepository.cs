@@ -8,6 +8,8 @@ namespace JelycoWarehouse.Interfaces
 
         Task<WarehouseRelease?> GetByIdAsync(int id);
 
+        Task<bool> ExistsByReferenceAsync(string reference, int? excludeId = null);
+
         Task AddAsync(WarehouseRelease release);
 
         Task UpdateAsync(WarehouseRelease release);

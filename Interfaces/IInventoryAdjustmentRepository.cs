@@ -8,6 +8,8 @@ namespace JelycoWarehouse.Interfaces
 
         Task<InventoryAdjustment?> GetByIdAsync(int id);
 
+        Task<bool> ExistsByReferenceAsync(string reference, int? excludeId = null);
+
         Task AddAsync(InventoryAdjustment adjustment);
 
         Task UpdateAsync(InventoryAdjustment adjustment);

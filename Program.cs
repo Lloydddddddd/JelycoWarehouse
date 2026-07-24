@@ -1,5 +1,6 @@
 ﻿using JelycoWarehouse.Data;
 using JelycoWarehouse.Interfaces;
+using JelycoWarehouse.Middleware;
 using JelycoWarehouse.Models;
 using JelycoWarehouse.Repositories;
 using JelycoWarehouse.Services;
@@ -200,6 +201,8 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

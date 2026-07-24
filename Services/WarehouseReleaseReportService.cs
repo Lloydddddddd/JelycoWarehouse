@@ -16,6 +16,7 @@ namespace JelycoWarehouse.Services
         public async Task<List<WarehouseReleaseReportDto>> GetWarehouseReleaseReportAsync()
         {
             return await _context.WarehouseReleases
+                .AsNoTracking()
                 .Include(r => r.Items)
                 .OrderByDescending(r => r.ReleaseDate)
                 .Select(r => new WarehouseReleaseReportDto

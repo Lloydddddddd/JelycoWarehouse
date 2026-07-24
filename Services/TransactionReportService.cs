@@ -16,6 +16,7 @@ namespace JelycoWarehouse.Services
         public async Task<List<TransactionReportDto>> GetTransactionReportAsync()
         {
             var transactions = await _context.Transactions
+                .AsNoTracking()
                 .Include(t => t.Item)
                     .ThenInclude(i => i!.Brand)
                 .OrderByDescending(t => t.Date)

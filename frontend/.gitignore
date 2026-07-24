@@ -1,24 +1,80 @@
-# Logs
-logs
-*.log
+# ============================
+# Node / Vite
+# ============================
+
+node_modules/
+dist/
+dist-ssr/
+
+*.local
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ============================
+# .NET Build Output
+# ============================
 
-# Editor directories and files
+bin/
+obj/
+
+Debug/
+Release/
+
+artifacts/
+
+.publish/
+
+TestResults/
+
+# ============================
+# Visual Studio
+# ============================
+
+.vs/
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+
+.idea/
+
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+*.cache
+
+# ============================
+# Generated Files
+# ============================
+
+*.dll
+*.exe
+*.pdb
+
+# ============================
+# OS Files
+# ============================
+
+.DS_Store
+Thumbs.db
+
+# ============================
+# Environment
+# ============================
+
+.env
+.env.*
+!.env.development
+!.env.production
+
+# ============================
+# Logs
+# ============================
+
+logs/
+*.log

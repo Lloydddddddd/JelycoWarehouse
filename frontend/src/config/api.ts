@@ -8,15 +8,15 @@ export const API = {
     logout: `${BASE_URL}/auth/logout`,
   },
 
+  brands: {
+    all: `${BASE_URL}/brands`,
+    byId: (id: number) => `${BASE_URL}/brands/${id}`,
+  },
+
   items: {
     all: `${BASE_URL}/items`,
     count: `${BASE_URL}/items/count`,
     byId: (id: number) => `${BASE_URL}/items/${id}`,
-  },
-
-  brands: {
-    all: `${BASE_URL}/brands`,
-    byId: (id: number) => `${BASE_URL}/brands/${id}`,
   },
 
   suppliers: {
@@ -29,6 +29,7 @@ export const API = {
     all: `${BASE_URL}/transactions`,
     dashboard: `${BASE_URL}/transactions/dashboard`,
     filter: `${BASE_URL}/transactions/filter`,
+    byId: (id: number) => `${BASE_URL}/transactions/${id}`,
   },
 
   supplierDeliveries: {
@@ -47,5 +48,14 @@ export const API = {
     all: `${BASE_URL}/inventoryadjustments`,
     byId: (id: number) =>
       `${BASE_URL}/inventoryadjustments/${id}`,
+  },
+
+  reports: {
+    inventory: `${BASE_URL}/reports/inventory`,
+    transactions: `${BASE_URL}/reports/transactions`,
+    lowStock: `${BASE_URL}/reports/low-stock`,
+    expiringItems: `${BASE_URL}/reports/expiring-items`,
+    supplierDeliveries: `${BASE_URL}/reports/supplier-deliveries`,
+    warehouseReleases: `${BASE_URL}/reports/warehouse-releases`,
   },
 };

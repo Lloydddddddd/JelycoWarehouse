@@ -8,12 +8,18 @@ public class SupplierDeliveryService
 {
     private readonly ISupplierDeliveryRepository _deliveryRepo;
     private readonly TransactionService _transactionService;
+    private readonly ISupplierRepository _supplierRepo;
+    private readonly IItemRepository _itemRepo;
 
     public SupplierDeliveryService(
         ISupplierDeliveryRepository deliveryRepo,
+        ISupplierRepository supplierRepo,
+        IItemRepository itemRepo,
         TransactionService transactionService)
     {
         _deliveryRepo = deliveryRepo;
+        _supplierRepo = supplierRepo;
+        _itemRepo = itemRepo;
         _transactionService = transactionService;
     }
 
@@ -69,8 +75,28 @@ public class SupplierDeliveryService
     }
 
     public async Task<SupplierDeliveryDto> AddAsync(
-        SupplierDeliveryCreateDto dto)
+    SupplierDeliveryCreateDto dto)
     {
+        dto.DeliveryReference = dto.DeliveryReference.Trim();
+
+        if (string.IsNullOrWhiteSpace(dto.DeliveryReference))
+            throw new InvalidOperationException(
+                "Delivery reference is required.");
+
+        if (await _deliveryRepo.ExistsByReferenceAsync(dto.DeliveryReference))
+            throw new InvalidOperationException(
+                "A delivery with this reference already exists.");
+
+        var supplier = await _supplierRepo.GetByIdAsync(dto.SupplierId);
+
+        if (supplier == null)
+            throw new KeyNotFoundException(
+                "Supplier not found.");
+
+        if (dto.Items.Count == 0)
+            throw new InvalidOperationException(
+                "A delivery must contain at least one item.");
+
         var delivery = new SupplierDelivery
         {
             SupplierId = dto.SupplierId,
@@ -78,14 +104,28 @@ public class SupplierDeliveryService
             DeliveryDate = dto.DeliveryDate
         };
 
-        foreach (var item in dto.Items)
+        foreach (var dtoItem in dto.Items)
         {
+            var item = await _itemRepo.GetByIdAsync(dtoItem.ItemId);
+
+            if (item == null)
+                throw new KeyNotFoundException(
+                    $"Item {dtoItem.ItemId} was not found.");
+
+            if (dtoItem.Quantity <= 0)
+                throw new InvalidOperationException(
+                    "Quantity must be greater than zero.");
+
+            if (dtoItem.UnitCost < 0)
+                throw new InvalidOperationException(
+                    "Unit cost cannot be negative.");
+
             delivery.Items.Add(new SupplierDeliveryItem
             {
-                ItemId = item.ItemId,
-                Quantity = item.Quantity,
-                UnitCost = item.UnitCost,
-                TotalCost = item.Quantity * item.UnitCost
+                ItemId = dtoItem.ItemId,
+                Quantity = dtoItem.Quantity,
+                UnitCost = dtoItem.UnitCost,
+                TotalCost = dtoItem.Quantity * dtoItem.UnitCost
             });
         }
 
@@ -94,7 +134,6 @@ public class SupplierDeliveryService
 
         await _deliveryRepo.AddAsync(delivery);
 
-        // Automatically create stock IN transactions
         foreach (var item in delivery.Items)
         {
             await _transactionService.AddAsync(
@@ -112,7 +151,7 @@ public class SupplierDeliveryService
         {
             Id = delivery.Id,
             SupplierId = delivery.SupplierId,
-            SupplierName = delivery.Supplier?.Name ?? string.Empty,
+            SupplierName = supplier.Name,
             DeliveryReference = delivery.DeliveryReference,
             DeliveryDate = delivery.DeliveryDate,
             GrandTotal = delivery.GrandTotal,
@@ -120,7 +159,7 @@ public class SupplierDeliveryService
             Items = delivery.Items.Select(i => new SupplierDeliveryItemDto
             {
                 ItemId = i.ItemId,
-                ItemName = i.Item?.Name ?? string.Empty,
+                ItemName = string.Empty,
                 Quantity = i.Quantity,
                 UnitCost = i.UnitCost,
                 TotalCost = i.TotalCost

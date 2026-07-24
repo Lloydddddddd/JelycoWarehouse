@@ -1,5 +1,5 @@
-﻿using JelycoWarehouse.Models;
-using JelycoWarehouse.Interfaces;
+﻿using JelycoWarehouse.Interfaces;
+using JelycoWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace JelycoWarehouse.Repositories
@@ -7,7 +7,11 @@ namespace JelycoWarehouse.Repositories
     public class SupplierRepository : ISupplierRepository
     {
         private readonly WarehouseContext _context;
-        public SupplierRepository(WarehouseContext context) => _context = context;
+
+        public SupplierRepository(WarehouseContext context)
+        {
+            _context = context;
+        }
 
         public async Task<IEnumerable<Supplier>> GetAllActiveAsync()
         {
@@ -25,10 +29,25 @@ namespace JelycoWarehouse.Repositories
                 .CountAsync(s => s.IsActive);
         }
 
-        public async Task<Supplier?> GetByIdAsync(int id) =>
-            await _context.Suppliers
-                          .Include(s => s.Items)
-                          .FirstOrDefaultAsync(s => s.Id == id && s.IsActive);
+        public async Task<bool> ExistsByNameAsync(string name, int? excludeId = null)
+        {
+            var query = _context.Suppliers
+                .Where(s => s.IsActive);
+
+            if (excludeId.HasValue)
+            {
+                query = query.Where(s => s.Id != excludeId.Value);
+            }
+
+            return await query.AnyAsync(s => s.Name == name);
+        }
+
+        public async Task<Supplier?> GetByIdAsync(int id)
+        {
+            return await _context.Suppliers
+                .Include(s => s.Items)
+                .FirstOrDefaultAsync(s => s.Id == id && s.IsActive);
+        }
 
         public async Task AddAsync(Supplier supplier)
         {
@@ -45,11 +64,13 @@ namespace JelycoWarehouse.Repositories
         public async Task DeactivateAsync(int id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier != null)
-            {
-                supplier.IsActive = false;
-                await _context.SaveChangesAsync();
-            }
+
+            if (supplier == null)
+                throw new KeyNotFoundException("Supplier not found.");
+
+            supplier.IsActive = false;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

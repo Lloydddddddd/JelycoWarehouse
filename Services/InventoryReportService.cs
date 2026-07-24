@@ -16,6 +16,7 @@ namespace JelycoWarehouse.Services
         public async Task<List<InventoryReportDto>> GetInventoryReportAsync()
         {
             var items = await _context.Items
+                .AsNoTracking()
                 .Include(i => i.Brand)
                 .Where(i => i.IsActive)
                 .OrderBy(i => i.Name)

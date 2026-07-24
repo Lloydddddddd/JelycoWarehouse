@@ -9,12 +9,15 @@ namespace JelycoWarehouse.Services
     {
         private readonly IInventoryAdjustmentRepository _adjustmentRepo;
         private readonly TransactionService _transactionService;
+        private readonly IItemRepository _itemRepo;
 
         public InventoryAdjustmentService(
             IInventoryAdjustmentRepository adjustmentRepo,
+            IItemRepository itemRepo,
             TransactionService transactionService)
         {
             _adjustmentRepo = adjustmentRepo;
+            _itemRepo = itemRepo;
             _transactionService = transactionService;
         }
 
@@ -66,8 +69,31 @@ namespace JelycoWarehouse.Services
         }
 
         public async Task<InventoryAdjustmentDto> AddAsync(
-            InventoryAdjustmentCreateDto dto)
+    InventoryAdjustmentCreateDto dto)
         {
+            dto.Reason = dto.Reason.Trim();
+
+            if (string.IsNullOrWhiteSpace(dto.Reason))
+                throw new InvalidOperationException(
+                    "Reason is required.");
+
+            if (dto.Items.Count == 0)
+                throw new InvalidOperationException(
+                    "An inventory adjustment must contain at least one item.");
+
+            // Prevent the same item from appearing twice
+            var duplicateItems = dto.Items
+                .GroupBy(i => i.ItemId)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicateItems.Any())
+            {
+                throw new InvalidOperationException(
+                    $"Duplicate item(s) found in adjustment: {string.Join(", ", duplicateItems)}");
+            }
+
             var adjustment = new InventoryAdjustment
             {
                 AdjustmentReference = await GenerateAdjustmentReferenceAsync(),
@@ -77,6 +103,16 @@ namespace JelycoWarehouse.Services
 
             foreach (var dtoItem in dto.Items)
             {
+                var item = await _itemRepo.GetByIdAsync(dtoItem.ItemId);
+
+                if (item == null)
+                    throw new KeyNotFoundException(
+                        $"Item {dtoItem.ItemId} was not found.");
+
+                if (dtoItem.ActualQuantity < 0)
+                    throw new InvalidOperationException(
+                        "Actual quantity cannot be negative.");
+
                 var systemQuantity =
                     await _transactionService.GetCurrentStockAsync(dtoItem.ItemId);
 
@@ -94,7 +130,6 @@ namespace JelycoWarehouse.Services
 
             await _adjustmentRepo.AddAsync(adjustment);
 
-            // Automatically create adjustment transactions
             foreach (var item in adjustment.Items)
             {
                 if (item.Difference == 0)
@@ -133,11 +168,11 @@ namespace JelycoWarehouse.Services
 
         private async Task<string> GenerateAdjustmentReferenceAsync()
         {
-            var adjustments =
-                await _adjustmentRepo.GetAllAsync();
+            var adjustments = await _adjustmentRepo.GetAllAsync();
 
-            var nextNumber =
-                adjustments.Count() + 1;
+            var nextNumber = adjustments.Any()
+                ? adjustments.Max(a => a.Id) + 1
+                : 1;
 
             return $"IA-{nextNumber:D4}";
         }
@@ -148,7 +183,7 @@ namespace JelycoWarehouse.Services
                 await _adjustmentRepo.GetByIdAsync(id);
 
             if (adjustment == null)
-                throw new Exception("Inventory adjustment not found.");
+                throw new KeyNotFoundException("Inventory adjustment not found.");
 
             await _adjustmentRepo.DeleteAsync(adjustment);
         }

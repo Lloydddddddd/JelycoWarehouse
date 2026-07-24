@@ -16,6 +16,7 @@ namespace JelycoWarehouse.Services
         public async Task<List<SupplierDeliveryReportDto>> GetSupplierDeliveryReportAsync()
         {
             return await _context.SupplierDeliveries
+                .AsNoTracking()
                 .Include(d => d.Supplier)
                 .Include(d => d.Items)
                 .OrderByDescending(d => d.DeliveryDate)

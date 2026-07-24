@@ -16,6 +16,7 @@ namespace JelycoWarehouse.Services
         public async Task<List<LowStockReportDto>> GetLowStockReportAsync()
         {
             return await _context.Items
+                .AsNoTracking()
                 .Include(i => i.Brand)
                 .Where(i => i.Quantity <= i.ReorderLevel)
                 .OrderBy(i => i.Quantity)

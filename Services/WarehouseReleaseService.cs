@@ -9,12 +9,15 @@ namespace JelycoWarehouse.Services
     {
         private readonly IWarehouseReleaseRepository _releaseRepo;
         private readonly TransactionService _transactionService;
+        private readonly IItemRepository _itemRepo;
 
         public WarehouseReleaseService(
             IWarehouseReleaseRepository releaseRepo,
+            IItemRepository itemRepo,
             TransactionService transactionService)
         {
             _releaseRepo = releaseRepo;
+            _itemRepo = itemRepo;
             _transactionService = transactionService;
         }
 
@@ -70,6 +73,16 @@ namespace JelycoWarehouse.Services
         public async Task<WarehouseReleaseDto> AddAsync(
             WarehouseReleaseCreateDto dto)
         {
+            dto.Destination = dto.Destination.Trim();
+
+            if (string.IsNullOrWhiteSpace(dto.Destination))
+                throw new InvalidOperationException(
+                    "Destination is required.");
+
+            if (dto.Items.Count == 0)
+                throw new InvalidOperationException(
+                    "A warehouse release must contain at least one item.");
+
             var release = new WarehouseRelease
             {
                 ReleaseReference = await GenerateReleaseReferenceAsync(),
@@ -79,13 +92,27 @@ namespace JelycoWarehouse.Services
 
             foreach (var dtoItem in dto.Items)
             {
+                var item = await _itemRepo.GetByIdAsync(dtoItem.ItemId);
+
+                if (item == null)
+                    throw new KeyNotFoundException(
+                        $"Item {dtoItem.ItemId} was not found.");
+
+                if (dtoItem.Quantity <= 0)
+                    throw new InvalidOperationException(
+                        "Quantity must be greater than zero.");
+
+                if (dtoItem.UnitCost < 0)
+                    throw new InvalidOperationException(
+                        "Unit cost cannot be negative.");
+
                 var stock = await _transactionService
                     .GetCurrentStockAsync(dtoItem.ItemId);
 
                 if (stock < dtoItem.Quantity)
                 {
-                    throw new Exception(
-                        $"Not enough stock for Item ID {dtoItem.ItemId}.");
+                    throw new InvalidOperationException(
+                        $"Not enough stock for item '{item.Name}'. Available: {stock}, Requested: {dtoItem.Quantity}.");
                 }
 
                 release.Items.Add(new WarehouseReleaseItem
@@ -97,12 +124,10 @@ namespace JelycoWarehouse.Services
                 });
             }
 
-            release.GrandTotal =
-                release.Items.Sum(i => i.TotalCost);
+            release.GrandTotal = release.Items.Sum(i => i.TotalCost);
 
             await _releaseRepo.AddAsync(release);
 
-            // Automatically create stock OUT transactions
             foreach (var item in release.Items)
             {
                 await _transactionService.AddAsync(
@@ -127,7 +152,7 @@ namespace JelycoWarehouse.Services
                 Items = release.Items.Select(i => new WarehouseReleaseItemDto
                 {
                     ItemId = i.ItemId,
-                    ItemName = i.Item?.Name ?? string.Empty,
+                    ItemName = string.Empty,
                     Quantity = i.Quantity,
                     UnitCost = i.UnitCost,
                     TotalCost = i.TotalCost
@@ -144,7 +169,7 @@ namespace JelycoWarehouse.Services
             var release = await _releaseRepo.GetByIdAsync(id);
 
             if (release == null)
-                throw new Exception("Warehouse release not found.");
+                throw new KeyNotFoundException("Warehouse release not found.");
 
             // Reverse stock by deleting the generated OUT transactions
             await _transactionService.DeleteByWarehouseReleaseAsync(id);

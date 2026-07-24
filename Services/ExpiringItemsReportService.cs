@@ -19,6 +19,7 @@ namespace JelycoWarehouse.Services
             var next30Days = today.AddDays(30);
 
             return await _context.Items
+                .AsNoTracking()
                 .Include(i => i.Brand)
                 .Where(i => i.ExpiryDate.HasValue &&
                             i.ExpiryDate.Value <= next30Days)

@@ -1,12 +1,21 @@
-﻿using JelycoWarehouse.DTOs.SupplierDeliveries;
+﻿using System.ComponentModel.DataAnnotations;
+using JelycoWarehouse.DTOs.SupplierDeliveries;
 
-public class SupplierDeliveryCreateDto
+namespace JelycoWarehouse.DTOs.SupplierDeliveries
 {
-    public int SupplierId { get; set; }
+    public class SupplierDeliveryCreateDto
+    {
+        [Range(1, int.MaxValue)]
+        public int SupplierId { get; set; }
 
-    public string DeliveryReference { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(100)]
+        public string DeliveryReference { get; set; } = string.Empty;
 
-    public DateTime DeliveryDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
 
-    public List<SupplierDeliveryItemDto> Items { get; set; } = new();
+        [Required]
+        [MinLength(1, ErrorMessage = "At least one delivery item is required.")]
+        public List<SupplierDeliveryItemDto> Items { get; set; } = new();
+    }
 }
