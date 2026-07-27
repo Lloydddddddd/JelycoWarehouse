@@ -15,6 +15,7 @@ import SupplierDeliveriesPage from "./pages/SupplierDeliveriesPage";
 import WarehouseReleasesPage from "./pages/WarehouseReleasesPage";
 import InventoryAdjustmentsPage from "./pages/InventoryAdjustmentsPage";
 import BrandsPage from "./pages/BrandsPage";
+import ReportsPage from "./pages/ReportsPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
@@ -93,6 +94,11 @@ export default function App() {
           <Route
             path="/inventory-adjustments"
             element={<InventoryAdjustmentsPage />}
+          />
+
+          <Route
+            path="/reports"
+            element={<ReportsPage />}
           />
         </Route>
 
