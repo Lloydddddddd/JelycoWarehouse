@@ -9,9 +9,6 @@ namespace JelycoWarehouse.Repositories
     {
         private readonly WarehouseContext _context;
 
-        // Temporary global threshold for low stock
-        private const int LowStockThreshold = 10;
-
         public DashboardRepository(WarehouseContext context)
         {
             _context = context;
@@ -26,8 +23,9 @@ namespace JelycoWarehouse.Repositories
             var inventoryValue = await _context.Items.SumAsync(i =>
                 i.Quantity * i.CostPrice);
 
+            // Uses each item's configured reorder level
             var lowStockItems = await _context.Items.CountAsync(i =>
-                i.Quantity <= LowStockThreshold);
+                i.Quantity <= i.ReorderLevel);
 
             var totalIn = await _context.Transactions
                 .Where(t => t.Type == Enums.TransactionType.IN)
