@@ -284,6 +284,7 @@ export default function BrandsPage() {
           },
         ]}
         data={filteredBrands}
+        rowKey={(brand) => brand.id}
       />
 
       <Toast

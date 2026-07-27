@@ -311,6 +311,7 @@ export default function SupplierDeliveriesPage() {
           },
         ]}
         data={filteredDeliveries}
+        rowKey={(delivery) => delivery.id}
       />
 
       <Toast

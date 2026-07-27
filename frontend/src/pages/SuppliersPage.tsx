@@ -324,6 +324,7 @@ export default function SuppliersPage() {
           },
         ]}
         data={filteredSuppliers}
+        rowKey={(supplier) => supplier.id}
       />
 
       <Toast

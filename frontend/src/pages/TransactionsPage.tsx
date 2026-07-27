@@ -314,6 +314,7 @@ export default function TransactionsPage() {
           },
         ]}
         data={filteredTransactions}
+        rowKey={(transaction) => transaction.id}
       />
 
       <Toast

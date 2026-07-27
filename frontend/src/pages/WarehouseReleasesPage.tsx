@@ -301,6 +301,7 @@ export default function WarehouseReleasesPage() {
           },
         ]}
         data={filteredReleases}
+        rowKey={(release) => release.id}
       />
 
       <Toast

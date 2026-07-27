@@ -288,6 +288,7 @@ export default function InventoryAdjustmentsPage() {
           },
         ]}
         data={filteredAdjustments}
+        rowKey={(adjustment) => adjustment.id}
       />
 
       <Toast

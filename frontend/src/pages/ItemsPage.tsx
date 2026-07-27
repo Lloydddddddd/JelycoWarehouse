@@ -228,6 +228,7 @@ export default function ItemsPage() {
           },
         ]}
         data={filteredItems}
+        rowKey={(item) => item.id}
       />
 
       <Toast
