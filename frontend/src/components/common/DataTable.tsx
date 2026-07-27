@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import styles from "./DataTable.module.css";
 
-interface Column<T> {
+export interface Column<T> {
   header: string;
 
   accessor?: keyof T;
@@ -17,14 +17,15 @@ interface DataTableProps<T> {
   columns: Column<T>[];
 
   data: T[];
+
+  rowKey: (row: T) => React.Key;
 }
 
-export default function DataTable<
-  T extends { id: number }
->({
+export default function DataTable<T>({
   columns,
   data,
-}: DataTableProps<T>) {
+  rowKey,
+  }: DataTableProps<T>) {
   const [sortColumn, setSortColumn] =
     useState<keyof T | null>(null);
 
@@ -103,7 +104,7 @@ export default function DataTable<
 
       <tbody>
         {sortedData.map((row) => (
-          <tr key={row.id}>
+          <tr key={rowKey(row)}>
             {columns.map((column, index) => (
               <td key={index}>
                 {column.render
