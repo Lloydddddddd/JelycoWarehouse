@@ -13,4 +13,8 @@ public class DashboardDto
     public int TotalIn { get; set; }
 
     public int TotalOut { get; set; }
+
+    public List<RecentTransactionDto> RecentTransactions { get; set; } = [];
+
+    public List<LowStockItemDto> LowStockList { get; set; } = [];
 }
