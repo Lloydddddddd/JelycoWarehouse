@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
+import LoadingSpinner from "./common/LoadingSpinner";
 
 import {
   FiPackage,
@@ -11,46 +12,72 @@ import {
 } from "react-icons/fi";
 
 import StatCard from "./StatCard";
+import Button from "./ui/Button";
 
 import { getDashboard } from "../services/dashboardService";
 import type { Dashboard as DashboardModel } from "../models/Dashboard";
 
 export default function Dashboard() {
-  const [data, setData] =
-    useState<DashboardModel | null>(null);
+  const [data, setData] = useState<DashboardModel | null>(null);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState("");
+
+  const loadDashboard = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = await getDashboard();
+
+      setData(result);
+    } catch (err) {
+      console.error(err);
+
+      setError("Unable to load dashboard data.");
+
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function loadDashboard() {
-      try {
-        const result =
-          await getDashboard();
-
-        setData(result);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadDashboard();
-  }, []);
+  }, [loadDashboard]);
+
+  function formatCurrency(value: number) {
+    return `₱${value.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
 
   if (loading) {
     return (
-      <p className={styles.loading}>
-        Loading dashboard...
-      </p>
+      <LoadingSpinner text="Loading dashboard..." />
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.loading}>
+        <div>
+          <p>{error}</p>
+
+          <Button onClick={loadDashboard}>
+            Try Again
+          </Button>
+        </div>
+      </div>
     );
   }
 
   if (!data) {
     return (
       <p className={styles.loading}>
-        Failed to load dashboard.
+        No dashboard data available.
       </p>
     );
   }
@@ -71,7 +98,7 @@ export default function Dashboard() {
 
       <StatCard
         title="Inventory Value"
-        value={`₱${data.inventoryValue.toLocaleString()}`}
+        value={formatCurrency(data.inventoryValue)}
         icon={<FiDollarSign />}
       />
 

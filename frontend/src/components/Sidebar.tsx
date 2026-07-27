@@ -8,6 +8,7 @@ import {
   FiUpload,
   FiClipboard,
   FiBarChart2,
+  FiFileText,
   FiLogOut,
 } from "react-icons/fi";
 
@@ -136,6 +137,16 @@ export default function Sidebar() {
           >
             <FiBarChart2 />
             Transactions
+          </NavLink>
+
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              isActive ? styles.active : styles.link
+            }
+          >
+            <FiFileText />
+            Reports
           </NavLink>
         </nav>
       </div>
