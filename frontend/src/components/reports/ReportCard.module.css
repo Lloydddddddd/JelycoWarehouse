@@ -1,0 +1,75 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  width: 100%;
+
+  padding: 18px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  text-align: left;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+}
+
+.active {
+  background: #2563eb;
+
+  color: white;
+
+  border-color: #2563eb;
+}
+
+.icon {
+  width: 48px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(37,99,235,.12);
+
+  font-size: 24px;
+}
+
+.active .icon {
+  background: rgba(255,255,255,.2);
+}
+
+.card h3 {
+  margin: 0;
+
+  font-size: 17px;
+
+  font-weight: 600;
+}
+
+.card p {
+  margin-top: 4px;
+
+  font-size: 13px;
+
+  opacity: .75;
+}
