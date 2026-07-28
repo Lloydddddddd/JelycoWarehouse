@@ -13,7 +13,6 @@ import SuppliersPage from "./pages/SuppliersPage";
 import TransactionsPage from "./pages/TransactionsPage";
 import SupplierDeliveriesPage from "./pages/SupplierDeliveriesPage";
 import WarehouseReleasesPage from "./pages/WarehouseReleasesPage";
-import InventoryAdjustmentsPage from "./pages/InventoryAdjustmentsPage";
 import BrandsPage from "./pages/BrandsPage";
 import ReportsPage from "./pages/ReportsPage";
 
@@ -89,11 +88,6 @@ export default function App() {
             element={
               <WarehouseReleasesPage />
             }
-          />
-
-          <Route
-            path="/inventory-adjustments"
-            element={<InventoryAdjustmentsPage />}
           />
 
           <Route

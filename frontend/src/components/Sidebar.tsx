@@ -116,18 +116,6 @@ export default function Sidebar() {
           </NavLink>
 
           <NavLink
-            to="/inventory-adjustments"
-            className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
-            }
-          >
-            <FiClipboard />
-            Adjustments
-          </NavLink>
-
-          <NavLink
             to="/transactions"
             className={({ isActive }) =>
               isActive
