@@ -8,6 +8,14 @@ export const API = {
     logout: `${BASE_URL}/auth/logout`,
   },
 
+  users: {
+    me: `${BASE_URL}/users/me`,
+  },
+
+  dashboard: {
+    summary: `${BASE_URL}/dashboard`,
+  },
+
   brands: {
     all: `${BASE_URL}/brands`,
     byId: (id: number) => `${BASE_URL}/brands/${id}`,
@@ -27,7 +35,6 @@ export const API = {
 
   transactions: {
     all: `${BASE_URL}/transactions`,
-    dashboard: `${BASE_URL}/transactions/dashboard`,
     filter: `${BASE_URL}/transactions/filter`,
     byId: (id: number) => `${BASE_URL}/transactions/${id}`,
   },

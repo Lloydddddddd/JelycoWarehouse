@@ -32,11 +32,8 @@ export interface ReportConfig {
   title: string;
   description: string;
   icon: IconType;
-
   loader: () => Promise<any[]>;
-
   rowKey: (row: any) => React.Key;
-
   columns: Column<any>[];
 }
 
@@ -108,8 +105,16 @@ export const reportConfigs: Record<ReportType, ReportConfig> = {
     columns: [
       {
         header: "Date",
-        accessor: "date",
         sortable: true,
+        render: (row: any) =>
+          new Date(row.date).toLocaleDateString(
+            "en-PH",
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }
+          ),
       },
       {
         header: "Item",
@@ -211,13 +216,29 @@ export const reportConfigs: Record<ReportType, ReportConfig> = {
       },
       {
         header: "Expiry Date",
-        accessor: "expiryDate",
         sortable: true,
+        render: (row: any) =>
+          row.expiryDate
+            ? new Date(row.expiryDate).toLocaleDateString(
+                "en-PH",
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }
+              )
+            : "-",
       },
       {
         header: "Days Remaining",
-        accessor: "daysRemaining",
         sortable: true,
+        render: (row: any) => {
+          if (row.daysRemaining < 0) {
+            return `${Math.abs(row.daysRemaining)} days ago`;
+          }
+
+          return `${row.daysRemaining} days`;
+        },
       },
       {
         header: "Status",
@@ -250,8 +271,16 @@ export const reportConfigs: Record<ReportType, ReportConfig> = {
       },
       {
         header: "Delivery Date",
-        accessor: "deliveryDate",
         sortable: true,
+        render: (row: any) =>
+          new Date(row.deliveryDate).toLocaleDateString(
+            "en-PH",
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }
+          ),
       },
       {
         header: "Total Quantity",
@@ -284,8 +313,16 @@ export const reportConfigs: Record<ReportType, ReportConfig> = {
       },
       {
         header: "Release Date",
-        accessor: "releaseDate",
         sortable: true,
+        render: (row: any) =>
+          new Date(row.releaseDate).toLocaleDateString(
+            "en-PH",
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }
+          ),
       },
       {
         header: "Destination",
