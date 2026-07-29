@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import DataTable from "../components/common/DataTable";
 import Modal from "../components/common/Modal";
-import ConfirmDialog from "../components/common/ConfirmDialog";
 import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
 import Button from "../components/ui/Button";
@@ -15,7 +14,6 @@ import {
   getSupplierDeliveries,
   getSupplierDelivery,
   createSupplierDelivery,
-  deleteSupplierDelivery,
 } from "../services/supplierDeliveryService";
 
 import type { SupplierDelivery } from "../models/SupplierDelivery";
@@ -38,9 +36,6 @@ export default function SupplierDeliveriesPage() {
     useState<SupplierDelivery | null>(null);
 
   const [showDetails, setShowDetails] =
-    useState(false);
-
-  const [showDeleteDialog, setShowDeleteDialog] =
     useState(false);
 
   const [toastMessage, setToastMessage] =
@@ -122,33 +117,6 @@ export default function SupplierDeliveriesPage() {
     }
   }
 
-  async function handleDelete() {
-    if (!selectedDelivery) return;
-
-    try {
-      await deleteSupplierDelivery(
-        selectedDelivery.id
-      );
-
-      await loadDeliveries();
-
-      setShowDeleteDialog(false);
-      setSelectedDelivery(null);
-
-      showToast(
-        "Supplier delivery deleted successfully!",
-        "success"
-      );
-    } catch (error) {
-      console.error(error);
-
-      showToast(
-        "Failed to delete supplier delivery.",
-        "error"
-      );
-    }
-  }
-
   const filteredDeliveries =
     deliveries.filter((delivery) => {
       const searchText =
@@ -158,7 +126,6 @@ export default function SupplierDeliveriesPage() {
         delivery.supplierName
           .toLowerCase()
           .includes(searchText) ||
-
         delivery.deliveryReference
           .toLowerCase()
           .includes(searchText)
@@ -181,8 +148,7 @@ export default function SupplierDeliveriesPage() {
       <div
         style={{
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
         }}
@@ -202,8 +168,6 @@ export default function SupplierDeliveriesPage() {
         </Button>
       </div>
 
-      {/* Add Delivery */}
-
       <Modal
         open={showModal}
         title="Add Supplier Delivery"
@@ -215,8 +179,6 @@ export default function SupplierDeliveriesPage() {
           onSubmit={handleCreate}
         />
       </Modal>
-
-      {/* View Details */}
 
       <Modal
         open={showDetails}
@@ -233,26 +195,8 @@ export default function SupplierDeliveriesPage() {
         )}
       </Modal>
 
-      {/* Delete Confirmation */}
-
-      <ConfirmDialog
-        open={showDeleteDialog}
-        title="Delete Supplier Delivery"
-        message="Are you sure you want to delete this supplier delivery? This will also remove all inventory added by this delivery."
-        onConfirm={handleDelete}
-        onCancel={() => {
-          setShowDeleteDialog(false);
-          setSelectedDelivery(null);
-        }}
-      />
-
       <DataTable
         columns={[
-          {
-            header: "ID",
-            accessor: "id",
-            sortable: true,
-          },
           {
             header: "Reference",
             accessor: "deliveryReference",
@@ -265,48 +209,42 @@ export default function SupplierDeliveriesPage() {
           },
           {
             header: "Date",
-            accessor: "deliveryDate",
+            render: (delivery) =>
+              new Date(
+                delivery.deliveryDate
+              ).toLocaleDateString(
+                "en-PH",
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }
+              ),
             sortable: true,
           },
           {
             header: "Grand Total",
             render: (delivery) =>
-              `₱${delivery.grandTotal.toLocaleString()}`,
+              delivery.grandTotal.toLocaleString(
+                "en-PH",
+                {
+                  style: "currency",
+                  currency: "PHP",
+                }
+              ),
           },
           {
             header: "Actions",
             render: (delivery) => (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                }}
+              <Button
+                onClick={() =>
+                  handleView(
+                    delivery.id
+                  )
+                }
               >
-                <Button
-                  onClick={() =>
-                    handleView(
-                      delivery.id
-                    )
-                  }
-                >
-                  View
-                </Button>
-
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    setSelectedDelivery(
-                      delivery
-                    );
-
-                    setShowDeleteDialog(
-                      true
-                    );
-                  }}
-                >
-                  Delete
-                </Button>
-              </div>
+                View
+              </Button>
             ),
           },
         ]}

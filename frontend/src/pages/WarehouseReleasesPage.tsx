@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import DataTable from "../components/common/DataTable";
 import Modal from "../components/common/Modal";
-import ConfirmDialog from "../components/common/ConfirmDialog";
 import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
 import Button from "../components/ui/Button";
@@ -15,7 +14,6 @@ import {
   getWarehouseReleases,
   getWarehouseRelease,
   createWarehouseRelease,
-  deleteWarehouseRelease,
 } from "../services/warehouseReleaseService";
 
 import type { WarehouseRelease } from "../models/WarehouseRelease";
@@ -38,9 +36,6 @@ export default function WarehouseReleasesPage() {
     useState<WarehouseRelease | null>(null);
 
   const [showDetails, setShowDetails] =
-    useState(false);
-
-  const [showDeleteDialog, setShowDeleteDialog] =
     useState(false);
 
   const [toastMessage, setToastMessage] =
@@ -115,34 +110,6 @@ export default function WarehouseReleasesPage() {
     }
   }
 
-  async function handleDelete() {
-    if (!selectedRelease) return;
-
-    try {
-      await deleteWarehouseRelease(
-        selectedRelease.id
-      );
-
-      await loadReleases();
-
-      setShowDeleteDialog(false);
-
-      setSelectedRelease(null);
-
-      showToast(
-        "Warehouse release deleted successfully!",
-        "success"
-      );
-    } catch (error) {
-      console.error(error);
-
-      showToast(
-        "Failed to delete warehouse release.",
-        "error"
-      );
-    }
-  }
-
   const filteredReleases =
     releases.filter((release) => {
       const searchText =
@@ -152,7 +119,6 @@ export default function WarehouseReleasesPage() {
         release.releaseReference
           .toLowerCase()
           .includes(searchText) ||
-
         release.destination
           .toLowerCase()
           .includes(searchText)
@@ -222,24 +188,8 @@ export default function WarehouseReleasesPage() {
         )}
       </Modal>
 
-      <ConfirmDialog
-        open={showDeleteDialog}
-        title="Delete Warehouse Release"
-        message="Are you sure you want to delete this warehouse release? This will restore all released inventory."
-        onConfirm={handleDelete}
-        onCancel={() => {
-          setShowDeleteDialog(false);
-          setSelectedRelease(null);
-        }}
-      />
-
       <DataTable
         columns={[
-          {
-            header: "ID",
-            accessor: "id",
-            sortable: true,
-          },
           {
             header: "Reference",
             accessor: "releaseReference",
@@ -253,50 +203,39 @@ export default function WarehouseReleasesPage() {
           {
             header: "Date",
             render: (release) =>
-              new Date(release.releaseDate)
-                .toLocaleDateString("en-PH", {
+              new Date(
+                release.releaseDate
+              ).toLocaleDateString(
+                "en-PH",
+                {
                   year: "numeric",
                   month: "short",
                   day: "numeric",
-                }),
+                }
+              ),
+            sortable: true,
           },
           {
             header: "Grand Total",
             render: (release) =>
-              `₱${release.grandTotal.toLocaleString()}`,
+              release.grandTotal.toLocaleString(
+                "en-PH",
+                {
+                  style: "currency",
+                  currency: "PHP",
+                }
+              ),
           },
           {
             header: "Actions",
             render: (release) => (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                }}
+              <Button
+                onClick={() =>
+                  handleView(release.id)
+                }
               >
-                <Button
-                  onClick={() =>
-                    handleView(release.id)
-                  }
-                >
-                  View
-                </Button>
-
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    setSelectedRelease(
-                      release
-                    );
-
-                    setShowDeleteDialog(
-                      true
-                    );
-                  }}
-                >
-                  Delete
-                </Button>
-              </div>
+                View
+              </Button>
             ),
           },
         ]}

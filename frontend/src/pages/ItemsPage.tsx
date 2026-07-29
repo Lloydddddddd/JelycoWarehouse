@@ -11,6 +11,7 @@ import ItemForm from "../components/items/ItemForm";
 import {
   getItems,
   createItem,
+  updateItem,
 } from "../services/itemService";
 
 import { getBrands } from "../services/brandService";
@@ -27,6 +28,7 @@ export default function ItemsPage() {
   const [loading, setLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   const [toastMessage, setToastMessage] =
     useState("");
@@ -62,6 +64,7 @@ export default function ItemsPage() {
 
   function closeModal() {
     setShowModal(false);
+    setEditingItem(null);
   }
 
   function showToast(
@@ -95,6 +98,32 @@ export default function ItemsPage() {
 
       showToast(
         "Failed to create item.",
+        "error"
+      );
+    }
+  }
+
+  async function handleUpdate(
+    item: CreateItemRequest
+  ) {
+    if (!editingItem) return;
+
+    try {
+      await updateItem(editingItem.id, item);
+
+      await loadItems();
+
+      closeModal();
+
+      showToast(
+        "Item updated successfully!",
+        "success"
+      );
+    } catch (error) {
+      console.error(error);
+
+      showToast(
+        "Failed to update item.",
         "error"
       );
     }
@@ -180,9 +209,10 @@ export default function ItemsPage() {
         </div>
 
         <Button
-          onClick={() =>
-            setShowModal(true)
-          }
+          onClick={() => {
+            setEditingItem(null);
+            setShowModal(true);
+          }}
         >
           + Add Item
         </Button>
@@ -190,12 +220,33 @@ export default function ItemsPage() {
 
       <Modal
         open={showModal}
-        title="Add Item"
+        title={
+          editingItem
+            ? "Edit Item"
+            : "Add Item"
+        }
         onClose={closeModal}
       >
         <ItemForm
           brands={brands}
-          onSubmit={handleCreate}
+          initialData={
+            editingItem
+              ? {
+                  name: editingItem.name,
+                  brandId: editingItem.brandId,
+                  category: editingItem.category,
+                  kind: editingItem.kind,
+                  size: editingItem.size,
+                  color: editingItem.color,
+                  reorderLevel: editingItem.reorderLevel,
+                }
+              : undefined
+          }
+          onSubmit={
+            editingItem
+              ? handleUpdate
+              : handleCreate
+          }
         />
       </Modal>
 
@@ -217,14 +268,37 @@ export default function ItemsPage() {
             sortable: true,
           },
           {
+            header: "Kind",
+            accessor: "kind",
+            sortable: true,
+          },
+          {
+            header: "Size",
+            accessor: "size",
+            sortable: true,
+          },
+          {
+            header: "Color",
+            accessor: "color",
+            sortable: true,
+          },
+          {
             header: "Stock",
             accessor: "quantity",
             sortable: true,
           },
           {
-            header: "Cost Price",
-            accessor: "costPrice",
-            sortable: true,
+            header: "Actions",
+            render: (item: Item) => (
+              <Button
+                onClick={() => {
+                  setEditingItem(item);
+                  setShowModal(true);
+                }}
+              >
+                Edit
+              </Button>
+            ),
           },
         ]}
         data={filteredItems}

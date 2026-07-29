@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import DataTable from "../components/common/DataTable";
 import Modal from "../components/common/Modal";
-import ConfirmDialog from "../components/common/ConfirmDialog";
 import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
 import Button from "../components/ui/Button";
@@ -13,7 +12,6 @@ import {
   getSuppliers,
   createSupplier,
   updateSupplier,
-  deleteSupplier,
 } from "../services/supplierService";
 
 import type { Supplier } from "../models/Supplier";
@@ -32,12 +30,6 @@ export default function SuppliersPage() {
   const [editingSupplier, setEditingSupplier] =
     useState<Supplier | null>(null);
 
-  const [showDeleteDialog, setShowDeleteDialog] =
-    useState(false);
-
-  const [supplierToDelete, setSupplierToDelete] =
-    useState<Supplier | null>(null);
-
   const [toastMessage, setToastMessage] =
     useState("");
 
@@ -51,9 +43,7 @@ export default function SuppliersPage() {
 
   async function loadSuppliers() {
     try {
-      const result =
-        await getSuppliers();
-
+      const result = await getSuppliers();
       setSuppliers(result);
     } catch (error) {
       console.error(error);
@@ -69,18 +59,6 @@ export default function SuppliersPage() {
   function closeModal() {
     setShowModal(false);
     setEditingSupplier(null);
-  }
-
-  function openDeleteDialog(
-    supplier: Supplier
-  ) {
-    setSupplierToDelete(supplier);
-    setShowDeleteDialog(true);
-  }
-
-  function closeDeleteDialog() {
-    setSupplierToDelete(null);
-    setShowDeleteDialog(false);
   }
 
   function showToast(
@@ -148,32 +126,6 @@ export default function SuppliersPage() {
     }
   }
 
-  async function confirmDelete() {
-    if (!supplierToDelete) return;
-
-    try {
-      await deleteSupplier(
-        supplierToDelete.id
-      );
-
-      await loadSuppliers();
-
-      closeDeleteDialog();
-
-      showToast(
-        "Supplier deleted successfully!",
-        "success"
-      );
-    } catch (error) {
-      console.error(error);
-
-      showToast(
-        "Failed to delete supplier.",
-        "error"
-      );
-    }
-  }
-
   const filteredSuppliers =
     suppliers.filter((supplier) => {
       const searchText =
@@ -209,8 +161,7 @@ export default function SuppliersPage() {
       <div
         style={{
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
         }}
@@ -250,25 +201,8 @@ export default function SuppliersPage() {
         />
       </Modal>
 
-      <ConfirmDialog
-        open={showDeleteDialog}
-        title="Delete Supplier"
-        message={
-          supplierToDelete
-            ? `Are you sure you want to delete "${supplierToDelete.name}"? This action cannot be undone.`
-            : ""
-        }
-        onCancel={closeDeleteDialog}
-        onConfirm={confirmDelete}
-      />
-
       <DataTable
         columns={[
-          {
-            header: "ID",
-            accessor: "id",
-            sortable: true,
-          },
           {
             header: "Name",
             accessor: "name",
@@ -292,34 +226,14 @@ export default function SuppliersPage() {
           {
             header: "Actions",
             render: (supplier) => (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
+              <Button
+                onClick={() => {
+                  setEditingSupplier(supplier);
+                  setShowModal(true);
                 }}
               >
-                <Button
-                  onClick={() => {
-                    setEditingSupplier(
-                      supplier
-                    );
-                    setShowModal(true);
-                  }}
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  variant="danger"
-                  onClick={() =>
-                    openDeleteDialog(
-                      supplier
-                    )
-                  }
-                >
-                  Delete
-                </Button>
-              </div>
+                Edit
+              </Button>
             ),
           },
         ]}
