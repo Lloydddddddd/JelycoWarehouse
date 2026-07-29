@@ -9,7 +9,5 @@ export interface CreateItemRequest {
 
   category: string;
 
-  costPrice: number;
-
-  expiryDate: string | null;
+  reorderLevel: number;
 }

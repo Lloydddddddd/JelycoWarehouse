@@ -14,6 +14,8 @@ export interface Item {
 
   quantity: number;
 
+  reorderLevel: number;
+
   costPrice: number;
 
   expiryDate: string | null;
