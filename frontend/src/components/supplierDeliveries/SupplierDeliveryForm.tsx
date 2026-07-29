@@ -23,6 +23,7 @@ const initialItem: CreateSupplierDeliveryItemRequest = {
   quantity: 0,
   unitCost: 0,
   totalCost: 0,
+  expiryDate: null,
 };
 
 const initialForm: CreateSupplierDeliveryRequest = {
@@ -46,6 +47,10 @@ export default function SupplierDeliveryForm({
 
   const [form, setForm] =
     useState(initialForm);
+
+  const [noExpiry, setNoExpiry] = useState<boolean[]>(
+    initialForm.items.map(() => true)
+  );
 
   useEffect(() => {
     async function loadData() {
@@ -114,9 +119,12 @@ export default function SupplierDeliveryForm({
           quantity: 0,
           unitCost: 0,
           totalCost: 0,
+          expiryDate: null,
         },
       ],
     }));
+
+    setNoExpiry((prev) => [...prev, true]);
   }
 
   function removeItem(index: number) {
@@ -133,6 +141,10 @@ export default function SupplierDeliveryForm({
       items: updatedItems,
       grandTotal,
     }));
+
+    setNoExpiry((prev) =>
+      prev.filter((_, i) => i !== index)
+    );
   }
 
   async function handleSubmit(
@@ -143,6 +155,7 @@ export default function SupplierDeliveryForm({
     await onSubmit(form);
 
     setForm(initialForm);
+    setNoExpiry([true]);
   }
 
   return (
@@ -246,8 +259,6 @@ export default function SupplierDeliveryForm({
             )}
           </div>
 
-          {/* Row 1 */}
-
           <Select
             label="Item"
             value={deliveryItem.itemId}
@@ -273,12 +284,11 @@ export default function SupplierDeliveryForm({
             ))}
           </Select>
 
-          {/* Row 2 */}
-
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns:
+                "repeat(4, 1fr)",
               gap: "16px",
               marginTop: "16px",
             }}
@@ -308,6 +318,68 @@ export default function SupplierDeliveryForm({
                 )
               }
             />
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "6px",
+                  fontWeight: 600,
+                }}
+              >
+                Expiry Date
+              </label>
+
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  marginBottom: "8px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={noExpiry[index]}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+
+                    setNoExpiry((prev) => {
+                      const updated = [...prev];
+                      updated[index] = checked;
+                      return updated;
+                    });
+
+                    if (checked) {
+                      updateItem(
+                        index,
+                        "expiryDate",
+                        null
+                      );
+                    }
+                  }}
+                />
+
+                No Expiry
+              </label>
+
+              {!noExpiry[index] && (
+                <Input
+                  label=""
+                  type="date"
+                  value={deliveryItem.expiryDate ?? ""}
+                  onChange={(e) =>
+                    updateItem(
+                      index,
+                      "expiryDate",
+                      e.target.value || null
+                    )
+                  }
+                />
+              )}
+            </div>
 
             <Input
               label="Total Cost"

@@ -11,7 +11,6 @@ export default function WarehouseReleaseDetails({
 }: Props) {
   return (
     <div>
-
       {/* Header */}
 
       <div
@@ -75,12 +74,22 @@ export default function WarehouseReleaseDetails({
           title="Release Date"
           value={new Date(
             release.releaseDate
-          ).toLocaleDateString()}
+          ).toLocaleDateString("en-PH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         />
 
         <InfoCard
           title="Grand Total"
-          value={`₱${release.grandTotal.toLocaleString()}`}
+          value={release.grandTotal.toLocaleString(
+            "en-PH",
+            {
+              style: "currency",
+              currency: "PHP",
+            }
+          )}
         />
       </div>
 
@@ -127,21 +136,15 @@ export default function WarehouseReleaseDetails({
                 Item
               </th>
 
-              <th
-                style={headerStyle}
-              >
+              <th style={headerStyle}>
                 Quantity
               </th>
 
-              <th
-                style={headerStyle}
-              >
+              <th style={headerStyle}>
                 Unit Cost
               </th>
 
-              <th
-                style={headerStyle}
-              >
+              <th style={headerStyle}>
                 Total
               </th>
             </tr>
@@ -166,16 +169,30 @@ export default function WarehouseReleaseDetails({
                     align="center"
                     style={cellStyle}
                   >
-                    ₱
-                    {item.unitCost.toLocaleString()}
+                    {item.unitCost.toLocaleString(
+                      "en-PH",
+                      {
+                        style:
+                          "currency",
+                        currency:
+                          "PHP",
+                      }
+                    )}
                   </td>
 
                   <td
                     align="center"
                     style={cellStyle}
                   >
-                    ₱
-                    {item.totalCost.toLocaleString()}
+                    {item.totalCost.toLocaleString(
+                      "en-PH",
+                      {
+                        style:
+                          "currency",
+                        currency:
+                          "PHP",
+                      }
+                    )}
                   </td>
                 </tr>
               )
@@ -208,10 +225,15 @@ export default function WarehouseReleaseDetails({
             color: "#0f172a",
           }}
         >
-          ₱{release.grandTotal.toLocaleString()}
+          {release.grandTotal.toLocaleString(
+            "en-PH",
+            {
+              style: "currency",
+              currency: "PHP",
+            }
+          )}
         </div>
       </div>
-
     </div>
   );
 }

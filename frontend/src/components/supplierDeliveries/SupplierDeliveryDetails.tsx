@@ -125,6 +125,14 @@ export default function SupplierDeliveryDetails({
                 padding: "14px",
               }}
             >
+              Expiry Date
+            </th>
+
+            <th
+              style={{
+                padding: "14px",
+              }}
+            >
               Total
             </th>
           </tr>
@@ -164,12 +172,29 @@ export default function SupplierDeliveryDetails({
                   {item.unitCost.toLocaleString(
                     "en-PH",
                     {
-                      style:
-                        "currency",
-                      currency:
-                        "PHP",
+                      style: "currency",
+                      currency: "PHP",
                     }
                   )}
+                </td>
+
+                <td
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  {item.expiryDate
+                    ? new Date(
+                        item.expiryDate
+                      ).toLocaleDateString(
+                        "en-PH",
+                        {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        }
+                      )
+                    : "-"}
                 </td>
 
                 <td
@@ -181,10 +206,8 @@ export default function SupplierDeliveryDetails({
                   {item.totalCost.toLocaleString(
                     "en-PH",
                     {
-                      style:
-                        "currency",
-                      currency:
-                        "PHP",
+                      style: "currency",
+                      currency: "PHP",
                     }
                   )}
                 </td>
@@ -201,7 +224,7 @@ export default function SupplierDeliveryDetails({
             }}
           >
             <td
-              colSpan={3}
+              colSpan={4}
               style={{
                 padding: "14px",
                 textAlign: "right",

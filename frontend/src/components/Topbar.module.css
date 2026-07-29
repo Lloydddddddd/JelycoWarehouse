@@ -1,37 +1,149 @@
-.topbar{
-    height:70px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding-bottom:20px;
-
-    border-bottom:1px solid #e5e7eb;
-
-    margin-bottom:30px;
+.topbar {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 30px;
 }
 
-.topbar h1{
-    margin:0;
-
-    font-size:34px;
-
-    font-weight:700;
-
-    color:#111827;
+.topbar h1 {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 700;
+    color: #111827;
 }
 
-.user{
-    background:#2563eb;
+/* ---------- Profile ---------- */
 
-    color:white;
+.profile {
+    position: relative;
+}
 
-    padding:10px 18px;
+.profileButton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-    border-radius:8px;
+    background: white;
 
-    font-weight:600;
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+    min-width: 220px;
+}
+
+.profileButton:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 14px rgba(37,99,235,.15);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.role {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.chevron {
+    transition: .2s;
+    color: #6b7280;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+/* ---------- Dropdown ---------- */
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 240px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+
+    overflow: hidden;
+
+    z-index: 1000;
+}
+
+.dropdown button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 18px;
+
+    background: white;
+
+    border: none;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.dropdown button:hover {
+    background: #f8fafc;
+}
+
+.dropdown hr {
+    margin: 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.logout {
+    color: #dc2626;
+}
+
+.logout:hover {
+    background: #fef2f2 !important;
 }

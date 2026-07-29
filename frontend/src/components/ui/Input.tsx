@@ -3,7 +3,7 @@ import styles from "./Input.module.css";
 
 interface InputProps
   extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
 }
 
 export default function Input({
@@ -12,9 +12,11 @@ export default function Input({
 }: InputProps) {
   return (
     <div className={styles.field}>
-      <label className={styles.label}>
-        {label}
-      </label>
+      {label && (
+        <label className={styles.label}>
+          {label}
+        </label>
+      )}
 
       <input
         className={styles.input}

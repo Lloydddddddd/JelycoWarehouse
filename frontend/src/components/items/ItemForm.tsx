@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Brand } from "../../models/Brand";
 import type { CreateItemRequest } from "../../models/CreateItemRequest";
@@ -8,10 +8,11 @@ import styles from "./ItemForm.module.css";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import Select from "../ui/Select";
-import Toggle from "../ui/Toggle";
 
 interface ItemFormProps {
   brands: Brand[];
+
+  initialData?: CreateItemRequest;
 
   onSubmit: (
     item: CreateItemRequest
@@ -25,19 +26,22 @@ const initialForm: CreateItemRequest = {
   size: "",
   color: "",
   category: "",
-  costPrice: 0,
-  expiryDate: null,
+  reorderLevel: 10,
 };
 
 export default function ItemForm({
   brands,
+  initialData,
   onSubmit,
 }: ItemFormProps) {
   const [form, setForm] =
-    useState<CreateItemRequest>(initialForm);
+    useState<CreateItemRequest>(
+      initialData ?? initialForm
+    );
 
-  const [noExpiry, setNoExpiry] =
-    useState(false);
+  useEffect(() => {
+    setForm(initialData ?? initialForm);
+  }, [initialData]);
 
   function update<K extends keyof CreateItemRequest>(
     key: K,
@@ -57,7 +61,6 @@ export default function ItemForm({
     await onSubmit(form);
 
     setForm(initialForm);
-    setNoExpiry(false);
   }
 
   return (
@@ -133,60 +136,17 @@ export default function ItemForm({
         />
 
         <Input
-          label="Cost Price"
+          label="Reorder Level"
           type="number"
-          step="0.01"
-          value={form.costPrice}
+          min={0}
+          value={form.reorderLevel}
           onChange={(e) =>
             update(
-              "costPrice",
+              "reorderLevel",
               Number(e.target.value)
             )
           }
         />
-
-        <div>
-          <Toggle
-            label="No Expiry Date"
-            checked={noExpiry}
-            onChange={(checked) => {
-              setNoExpiry(checked);
-
-              if (checked) {
-                update("expiryDate", null);
-              }
-            }}
-          />
-
-          {noExpiry ? (
-            <div
-              style={{
-                marginTop: "12px",
-                padding: "12px",
-                background: "#f3f8ff",
-                border: "1px solid #c7ddff",
-                borderRadius: "8px",
-                color: "#2563eb",
-                fontSize: "14px",
-                fontWeight: 500,
-              }}
-            >
-              ✓ This item does not expire.
-            </div>
-          ) : (
-            <Input
-              label="Expiry Date"
-              type="date"
-              value={form.expiryDate ?? ""}
-              onChange={(e) =>
-                update(
-                  "expiryDate",
-                  e.target.value || null
-                )
-              }
-            />
-          )}
-        </div>
       </div>
 
       <div className={styles.actions}>

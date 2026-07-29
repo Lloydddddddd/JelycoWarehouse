@@ -6,7 +6,6 @@ import {
   FiTruck,
   FiDownload,
   FiUpload,
-  FiClipboard,
   FiBarChart2,
   FiFileText,
   FiLogOut,
@@ -130,7 +129,9 @@ export default function Sidebar() {
           <NavLink
             to="/reports"
             className={({ isActive }) =>
-              isActive ? styles.active : styles.link
+              isActive
+                ? styles.active
+                : styles.link
             }
           >
             <FiFileText />
@@ -160,9 +161,7 @@ export default function Sidebar() {
           variant="danger"
           onClick={logout}
         >
-          <FiLogOut
-            style={{ marginRight: 8 }}
-          />
+          <FiLogOut style={{ marginRight: 8 }} />
           Logout
         </Button>
       </div>

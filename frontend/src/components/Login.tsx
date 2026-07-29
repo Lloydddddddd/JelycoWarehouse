@@ -1,66 +1,279 @@
 import { useState } from "react";
-import { API } from "../config/api";
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ onLogin }: { onLogin: (token: string) => void }) {
+import { API } from "../config/api";
+import Toast from "./common/Toast";
+
+export default function Login({
+  onLogin,
+}: {
+  onLogin: (token: string) => void;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Change this later if your backend URL changes
-  const API_URL = API.auth.login;
+  const [loading, setLoading] = useState(false);
+
+  const [toastMessage, setToastMessage] =
+    useState("");
+
+  const [toastType, setToastType] =
+    useState<"success" | "error">(
+      "error"
+    );
+
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  function showToast(
+    message: string,
+    type: "success" | "error"
+  ) {
+    setToastMessage(message);
+    setToastType(type);
+
+    setTimeout(() => {
+      setToastMessage("");
+    }, 3000);
+  }
+
+  async function handleLogin() {
+    if (loading) return;
+
+    setLoading(true);
+
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const res = await fetch(
+        API.auth.login,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert("Login failed");
+        showToast(
+          "Invalid email or password.",
+          "error"
+        );
+
+        setLoading(false);
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem(
+        "token",
+        data.token
+      );
+
       onLogin(data.token);
-      
+
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
+
+      showToast(
+        "Unable to connect to the server.",
+        "error"
+      );
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div>
-      <h2>🔐 Login</h2>
+    <>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#f5f7fb",
+        }}
+      >
+        <div
+          style={{
+            width: "420px",
+            background: "#fff",
+            borderRadius: "18px",
+            padding: "40px",
+            boxShadow:
+              "0 15px 35px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "35px",
+            }}
+          >
+            <div
+              style={{
+                width: "70px",
+                height: "70px",
+                borderRadius: "16px",
+                background: "#2563eb",
+                color: "#fff",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "28px",
+                fontWeight: "bold",
+                margin:
+                  "0 auto 18px",
+              }}
+            >
+              JW
+            </div>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+            <h1
+              style={{
+                margin: 0,
+                color: "#111827",
+              }}
+            >
+              Jelyco
+            </h1>
+
+            <p
+              style={{
+                marginTop: "8px",
+                color: "#6b7280",
+              }}
+            >
+              Warehouse Management
+              System
+            </p>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+          >
+            <div
+              style={{
+                marginBottom: "20px",
+              }}
+            >
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 600,
+                }}
+              >
+                Email
+              </label>
+
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) =>
+                  setEmail(
+                    e.target.value
+                  )
+                }
+                placeholder="Enter your email"
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius:
+                    "10px",
+                  border:
+                    "1px solid #d1d5db",
+                  fontSize: "15px",
+                  boxSizing:
+                    "border-box",
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                marginBottom: "30px",
+              }}
+            >
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 600,
+                }}
+              >
+                Password
+              </label>
+
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) =>
+                  setPassword(
+                    e.target.value
+                  )
+                }
+                placeholder="Enter your password"
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius:
+                    "10px",
+                  border:
+                    "1px solid #d1d5db",
+                  fontSize: "15px",
+                  boxSizing:
+                    "border-box",
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "14px",
+                background:
+                  "#2563eb",
+                color: "#fff",
+                border: "none",
+                borderRadius:
+                  "10px",
+                cursor: loading
+                  ? "not-allowed"
+                  : "pointer",
+                opacity: loading
+                  ? 0.7
+                  : 1,
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              {loading
+                ? "Logging in..."
+                : "Login"}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <Toast
+        visible={toastMessage !== ""}
+        message={toastMessage}
+        type={toastType}
       />
-
-      <br />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <br />
-
-      <button onClick={handleLogin}>Login</button>
-    </div>
+    </>
   );
 }
