@@ -19,12 +19,24 @@ namespace JelycoWarehouse.Controllers
         }
 
         [HttpPost("register")]
-        [AllowAnonymous]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin"
+        )]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             var userId = await _authService.RegisterAsync(dto);
-            if (userId == null) return BadRequest(new { error = "Registration failed" });
-            return Ok(new { userId });
+
+            if (userId == null)
+                return BadRequest(new
+                {
+                    error = "Registration failed"
+                });
+
+            return Ok(new
+            {
+                userId
+            });
         }
 
         [HttpPost("login")]

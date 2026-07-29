@@ -138,13 +138,5 @@ namespace JelycoWarehouse.Controllers
 
             return NoContent();
         }
-
-        // GET: api/transactions/dashboard
-        [HttpGet("dashboard")]
-        public async Task<ActionResult<DashboardDto>> GetDashboard()
-        {
-            var dashboard = await _transactionService.GetDashboardAsync();
-            return Ok(dashboard);
-        }
     }
 }

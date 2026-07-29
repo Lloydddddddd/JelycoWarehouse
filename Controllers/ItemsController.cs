@@ -66,8 +66,7 @@ namespace JelycoWarehouse.Controllers
                 // NEW
                 ReorderLevel = dto.ReorderLevel,
 
-                CostPrice = dto.CostPrice,
-                ExpiryDate = dto.ExpiryDate,
+                CostPrice = 0,
                 IsActive = true
             };
 
@@ -86,7 +85,6 @@ namespace JelycoWarehouse.Controllers
                 Quantity = item.Quantity,
                 ReorderLevel = item.ReorderLevel,
                 CostPrice = item.CostPrice,
-                ExpiryDate = item.ExpiryDate,
                 IsActive = item.IsActive
             });
         }
@@ -107,8 +105,6 @@ namespace JelycoWarehouse.Controllers
             item.Color = dto.Color;
             item.Category = dto.Category;
             item.ReorderLevel = dto.ReorderLevel;
-            item.CostPrice = dto.CostPrice;
-            item.ExpiryDate = dto.ExpiryDate;
 
             await _itemService.UpdateAsync(item);
 
