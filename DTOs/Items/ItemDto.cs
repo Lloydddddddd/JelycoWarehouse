@@ -25,8 +25,6 @@
 
         public decimal CostPrice { get; set; }
 
-        public DateTime? ExpiryDate { get; set; }
-
         public bool IsActive { get; set; }
     }
 }

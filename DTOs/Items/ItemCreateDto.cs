@@ -25,10 +25,5 @@ namespace JelycoWarehouse.DTOs.Items
 
         [Range(0, int.MaxValue)]
         public int ReorderLevel { get; set; } = 10;
-
-        [Range(typeof(decimal), "0", "999999999")]
-        public decimal CostPrice { get; set; }
-
-        public DateTime? ExpiryDate { get; set; }
     }
 }
