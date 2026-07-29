@@ -35,14 +35,3 @@ export async function createSupplierDelivery(
 
   return response.json();
 }
-
-export async function deleteSupplierDelivery(
-  id: number
-) {
-  await apiClient(
-    API.supplierDeliveries.byId(id),
-    {
-      method: "DELETE",
-    }
-  );
-}

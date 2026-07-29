@@ -35,14 +35,3 @@ export async function createWarehouseRelease(
 
   return response.json();
 }
-
-export async function deleteWarehouseRelease(
-  id: number
-) {
-  await apiClient(
-    API.warehouseReleases.byId(id),
-    {
-      method: "DELETE",
-    }
-  );
-}

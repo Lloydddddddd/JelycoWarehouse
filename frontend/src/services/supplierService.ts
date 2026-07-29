@@ -30,9 +30,3 @@ export async function updateSupplier(
     body: JSON.stringify(supplier),
   });
 }
-
-export async function deleteSupplier(id: number) {
-  await apiClient(API.suppliers.byId(id), {
-    method: "DELETE",
-  });
-}
