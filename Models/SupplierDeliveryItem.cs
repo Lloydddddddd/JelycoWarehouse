@@ -10,11 +10,12 @@ public class SupplierDeliveryItem
 
     public int Quantity { get; set; }
 
-    // Cost per unit
     public decimal UnitCost { get; set; }
 
-    // Quantity × UnitCost
     public decimal TotalCost { get; set; }
+
+    // NEW
+    public DateTime? ExpiryDate { get; set; }
 
     public SupplierDelivery? SupplierDelivery { get; set; }
 

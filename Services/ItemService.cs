@@ -92,7 +92,6 @@ namespace JelycoWarehouse.Services
                 Quantity = item.Quantity,
                 ReorderLevel = item.ReorderLevel,
                 CostPrice = item.CostPrice,
-                ExpiryDate = item.ExpiryDate,
                 IsActive = item.IsActive
             };
         }

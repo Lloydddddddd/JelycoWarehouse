@@ -230,41 +230,6 @@ namespace JelycoWarehouse.Services
         }
 
         // =========================
-        // DASHBOARD
-        // =========================
-
-        public async Task<DashboardDto> GetDashboardAsync()
-        {
-            var totalItems =
-                await _context.Items.CountAsync();
-
-            var totalStock =
-                await _context.Items
-                    .Select(i => (int?)i.Quantity)
-                    .SumAsync() ?? 0;
-
-            var totalIn =
-                await _context.Transactions
-                    .Where(t => t.Type == TransactionType.IN)
-                    .Select(t => (int?)t.Quantity)
-                    .SumAsync() ?? 0;
-
-            var totalOut =
-                await _context.Transactions
-                    .Where(t => t.Type == TransactionType.OUT)
-                    .Select(t => (int?)t.Quantity)
-                    .SumAsync() ?? 0;
-
-            return new DashboardDto
-            {
-                TotalItems = totalItems,
-                TotalStock = totalStock,
-                TotalIn = totalIn,
-                TotalOut = totalOut
-            };
-        }
-
-        // =========================
         // CURRENT STOCK
         // =========================
 
