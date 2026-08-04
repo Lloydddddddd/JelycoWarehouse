@@ -28,10 +28,12 @@ namespace JelycoWarehouse.Controllers
             var userId = await _authService.RegisterAsync(dto);
 
             if (userId == null)
+            {
                 return BadRequest(new
                 {
                     error = "Registration failed"
                 });
+            }
 
             return Ok(new
             {
@@ -44,8 +46,16 @@ namespace JelycoWarehouse.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var result = await _authService.LoginAsync(dto);
-            if (result == null) return Unauthorized(new { error = "Invalid credentials" });
-            return Ok(result);
+
+            if (!result.Success)
+            {
+                return Unauthorized(new
+                {
+                    error = result.Message
+                });
+            }
+
+            return Ok(result.Tokens);
         }
 
         [HttpPost("refresh")]
@@ -53,21 +63,43 @@ namespace JelycoWarehouse.Controllers
         public async Task<IActionResult> Refresh([FromBody] RefreshDto dto)
         {
             var result = await _authService.RefreshAsync(dto.RefreshToken);
-            if (result == null) return Unauthorized(new { error = "Invalid or expired refresh token" });
+
+            if (result == null)
+            {
+                return Unauthorized(new
+                {
+                    error = "Invalid or expired refresh token"
+                });
+            }
+
             return Ok(result);
         }
 
         [HttpPost("logout")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Logout()
         {
             var userId = User.FindFirst("uid")?.Value;
-            if (userId == null) return Unauthorized();
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
 
             var success = await _authService.LogoutAsync(userId);
-            if (!success) return Unauthorized(new { error = "Logout failed" });
 
-            return Ok(new { message = "Logged out successfully" });
+            if (!success)
+            {
+                return Unauthorized(new
+                {
+                    error = "Logout failed"
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Logged out successfully"
+            });
         }
     }
 }
