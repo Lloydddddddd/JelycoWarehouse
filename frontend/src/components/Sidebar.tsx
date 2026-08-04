@@ -8,8 +8,11 @@ import {
   FiUpload,
   FiBarChart2,
   FiFileText,
+  FiUsers,
   FiLogOut,
 } from "react-icons/fi";
+
+import { useAuth } from "../context/AuthContext";
 
 import styles from "./Sidebar.module.css";
 import Button from "./ui/Button";
@@ -17,8 +20,10 @@ import Button from "./ui/Button";
 export default function Sidebar() {
   const navigate = useNavigate();
 
-  function logout() {
-    localStorage.removeItem("token");
+  const { user, logout } = useAuth();
+
+  function handleLogout() {
+    logout();
     navigate("/login");
   }
 
@@ -45,21 +50,30 @@ export default function Sidebar() {
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiHome />
             Dashboard
           </NavLink>
 
+          {/* Admin Only */}
+          {user?.role === "Admin" && (
+            <NavLink
+              to="/users"
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiUsers />
+              Users
+            </NavLink>
+          )}
+
           <NavLink
             to="/brands"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiTag />
@@ -69,9 +83,7 @@ export default function Sidebar() {
           <NavLink
             to="/items"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiPackage />
@@ -81,9 +93,7 @@ export default function Sidebar() {
           <NavLink
             to="/suppliers"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiTruck />
@@ -93,9 +103,7 @@ export default function Sidebar() {
           <NavLink
             to="/supplier-deliveries"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiDownload />
@@ -105,9 +113,7 @@ export default function Sidebar() {
           <NavLink
             to="/warehouse-releases"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiUpload />
@@ -117,9 +123,7 @@ export default function Sidebar() {
           <NavLink
             to="/transactions"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiBarChart2 />
@@ -129,9 +133,7 @@ export default function Sidebar() {
           <NavLink
             to="/reports"
             className={({ isActive }) =>
-              isActive
-                ? styles.active
-                : styles.link
+              isActive ? styles.active : styles.link
             }
           >
             <FiFileText />
@@ -143,23 +145,23 @@ export default function Sidebar() {
       <div className={styles.footer}>
         <div className={styles.userCard}>
           <div className={styles.avatar}>
-            A
+            {user?.fullName?.charAt(0).toUpperCase() ?? "?"}
           </div>
 
           <div>
             <div className={styles.userName}>
-              Administrator
+              {user?.fullName ?? "Loading..."}
             </div>
 
             <div className={styles.userRole}>
-              Warehouse Admin
+              {user?.role ?? ""}
             </div>
           </div>
         </div>
 
         <Button
           variant="danger"
-          onClick={logout}
+          onClick={handleLogout}
         >
           <FiLogOut style={{ marginRight: 8 }} />
           Logout

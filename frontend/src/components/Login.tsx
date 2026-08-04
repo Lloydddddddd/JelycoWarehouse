@@ -42,49 +42,56 @@ export default function Login({
     setLoading(true);
 
     try {
-      const res = await fetch(
-        API.auth.login,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      const res = await fetch(API.auth.login, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
       const data = await res.json();
 
-      if (!res.ok) {
+      if (!data.success) {
         showToast(
-          "Invalid email or password.",
+          data.message ?? "Login failed.",
           "error"
         );
 
-        setLoading(false);
         return;
       }
 
       localStorage.setItem(
         "token",
-        data.token
+        data.tokens.token
       );
 
-      onLogin(data.token);
+      localStorage.setItem(
+        "refreshToken",
+        data.tokens.refreshToken
+      );
+
+      onLogin(data.tokens.token);
+
+      showToast(
+        "Login successful.",
+        "success"
+      );
 
       navigate("/dashboard");
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err);
 
       showToast(
         "Unable to connect to the server.",
         "error"
       );
-    } finally {
+    }
+    finally {
       setLoading(false);
     }
   }

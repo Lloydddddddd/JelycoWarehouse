@@ -1,0 +1,35 @@
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 28px;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #111827;
+}
+
+.header p {
+    margin-top: 6px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.actions {
+    margin-top: 28px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
