@@ -9,5 +9,8 @@ namespace JelycoWarehouse.Models
         // Refresh token support
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        // Account status
+        public bool IsActive { get; set; } = true;
     }
 }
