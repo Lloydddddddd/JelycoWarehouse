@@ -142,6 +142,7 @@ builder.Services.AddScoped<IWarehouseReleaseRepository, WarehouseReleaseReposito
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
 
 
 // Services
@@ -160,6 +161,7 @@ builder.Services.AddScoped<SupplierDeliveryReportService>();
 builder.Services.AddScoped<WarehouseReleaseReportService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AdminUserService>();
 
 
 // CORS
