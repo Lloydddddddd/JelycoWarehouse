@@ -13,7 +13,7 @@ namespace JelycoWarehouse.Services
         }
 
         public Task<string?> RegisterAsync(RegisterDto dto) => _authRepository.RegisterAsync(dto);
-        public Task<AuthResponseDto?> LoginAsync(LoginDto dto) => _authRepository.LoginAsync(dto);
+        public Task<LoginResultDto> LoginAsync(LoginDto dto)  => _authRepository.LoginAsync(dto);
         public Task<AuthResponseDto?> RefreshAsync(string refreshToken) => _authRepository.RefreshAsync(refreshToken);
         public Task<bool> LogoutAsync(string userId) => _authRepository.LogoutAsync(userId);
     }
