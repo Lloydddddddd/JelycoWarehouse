@@ -14,13 +14,10 @@ export default function Login({
 
   const [loading, setLoading] = useState(false);
 
-  const [toastMessage, setToastMessage] =
-    useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
   const [toastType, setToastType] =
-    useState<"success" | "error">(
-      "error"
-    );
+    useState<"success" | "error">("error");
 
   const navigate = useNavigate();
 
@@ -55,43 +52,63 @@ export default function Login({
 
       const data = await res.json();
 
-      if (!data.success) {
+      console.log("HTTP Status:", res.status);
+      console.log("LOGIN RESPONSE:", data);
+
+      if (!res.ok) {
         showToast(
           data.message ?? "Login failed.",
           "error"
         );
-
         return;
       }
 
-      localStorage.setItem(
-        "token",
-        data.tokens.token
+      // Handle either response shape
+      const token =
+        data.tokens?.token ??
+        data.token;
+
+      const refreshToken =
+        data.tokens?.refreshToken ??
+        data.refreshToken;
+
+      console.log("Resolved token:", token);
+      console.log("Resolved refresh token:", refreshToken);
+
+      if (!token) {
+        console.error("No token returned from API.");
+        showToast(
+          "Login response did not contain a token.",
+          "error"
+        );
+        return;
+      }
+
+      localStorage.setItem("token", token);
+
+      if (refreshToken) {
+        localStorage.setItem(
+          "refreshToken",
+          refreshToken
+        );
+      }
+
+      console.log(
+        "Stored token:",
+        localStorage.getItem("token")
       );
 
-      localStorage.setItem(
-        "refreshToken",
-        data.tokens.refreshToken
-      );
-
-      onLogin(data.tokens.token);
-
-      showToast(
-        "Login successful.",
-        "success"
-      );
+      onLogin(token);
 
       navigate("/dashboard");
-    }
-    catch (err) {
-      console.error(err);
+    } catch (err) {
+      console.error("LOGIN ERROR:", err);
 
       showToast(
         "Unable to connect to the server.",
         "error"
       );
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   }
@@ -135,8 +152,7 @@ export default function Login({
                 alignItems: "center",
                 fontSize: "28px",
                 fontWeight: "bold",
-                margin:
-                  "0 auto 18px",
+                margin: "0 auto 18px",
               }}
             >
               JW
@@ -157,8 +173,7 @@ export default function Login({
                 color: "#6b7280",
               }}
             >
-              Warehouse Management
-              System
+              Warehouse Management System
             </p>
           </div>
 
@@ -188,21 +203,16 @@ export default function Login({
                 required
                 value={email}
                 onChange={(e) =>
-                  setEmail(
-                    e.target.value
-                  )
+                  setEmail(e.target.value)
                 }
                 placeholder="Enter your email"
                 style={{
                   width: "100%",
                   padding: "12px",
-                  borderRadius:
-                    "10px",
-                  border:
-                    "1px solid #d1d5db",
+                  borderRadius: "10px",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                 }}
               />
             </div>
@@ -227,21 +237,16 @@ export default function Login({
                 required
                 value={password}
                 onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
+                  setPassword(e.target.value)
                 }
                 placeholder="Enter your password"
                 style={{
                   width: "100%",
                   padding: "12px",
-                  borderRadius:
-                    "10px",
-                  border:
-                    "1px solid #d1d5db",
+                  borderRadius: "10px",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                 }}
               />
             </div>
@@ -252,18 +257,14 @@ export default function Login({
               style={{
                 width: "100%",
                 padding: "14px",
-                background:
-                  "#2563eb",
+                background: "#2563eb",
                 color: "#fff",
                 border: "none",
-                borderRadius:
-                  "10px",
+                borderRadius: "10px",
                 cursor: loading
                   ? "not-allowed"
                   : "pointer",
-                opacity: loading
-                  ? 0.7
-                  : 1,
+                opacity: loading ? 0.7 : 1,
                 fontWeight: "bold",
                 fontSize: "16px",
               }}
