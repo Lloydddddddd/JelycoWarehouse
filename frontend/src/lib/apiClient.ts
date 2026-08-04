@@ -1,36 +1,48 @@
 export async function apiClient(
-  url: string,
-  options: RequestInit = {}
+    url: string,
+    options: RequestInit = {}
 ) {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
 
-      ...(token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {}),
+            ...(token
+                ? {
+                      Authorization: `Bearer ${token}`,
+                  }
+                : {}),
 
-      ...options.headers,
-    },
-  });
+            ...options.headers,
+        },
+    });
 
-  // Token expired or invalid
-  if (response.status === 401) {
-    localStorage.removeItem("token");
+    // Token expired or invalid
+    if (response.status === 401) {
+        localStorage.removeItem("token");
 
-    window.location.href = "/login";
+        window.location.href = "/login";
 
-    throw new Error("Unauthorized");
-  }
+        throw new Error("Unauthorized");
+    }
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
+    if (!response.ok) {
+        let message = `HTTP ${response.status}`;
 
-  return response;
+        try {
+            const error = await response.json();
+
+            if (error.message) {
+                message = error.message;
+            }
+        } catch {
+            // Ignore if response body is not JSON
+        }
+
+        throw new Error(message);
+    }
+
+    return response;
 }

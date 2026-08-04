@@ -9,7 +9,8 @@ export const API = {
   },
 
   users: {
-    me: `${BASE_URL}/users/me`,
+      me: `${BASE_URL}/users/me`,
+      password: `${BASE_URL}/users/me/password`,
   },
 
   dashboard: {
@@ -64,5 +65,11 @@ export const API = {
     expiringItems: `${BASE_URL}/reports/expiring-items`,
     supplierDeliveries: `${BASE_URL}/reports/supplier-deliveries`,
     warehouseReleases: `${BASE_URL}/reports/warehouse-releases`,
+  },
+
+  adminUsers: {
+      all: `${BASE_URL}/admin/users`,
+      byId: (id: string) => `${BASE_URL}/admin/users/${id}`,
+      status: (id: string) => `${BASE_URL}/admin/users/${id}/status`,
   },
 };
