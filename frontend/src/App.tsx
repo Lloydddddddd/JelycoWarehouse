@@ -15,6 +15,8 @@ import SupplierDeliveriesPage from "./pages/SupplierDeliveriesPage";
 import WarehouseReleasesPage from "./pages/WarehouseReleasesPage";
 import BrandsPage from "./pages/BrandsPage";
 import ReportsPage from "./pages/ReportsPage";
+import ProfilePage from "./pages/ProfilePage";
+import UsersPage from "./pages/UsersPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
@@ -33,7 +35,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Public Route */}
         <Route
           path="/login"
           element={
@@ -43,7 +44,6 @@ export default function App() {
           }
         />
 
-        {/* Protected Routes */}
         <Route
           element={
             <ProtectedRoute>
@@ -54,6 +54,11 @@ export default function App() {
           <Route
             path="/dashboard"
             element={<DashboardPage />}
+          />
+
+          <Route
+            path="/profile"
+            element={<ProfilePage />}
           />
 
           <Route
@@ -72,31 +77,31 @@ export default function App() {
           />
 
           <Route
-            path="/transactions"
-            element={<TransactionsPage />}
-          />
-
-          <Route
             path="/supplier-deliveries"
-            element={
-              <SupplierDeliveriesPage />
-            }
+            element={<SupplierDeliveriesPage />}
           />
 
           <Route
             path="/warehouse-releases"
-            element={
-              <WarehouseReleasesPage />
-            }
+            element={<WarehouseReleasesPage />}
+          />
+
+          <Route
+            path="/transactions"
+            element={<TransactionsPage />}
           />
 
           <Route
             path="/reports"
             element={<ReportsPage />}
           />
+
+          <Route
+            path="/users"
+            element={<UsersPage />}
+          />
         </Route>
 
-        {/* Default */}
         <Route
           path="*"
           element={
@@ -113,7 +118,6 @@ export default function App() {
             )
           }
         />
-
       </Routes>
     </BrowserRouter>
   );
