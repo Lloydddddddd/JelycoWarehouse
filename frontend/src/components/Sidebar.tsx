@@ -29,11 +29,9 @@ export default function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      <div>
+      <div className={styles.top}>
         <div className={styles.brand}>
-          <div className={styles.logoCircle}>
-            JW
-          </div>
+          <div className={styles.logoCircle}>JW</div>
 
           <div>
             <h2 className={styles.logo}>
@@ -57,7 +55,6 @@ export default function Sidebar() {
             Dashboard
           </NavLink>
 
-          {/* Admin Only */}
           {user?.role === "Admin" && (
             <NavLink
               to="/users"
