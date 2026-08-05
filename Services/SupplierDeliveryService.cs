@@ -44,7 +44,7 @@ namespace JelycoWarehouse.Services
                     Quantity = i.Quantity,
                     UnitCost = i.UnitCost,
                     TotalCost = i.TotalCost,
-                    ExpiryDate = i.ExpiryDate // NEW
+                    ExpiryDate = i.ExpiryDate
                 }).ToList()
             });
         }
@@ -72,7 +72,7 @@ namespace JelycoWarehouse.Services
                     Quantity = i.Quantity,
                     UnitCost = i.UnitCost,
                     TotalCost = i.TotalCost,
-                    ExpiryDate = i.ExpiryDate // NEW
+                    ExpiryDate = i.ExpiryDate
                 }).ToList()
             };
         }
@@ -123,10 +123,12 @@ namespace JelycoWarehouse.Services
                     throw new InvalidOperationException(
                         "Unit cost cannot be negative.");
 
-                // NEW
-                // Keep Item.ExpiryDate updated so the existing
-                // Expiring Report continues to work.
+                // Update the item's latest expiry date and cost price
                 item.ExpiryDate = dtoItem.ExpiryDate;
+                item.CostPrice = dtoItem.UnitCost;
+
+                // Save the updated item
+                await _itemRepo.UpdateAsync(item);
 
                 delivery.Items.Add(new SupplierDeliveryItem
                 {
@@ -172,7 +174,7 @@ namespace JelycoWarehouse.Services
                     Quantity = i.Quantity,
                     UnitCost = i.UnitCost,
                     TotalCost = i.TotalCost,
-                    ExpiryDate = i.ExpiryDate // NEW
+                    ExpiryDate = i.ExpiryDate
                 }).ToList()
             };
         }

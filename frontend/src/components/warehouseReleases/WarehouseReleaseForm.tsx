@@ -21,8 +21,9 @@ export default function WarehouseReleaseForm({
 }: Props) {
   const [items, setItems] = useState<Item[]>([]);
 
+  // Automatically default to today's date
   const [releaseDate, setReleaseDate] =
-    useState("");
+    useState(new Date().toISOString().split("T")[0]);
 
   const [destination, setDestination] =
     useState("");
