@@ -14,7 +14,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Controllers
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
@@ -22,7 +21,6 @@ builder.Services.AddControllers()
         options.SerializerSettings.ReferenceLoopHandling =
             Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
-
 
 // Connection String
 var connectionString = builder.Environment.IsDevelopment()
@@ -32,7 +30,6 @@ var connectionString = builder.Environment.IsDevelopment()
 builder.Services.AddDbContext<WarehouseContext>(options =>
     options.UseSqlServer(connectionString));
 
-
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -40,7 +37,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<WarehouseContext>()
 .AddDefaultTokenProviders();
-
 
 // Prevent redirects
 builder.Services.ConfigureApplicationCookie(options =>
@@ -57,7 +53,6 @@ builder.Services.ConfigureApplicationCookie(options =>
         return Task.CompletedTask;
     };
 });
-
 
 // JWT
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -83,14 +78,14 @@ builder.Services
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
             IssuerSigningKey =
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtKey)),
 
             RoleClaimType = ClaimTypes.Role,
 
             ClockSkew = TimeSpan.Zero
         };
     });
-
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -104,33 +99,34 @@ builder.Services.AddSwaggerGen(c =>
             Version = "v1"
         });
 
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter ONLY the JWT token."
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+    c.AddSecurityDefinition("Bearer",
+        new OpenApiSecurityScheme
         {
-            new OpenApiSecurityScheme
-            {
-                Reference =
-                    new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter ONLY the JWT token."
+        });
 
+    c.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference =
+                        new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
 
 // Repositories
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
@@ -143,7 +139,6 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
-
 
 // Services
 builder.Services.AddScoped<ItemService>();
@@ -163,7 +158,6 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdminUserService>();
 
-
 // CORS
 builder.Services.AddCors(options =>
 {
@@ -171,30 +165,31 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:5173",
-                "https://jelyco-warehouse.vercel.app"
-            )
+                "https://jelyco-warehouse.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
 
-
 var app = builder.Build();
-
 
 // Seeder
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
 
-    var context = scope.ServiceProvider.GetRequiredService<WarehouseContext>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var context =
+        scope.ServiceProvider.GetRequiredService<WarehouseContext>();
+
+    var roleManager =
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var userManager =
+        scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     await DataSeeder.Seed(context, roleManager, userManager);
 }
-
 
 // Pipeline
 app.UseSwagger();

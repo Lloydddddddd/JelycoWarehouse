@@ -45,84 +45,103 @@ namespace JelycoWarehouse.Repositories
 
         public async Task<LoginResultDto> LoginAsync(LoginDto dto)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-
-            if (user == null)
+            try
             {
-                return new LoginResultDto
+                var user = await _userManager.FindByEmailAsync(dto.Email);
+
+                if (user == null)
                 {
-                    Success = false,
-                    Message = "Invalid email or password."
-                };
-            }
-
-            if (!user.IsActive)
-            {
-                return new LoginResultDto
-                {
-                    Success = false,
-                    Message = "Your account has been deactivated. Please contact an administrator."
-                };
-            }
-
-            var validPassword =
-                await _userManager.CheckPasswordAsync(user, dto.Password);
-
-            if (!validPassword)
-            {
-                return new LoginResultDto
-                {
-                    Success = false,
-                    Message = "Invalid email or password."
-                };
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? string.Empty),
-                new Claim("uid", user.Id ?? string.Empty)
-            };
-
-            claims.AddRange(
-                roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-            var jwtKey = _config["Jwt:Key"]!;
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey));
-
-            var creds = new SigningCredentials(
-                key,
-                SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: creds
-            );
-
-            var refreshToken = Guid.NewGuid().ToString();
-
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-
-            await _userManager.UpdateAsync(user);
-
-            return new LoginResultDto
-            {
-                Success = true,
-                Tokens = new AuthResponseDto
-                {
-                    Token = new JwtSecurityTokenHandler()
-                        .WriteToken(token),
-
-                    RefreshToken = refreshToken
+                    return new LoginResultDto
+                    {
+                        Success = false,
+                        Message = "USER_NOT_FOUND"
+                    };
                 }
+
+                if (!user.IsActive)
+                {
+                    return new LoginResultDto
+                    {
+                        Success = false,
+                        Message = "USER_INACTIVE"
+                    };
+                }
+
+                var validPassword =
+                    await _userManager.CheckPasswordAsync(user, dto.Password);
+
+                if (!validPassword)
+                {
+                    return new LoginResultDto
+                    {
+                        Success = false,
+                        Message = "INVALID_PASSWORD"
+                    };
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? ""),
+                new Claim("uid", user.Id)
             };
+
+                claims.AddRange(
+                    roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+                var jwtKey = _config["Jwt:Key"]!;
+
+                var key = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtKey));
+
+                var creds = new SigningCredentials(
+                    key,
+                    SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: _config["Jwt:Issuer"],
+                    audience: _config["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(2),
+                    signingCredentials: creds);
+
+                var refreshToken = Guid.NewGuid().ToString();
+
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+                var updateResult = await _userManager.UpdateAsync(user);
+
+                if (!updateResult.Succeeded)
+                {
+                    return new LoginResultDto
+                    {
+                        Success = false,
+                        Message = string.Join(", ",
+                            updateResult.Errors.Select(e => e.Description))
+                    };
+                }
+
+                return new LoginResultDto
+                {
+                    Success = true,
+                    Tokens = new AuthResponseDto
+                    {
+                        Token = new JwtSecurityTokenHandler()
+                            .WriteToken(token),
+                        RefreshToken = refreshToken
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LoginResultDto
+                {
+                    Success = false,
+                    Message = ex.ToString()
+                };
+            }
         }
 
         public async Task<AuthResponseDto?> RefreshAsync(string refreshToken)
