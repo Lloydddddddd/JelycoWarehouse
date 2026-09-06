@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer"
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class TransactionsController : ControllerBase
@@ -59,6 +62,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // POST: api/transactions
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager,Staff"
+        )]
         [HttpPost]
         public async Task<ActionResult<TransactionDto>> PostTransaction(TransactionCreateDto dto)
         {
@@ -87,6 +94,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // PUT: api/transactions/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTransaction(int id, TransactionUpdateDto dto)
         {
@@ -131,6 +142,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // DELETE: api/transactions/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

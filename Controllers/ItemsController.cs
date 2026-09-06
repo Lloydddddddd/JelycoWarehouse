@@ -59,8 +59,8 @@ namespace JelycoWarehouse.Controllers
                 Category = dto.Category,
 
                 // Stock starts at zero.
-                // It will only change through Supplier Deliveries
-                // and Warehouse Releases.
+                // It will only change through Supplier Deliveries,
+                // Warehouse Releases, and Inventory Adjustments.
                 Quantity = 0,
 
                 // NEW
