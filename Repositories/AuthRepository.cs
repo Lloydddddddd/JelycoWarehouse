@@ -38,7 +38,7 @@ namespace JelycoWarehouse.Repositories
                 return null;
             }
 
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, "Viewer");
 
             return user.Id;
         }

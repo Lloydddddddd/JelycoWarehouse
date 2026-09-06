@@ -16,16 +16,23 @@ namespace JelycoWarehouse.Repositories
 
         public async Task<DashboardDto> GetDashboardAsync()
         {
-            var totalItems = await _context.Items.CountAsync();
+            var totalItems = await _context.Items
+                .CountAsync(i => i.IsActive);
 
-            var totalStock = await _context.Items.SumAsync(i => i.Quantity);
+            var totalStock = await _context.Items
+                .Where(i => i.IsActive)
+                .SumAsync(i => i.Quantity);
 
-            var inventoryValue = await _context.Items.SumAsync(i =>
-                i.Quantity * i.CostPrice);
+            var inventoryValue = await _context.Items
+                .Where(i => i.IsActive)
+                .SumAsync(i =>
+                    i.Quantity * i.CostPrice);
 
             // Uses each item's configured reorder level
-            var lowStockItems = await _context.Items.CountAsync(i =>
-                i.Quantity <= i.ReorderLevel);
+            var lowStockItems = await _context.Items
+                .CountAsync(i =>
+                    i.IsActive &&
+                    i.Quantity <= i.ReorderLevel);
 
             var totalIn = await _context.Transactions
                 .Where(t => t.Type == Enums.TransactionType.IN)
