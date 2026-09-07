@@ -13,6 +13,7 @@
     flex-direction: column;
 
     padding: 24px;
+
     box-sizing: border-box;
 
     border-right: 1px solid rgba(255,255,255,.06);
@@ -20,7 +21,11 @@
     overflow: hidden;
 }
 
-/* NEW */
+
+/* ============================= */
+/* TOP SECTION */
+/* ============================= */
+
 .top {
     flex: 1;
 
@@ -30,9 +35,17 @@
     min-height: 0;
 }
 
+
+/* ============================= */
+/* BRAND */
+/* ============================= */
+
 .brand {
+
     display: flex;
+
     align-items: center;
+
     gap: 14px;
 
     margin-bottom: 40px;
@@ -40,8 +53,11 @@
     flex-shrink: 0;
 }
 
+
 .logoCircle {
+
     width: 52px;
+
     height: 52px;
 
     border-radius: 14px;
@@ -49,16 +65,21 @@
     background: #2563eb;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-weight: bold;
+
     font-size: 18px;
 
     color: white;
 }
 
+
 .logo {
+
     margin: 0;
 
     font-size: 22px;
@@ -66,7 +87,9 @@
     font-weight: 700;
 }
 
+
 .subtitle {
+
     margin-top: 4px;
 
     color: #94a3b8;
@@ -74,10 +97,18 @@
     font-size: 13px;
 }
 
+
+
+/* ============================= */
+/* NAVIGATION */
+/* ============================= */
+
 .nav {
+
     flex: 1;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 8px;
@@ -87,20 +118,25 @@
     padding-right: 6px;
 
     min-height: 0;
+
+    /* Hide scrollbar */
+    scrollbar-width: none;
 }
+
 
 .nav::-webkit-scrollbar {
-    width: 6px;
+
+    display: none;
+
 }
 
-.nav::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.18);
-    border-radius: 999px;
-}
+
 
 .link,
 .active {
+
     display: flex;
+
     align-items: center;
 
     gap: 14px;
@@ -118,18 +154,26 @@
     flex-shrink: 0;
 }
 
+
 .link svg,
 .active svg {
+
     font-size: 20px;
+
 }
 
+
 .link:hover {
+
     background: #1e293b;
 
     color: white;
+
 }
 
+
 .active {
+
     background: #2563eb;
 
     color: white;
@@ -137,21 +181,35 @@
     font-weight: 600;
 
     box-shadow: 0 8px 18px rgba(37,99,235,.35);
+
 }
 
+
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
 .footer {
+
     flex-shrink: 0;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 16px;
 
     margin-top: 20px;
+
 }
 
+
+
 .userCard {
+
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -163,10 +221,15 @@
     background: rgba(255,255,255,.05);
 
     border: 1px solid rgba(255,255,255,.08);
+
 }
 
+
+
 .avatar {
+
     width: 44px;
+
     height: 44px;
 
     border-radius: 50%;
@@ -176,28 +239,42 @@
     color: white;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-weight: bold;
+
     font-size: 18px;
+
 }
 
+
+
 .userName {
+
     font-size: 15px;
 
     font-weight: 600;
 
     color: white;
+
 }
 
+
+
 .userRole {
+
     margin-top: 3px;
 
     color: #94a3b8;
 
     font-size: 13px;
+
 }
+
+
 
 /* ============================= */
 /* MOBILE SIDEBAR DRAWER */
@@ -205,13 +282,17 @@
 
 @media (max-width: 768px) {
 
+
     .sidebar {
+
+        width: 260px;
 
         transform: translateX(-100%);
 
         transition: transform 0.3s ease;
 
         z-index: 1000;
+
     }
 
 

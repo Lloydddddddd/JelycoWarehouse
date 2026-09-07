@@ -16,6 +16,11 @@ import { useAuth } from "../context/AuthContext";
 
 import styles from "./Sidebar.module.css";
 import Button from "./ui/Button";
+import {
+  canManageUsers,
+  canOperateWarehouse,
+  canViewReports,
+} from "../utils/permissions";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -88,7 +93,7 @@ export default function Sidebar({
 
 
 
-          {user?.role === "Admin" && (
+          {canManageUsers(user) && (
             <NavLink
               to="/users"
               onClick={handleNavigate}
@@ -142,55 +147,63 @@ export default function Sidebar({
 
 
 
-          <NavLink
-            to="/supplier-deliveries"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiDownload />
-            Deliveries
-          </NavLink>
+          {canOperateWarehouse(user) && (
+            <NavLink
+              to="/supplier-deliveries"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiDownload />
+              Deliveries
+            </NavLink>
+          )}
 
 
 
-          <NavLink
-            to="/warehouse-releases"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiUpload />
-            Releases
-          </NavLink>
+          {canOperateWarehouse(user) && (
+            <NavLink
+              to="/warehouse-releases"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiUpload />
+              Releases
+            </NavLink>
+          )}
 
 
 
-          <NavLink
-            to="/transactions"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiBarChart2 />
-            Transactions
-          </NavLink>
+          {canOperateWarehouse(user) && (
+            <NavLink
+              to="/transactions"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiBarChart2 />
+              Transactions
+            </NavLink>
+          )}
 
 
 
-          <NavLink
-            to="/reports"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiFileText />
-            Reports
-          </NavLink>
+          {canViewReports(user) && (
+            <NavLink
+              to="/reports"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiFileText />
+              Reports
+            </NavLink>
+          )}
 
 
         </nav>
