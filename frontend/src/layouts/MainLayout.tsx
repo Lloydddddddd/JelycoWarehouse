@@ -11,12 +11,14 @@ export default function MainLayout() {
   return (
     <div className={styles.layout}>
 
-      <button
-        className={styles.menuButton}
-        onClick={() => setSidebarOpen(true)}
-      >
-        <FiMenu />
-      </button>
+      {!sidebarOpen && (
+        <button
+          className={styles.menuButton}
+          onClick={() => setSidebarOpen(true)}
+        >
+          <FiMenu />
+        </button>
+      )}
 
       <Sidebar
         isOpen={sidebarOpen}
