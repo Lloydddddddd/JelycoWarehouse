@@ -147,3 +147,57 @@
 .logout:hover {
     background: #fef2f2 !important;
 }
+
+/* ============================= */
+/* MOBILE RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+    .topbar {
+
+        height: auto;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 16px;
+
+        padding-bottom: 16px;
+
+        margin-bottom: 24px;
+
+    }
+
+
+    .topbar h1 {
+
+        font-size: 28px;
+
+    }
+
+
+    .profile {
+
+        width: 100%;
+
+    }
+
+
+    .profileButton {
+
+        width: 100%;
+
+        min-width: unset;
+
+    }
+
+
+    .dropdown {
+
+        width: 100%;
+
+    }
+
+}
