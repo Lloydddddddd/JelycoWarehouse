@@ -17,21 +17,47 @@ import { useAuth } from "../context/AuthContext";
 import styles from "./Sidebar.module.css";
 import Button from "./ui/Button";
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({
+  isOpen,
+  onClose,
+}: SidebarProps) {
+
   const navigate = useNavigate();
 
   const { user, logout } = useAuth();
+
 
   function handleLogout() {
     logout();
     navigate("/login");
   }
 
+
+  function handleNavigate() {
+    onClose();
+  }
+
+
   return (
-    <aside className={styles.sidebar}>
+    <aside
+      className={`${styles.sidebar} ${
+        isOpen ? styles.open : ""
+      }`}
+    >
+
       <div className={styles.top}>
+
         <div className={styles.brand}>
-          <div className={styles.logoCircle}>JW</div>
+
+          <div className={styles.logoCircle}>
+            JW
+          </div>
+
 
           <div>
             <h2 className={styles.logo}>
@@ -42,11 +68,16 @@ export default function Sidebar() {
               Warehouse Management
             </p>
           </div>
+
         </div>
 
+
+
         <nav className={styles.nav}>
+
           <NavLink
             to="/dashboard"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -55,9 +86,12 @@ export default function Sidebar() {
             Dashboard
           </NavLink>
 
+
+
           {user?.role === "Admin" && (
             <NavLink
               to="/users"
+              onClick={handleNavigate}
               className={({ isActive }) =>
                 isActive ? styles.active : styles.link
               }
@@ -67,8 +101,11 @@ export default function Sidebar() {
             </NavLink>
           )}
 
+
+
           <NavLink
             to="/brands"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -77,8 +114,11 @@ export default function Sidebar() {
             Brands
           </NavLink>
 
+
+
           <NavLink
             to="/items"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -87,8 +127,11 @@ export default function Sidebar() {
             Items
           </NavLink>
 
+
+
           <NavLink
             to="/suppliers"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -97,8 +140,11 @@ export default function Sidebar() {
             Suppliers
           </NavLink>
 
+
+
           <NavLink
             to="/supplier-deliveries"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -107,8 +153,11 @@ export default function Sidebar() {
             Deliveries
           </NavLink>
 
+
+
           <NavLink
             to="/warehouse-releases"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -117,8 +166,11 @@ export default function Sidebar() {
             Releases
           </NavLink>
 
+
+
           <NavLink
             to="/transactions"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -127,8 +179,11 @@ export default function Sidebar() {
             Transactions
           </NavLink>
 
+
+
           <NavLink
             to="/reports"
+            onClick={handleNavigate}
             className={({ isActive }) =>
               isActive ? styles.active : styles.link
             }
@@ -136,25 +191,41 @@ export default function Sidebar() {
             <FiFileText />
             Reports
           </NavLink>
+
+
         </nav>
+
       </div>
 
+
+
+
       <div className={styles.footer}>
+
         <div className={styles.userCard}>
+
           <div className={styles.avatar}>
             {user?.fullName?.charAt(0).toUpperCase() ?? "?"}
           </div>
 
+
           <div>
+
             <div className={styles.userName}>
               {user?.fullName ?? "Loading..."}
             </div>
 
+
             <div className={styles.userRole}>
               {user?.role ?? ""}
             </div>
+
           </div>
+
         </div>
+
+
+
 
         <Button
           variant="danger"
@@ -163,7 +234,11 @@ export default function Sidebar() {
           <FiLogOut style={{ marginRight: 8 }} />
           Logout
         </Button>
+
+
       </div>
+
+
     </aside>
   );
 }
