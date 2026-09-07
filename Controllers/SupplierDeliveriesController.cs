@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer"
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class SupplierDeliveriesController : ControllerBase
@@ -40,6 +43,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // POST: api/supplierdeliveries
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager,Staff"
+        )]
         [HttpPost]
         public async Task<ActionResult<SupplierDeliveryDto>> PostDelivery(
             SupplierDeliveryCreateDto dto)
@@ -53,6 +60,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // DELETE: api/supplierdeliveries/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDelivery(int id)
         {

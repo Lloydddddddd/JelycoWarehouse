@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace JelycoWarehouse.Controllers
 {
     [Authorize(
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Admin,Manager")]
+    AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer")]
     [Route("api/reports")]
     [ApiController]
     public class ReportsController : ControllerBase

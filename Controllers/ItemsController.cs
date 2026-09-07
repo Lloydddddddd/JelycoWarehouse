@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer"
+    )]
     [Route("api/items")]
     [ApiController]
     public class ItemsController : ControllerBase
@@ -46,6 +49,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // POST: api/items
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager,Staff"
+        )]
         [HttpPost]
         public async Task<ActionResult<ItemDto>> PostItem(ItemCreateDto dto)
         {
@@ -90,6 +97,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // PUT: api/items/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager,Staff"
+        )]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutItem(int id, ItemUpdateDto dto)
         {
@@ -112,6 +123,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // DELETE: api/items/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(int id)
         {

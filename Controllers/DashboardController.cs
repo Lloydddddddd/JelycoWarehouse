@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer"
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase

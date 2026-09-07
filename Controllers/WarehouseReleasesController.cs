@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JelycoWarehouse.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin,Manager,Staff,Viewer"
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class WarehouseReleasesController : ControllerBase
@@ -40,6 +43,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // POST: api/warehousereleases
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager,Staff"
+        )]
         [HttpPost]
         public async Task<ActionResult<WarehouseReleaseDto>> PostRelease(
             WarehouseReleaseCreateDto dto)
@@ -53,6 +60,10 @@ namespace JelycoWarehouse.Controllers
         }
 
         // DELETE: api/warehousereleases/5
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRelease(int id)
         {
