@@ -29,16 +29,17 @@ export default function ProfilePage() {
     };
 
     useEffect(() => {
-        if (window.location.hash === "#security") {
+        if (!loading && window.location.hash === "#security") {
             setTimeout(() => {
                 document
                     .getElementById("security")
                     ?.scrollIntoView({
                         behavior: "smooth",
+                        block: "start",
                     });
             }, 100);
         }
-    }, []);
+    }, [loading]);
 
     useEffect(() => {
         const loadUser = async () => {
