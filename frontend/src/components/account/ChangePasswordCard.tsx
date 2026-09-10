@@ -73,7 +73,7 @@ export default function ChangePasswordCard({
     };
 
     return (
-        <div className={styles.card}>
+        <div id="security" className={styles.card}>
             <div className={styles.header}>
                 <h3>Security</h3>
                 <p>Change your account password.</p>

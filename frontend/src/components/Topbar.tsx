@@ -104,7 +104,7 @@ export default function Topbar({ title }: TopbarProps) {
 
             <button
               onClick={() => {
-                navigate("/profile");
+                navigate("/profile#security");
                 setOpen(false);
               }}
             >

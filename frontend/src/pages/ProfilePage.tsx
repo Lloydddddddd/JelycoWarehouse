@@ -29,6 +29,18 @@ export default function ProfilePage() {
     };
 
     useEffect(() => {
+        if (window.location.hash === "#security") {
+            setTimeout(() => {
+                document
+                    .getElementById("security")
+                    ?.scrollIntoView({
+                        behavior: "smooth",
+                    });
+            }, 100);
+        }
+    }, []);
+
+    useEffect(() => {
         const loadUser = async () => {
             try {
                 const currentUser = await getCurrentUser();
