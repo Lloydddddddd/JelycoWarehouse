@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import { API } from "../config/api";
 import Toast from "./common/Toast";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login({
   onLogin,
 }: {
   onLogin: (token: string) => void;
 }) {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,7 +21,11 @@ export default function Login({
   const [toastType, setToastType] =
     useState<"success" | "error">("error");
 
+
   const navigate = useNavigate();
+
+  const { refreshUser } = useAuth();
+
 
   function showToast(
     message: string,
@@ -33,84 +39,116 @@ export default function Login({
     }, 3000);
   }
 
+
   async function handleLogin() {
+
     if (loading) return;
 
     setLoading(true);
 
+
     try {
+
       const res = await fetch(API.auth.login, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           email,
           password,
         }),
       });
 
+
       const data = await res.json();
 
-      console.log("HTTP Status:", res.status);
-      console.log("LOGIN RESPONSE:", data);
 
       if (!res.ok) {
+
         showToast(
           data.message ?? "Login failed.",
           "error"
         );
+
         return;
       }
 
-      // Handle either response shape
+
       const token =
         data.tokens?.token ??
         data.token;
+
 
       const refreshToken =
         data.tokens?.refreshToken ??
         data.refreshToken;
 
-      console.log("Resolved token:", token);
-      console.log("Resolved refresh token:", refreshToken);
+
 
       if (!token) {
-        console.error("No token returned from API.");
+
         showToast(
           "Login response did not contain a token.",
           "error"
         );
+
         return;
       }
 
-      localStorage.setItem("token", token);
+
+
+      localStorage.setItem(
+        "token",
+        token
+      );
+
 
       if (refreshToken) {
+
         localStorage.setItem(
           "refreshToken",
           refreshToken
         );
+
       }
 
-      console.log(
-        "Stored token:",
-        localStorage.getItem("token")
-      );
 
+
+      // Update App token state
       onLogin(token);
 
+
+      // Load current user into AuthContext
+      await refreshUser();
+
+
+      // Only navigate after user exists
       navigate("/dashboard");
+
+
     } catch (err) {
-      console.error("LOGIN ERROR:", err);
+
+      console.error(
+        "LOGIN ERROR:",
+        err
+      );
+
 
       showToast(
         "Unable to connect to the server.",
         "error"
       );
+
+
     } finally {
+
       setLoading(false);
+
     }
+
   }
 
   return (
