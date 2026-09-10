@@ -5,8 +5,23 @@ import { FiMenu } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 import styles from "./MainLayout.module.css";
 
+import { useAuth } from "../context/AuthContext";
+
 export default function MainLayout() {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { loading } = useAuth();
+
+
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        Loading...
+      </div>
+    );
+  }
+
 
   return (
     <div className={styles.layout}>
@@ -20,10 +35,12 @@ export default function MainLayout() {
         </button>
       )}
 
+
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
+
 
       {sidebarOpen && (
         <div
@@ -32,9 +49,11 @@ export default function MainLayout() {
         />
       )}
 
+
       <main className={styles.content}>
         <Outlet />
       </main>
+
 
     </div>
   );
