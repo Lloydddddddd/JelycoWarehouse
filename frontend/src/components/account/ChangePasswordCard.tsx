@@ -80,10 +80,24 @@ export default function ChangePasswordCard({
             </div>
 
             <div className={styles.form}>
+
+                {/* Prevent browser password manager autofill */}
+                <input
+                    type="text"
+                    autoComplete="username"
+                    style={{ display: "none" }}
+                />
+
+                <input
+                    type="password"
+                    autoComplete="new-password"
+                    style={{ display: "none" }}
+                />
+
                 <Input
                     label="Current Password"
                     type="password"
-                    autoComplete="current-password"
+                    autoComplete="off"
                     value={currentPassword}
                     onChange={(e) =>
                         setCurrentPassword(e.target.value)
@@ -109,6 +123,7 @@ export default function ChangePasswordCard({
                         setConfirmPassword(e.target.value)
                     }
                 />
+
             </div>
 
             <div className={styles.actions}>

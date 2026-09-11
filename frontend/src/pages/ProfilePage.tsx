@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
+
 import PageHeader from "../components/PageHeader";
 import ProfileSummary from "../components/account/ProfileSummary";
 import PersonalInformationCard from "../components/account/PersonalInformationCard";
 import Toast from "../components/common/Toast";
-import { getCurrentUser, updateProfile } from "../services/userService";
-import type { User } from "../models/user";
 import ChangePasswordCard from "../components/account/ChangePasswordCard";
 
-export default function ProfilePage() {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+import { updateProfile } from "../services/userService";
+import { useAuth } from "../context/AuthContext";
 
-    const [toastVisible, setToastVisible] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
-    const [toastType, setToastType] = useState<"success" | "error">("success");
+export default function ProfilePage() {
+    const { user, loading, refreshUser } = useAuth();
+
+    const [toastVisible, setToastVisible] =
+        useState(false);
+
+    const [toastMessage, setToastMessage] =
+        useState("");
+
+    const [toastType, setToastType] =
+        useState<"success" | "error">("success");
+
 
     const showToast = (
         message: string,
@@ -28,6 +35,7 @@ export default function ProfilePage() {
         }, 3000);
     };
 
+
     useEffect(() => {
         if (!loading && window.location.hash === "#security") {
             setTimeout(() => {
@@ -41,29 +49,16 @@ export default function ProfilePage() {
         }
     }, [loading]);
 
-    useEffect(() => {
-        const loadUser = async () => {
-            try {
-                const currentUser = await getCurrentUser();
-                setUser(currentUser);
-            } catch (error) {
-                console.error(error);
-                showToast("Unable to load your profile.", "error");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadUser();
-    }, []);
 
     if (loading) {
         return <p>Loading...</p>;
     }
 
+
     if (!user) {
         return <p>User not found.</p>;
     }
+
 
     return (
         <>
@@ -72,27 +67,34 @@ export default function ProfilePage() {
                 subtitle="Manage your account information"
             />
 
+
             <ProfileSummary
                 fullName={user.fullName}
                 role={user.role}
             />
 
+
             <PersonalInformationCard
                 fullName={user.fullName}
                 email={user.email}
                 role={user.role}
+
                 onSave={async (newName) => {
                     try {
-                        const updatedUser = await updateProfile({
+                        await updateProfile({
                             fullName: newName,
                         });
 
-                        setUser(updatedUser);
+
+                        // Refresh global user state
+                        await refreshUser();
+
 
                         showToast(
                             "Profile updated successfully.",
                             "success"
                         );
+
                     } catch (error) {
                         console.error(error);
 
@@ -104,6 +106,7 @@ export default function ProfilePage() {
                 }}
             />
 
+
             <ChangePasswordCard
                 onSuccess={(message) =>
                     showToast(message, "success")
@@ -112,6 +115,7 @@ export default function ProfilePage() {
                     showToast(message, "error")
                 }
             />
+
 
             <Toast
                 visible={toastVisible}
