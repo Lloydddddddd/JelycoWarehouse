@@ -73,6 +73,10 @@ export async function deleteBrand(
   );
 
   if (!response.ok) {
-    throw new Error("Failed to delete brand.");
+    const error = await response.json();
+
+    throw new Error(
+      error.message ?? "Failed to delete brand."
+    );
   }
 }

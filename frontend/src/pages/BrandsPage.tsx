@@ -155,11 +155,16 @@ export default function BrandsPage() {
         "Brand deleted successfully!",
         "success"
       );
+
     } catch (error) {
       console.error(error);
 
+      closeDeleteDialog();
+
       showToast(
-        "Failed to delete brand.",
+        error instanceof Error
+          ? error.message
+          : "Failed to delete brand.",
         "error"
       );
     }
