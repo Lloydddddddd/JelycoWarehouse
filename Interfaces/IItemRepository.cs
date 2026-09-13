@@ -4,7 +4,7 @@ namespace JelycoWarehouse.Interfaces
 {
     public interface IItemRepository
     {
-        Task<IEnumerable<Item>> GetAllActiveAsync();
+        Task<IEnumerable<Item>> GetAllAsync();
         Task<int> CountActiveAsync();
         Task<bool> BrandExistsAsync(int brandId);
         Task<Item?> GetByIdAsync(int id);

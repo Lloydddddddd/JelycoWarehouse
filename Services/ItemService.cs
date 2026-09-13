@@ -15,7 +15,7 @@ namespace JelycoWarehouse.Services
 
         public async Task<IEnumerable<ItemDto>> GetAllAsync()
         {
-            var items = await _itemRepo.GetAllActiveAsync();
+            var items = await _itemRepo.GetAllAsync();
 
             return items.Select(MapToDto);
         }

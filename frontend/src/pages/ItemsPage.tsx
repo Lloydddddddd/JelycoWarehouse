@@ -5,6 +5,8 @@ import DataTable from "../components/common/DataTable";
 import Modal from "../components/common/Modal";
 import Toast from "../components/common/Toast";
 import SearchBar from "../components/common/SearchBar";
+import ConfirmDialog from "../components/common/ConfirmDialog";
+
 import Button from "../components/ui/Button";
 import ItemForm from "../components/items/ItemForm";
 
@@ -12,6 +14,7 @@ import {
   getItems,
   createItem,
   updateItem,
+  deleteItem,
 } from "../services/itemService";
 
 import { getBrands } from "../services/brandService";
@@ -30,16 +33,20 @@ export default function ItemsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
-  const [toastMessage, setToastMessage] =
-    useState("");
+  const [deletingItem, setDeletingItem] =
+    useState<Item | null>(null);
+
+  const [toastMessage, setToastMessage] = useState("");
 
   const [toastType, setToastType] =
     useState<"success" | "error">("success");
 
   const [search, setSearch] = useState("");
 
-  const [category, setCategory] =
-    useState("All");
+  const [category, setCategory] = useState("All");
+
+  const [status, setStatus] = useState("All");
+
 
   async function loadItems() {
     try {
@@ -51,21 +58,26 @@ export default function ItemsPage() {
 
       setItems(itemsResult);
       setBrands(brandsResult);
+
     } catch (error) {
       console.error(error);
+
     } finally {
       setLoading(false);
     }
   }
 
+
   useEffect(() => {
     loadItems();
   }, []);
+
 
   function closeModal() {
     setShowModal(false);
     setEditingItem(null);
   }
+
 
   function showToast(
     message: string,
@@ -78,6 +90,7 @@ export default function ItemsPage() {
       setToastMessage("");
     }, 3000);
   }
+
 
   async function handleCreate(
     item: CreateItemRequest
@@ -93,15 +106,15 @@ export default function ItemsPage() {
         "Item added successfully!",
         "success"
       );
-    } catch (error) {
-      console.error(error);
 
+    } catch {
       showToast(
         "Failed to create item.",
         "error"
       );
     }
   }
+
 
   async function handleUpdate(
     item: CreateItemRequest
@@ -119,9 +132,8 @@ export default function ItemsPage() {
         "Item updated successfully!",
         "success"
       );
-    } catch (error) {
-      console.error(error);
 
+    } catch {
       showToast(
         "Failed to update item.",
         "error"
@@ -129,47 +141,74 @@ export default function ItemsPage() {
     }
   }
 
+
+  async function handleDelete() {
+    if (!deletingItem) return;
+
+    try {
+      await deleteItem(deletingItem.id);
+
+      await loadItems();
+
+      setDeletingItem(null);
+
+      showToast(
+        "Item deactivated successfully!",
+        "success"
+      );
+
+    } catch {
+      showToast(
+        "Failed to deactivate item.",
+        "error"
+      );
+    }
+  }
+
+
   const categories = [
     "All",
     ...new Set(
       items
         .map((item) => item.category)
-        .filter(
-          (category) => category !== ""
-        )
+        .filter((category) => category !== "")
     ),
   ];
 
-  const filteredItems = items.filter(
-    (item) => {
-      const searchText =
-        search.toLowerCase();
 
-      const matchesSearch =
-        item.name
-          .toLowerCase()
-          .includes(searchText) ||
-        item.brand
-          .toLowerCase()
-          .includes(searchText) ||
-        item.category
-          .toLowerCase()
-          .includes(searchText);
+  const filteredItems = items.filter((item) => {
 
-      const matchesCategory =
-        category === "All" ||
-        item.category === category;
+    const searchText = search.toLowerCase();
 
-      return (
-        matchesSearch &&
-        matchesCategory
-      );
-    }
-  );
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchText) ||
+      item.brand.toLowerCase().includes(searchText) ||
+      item.category.toLowerCase().includes(searchText);
+
+
+    const matchesCategory =
+      category === "All" ||
+      item.category === category;
+
+
+    const matchesStatus =
+      status === "All" ||
+      (status === "Active" && item.isActive) ||
+      (status === "Inactive" && !item.isActive);
+
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesStatus
+    );
+  });
+
 
   if (loading) {
     return <p>Loading items...</p>;
   }
+
 
   return (
     <>
@@ -178,23 +217,23 @@ export default function ItemsPage() {
         subtitle="Manage warehouse inventory"
       />
 
+
       <div className={styles.toolbar}>
+
         <div className={styles.filters}>
+
           <SearchBar
             value={search}
             onChange={setSearch}
             placeholder="Search items..."
           />
 
+
           <select
-            className={
-              styles.categoryFilter
-            }
+            className={styles.categoryFilter}
             value={category}
             onChange={(e) =>
-              setCategory(
-                e.target.value
-              )
+              setCategory(e.target.value)
             }
           >
             {categories.map((category) => (
@@ -206,7 +245,31 @@ export default function ItemsPage() {
               </option>
             ))}
           </select>
+
+
+          <select
+            className={styles.categoryFilter}
+            value={status}
+            onChange={(e) =>
+              setStatus(e.target.value)
+            }
+          >
+            <option value="All">
+              All Status
+            </option>
+
+            <option value="Active">
+              Active
+            </option>
+
+            <option value="Inactive">
+              Inactive
+            </option>
+
+          </select>
+
         </div>
+
 
         <Button
           onClick={() => {
@@ -216,7 +279,9 @@ export default function ItemsPage() {
         >
           + Add Item
         </Button>
+
       </div>
+
 
       <Modal
         open={showModal}
@@ -227,6 +292,7 @@ export default function ItemsPage() {
         }
         onClose={closeModal}
       >
+
         <ItemForm
           brands={brands}
           initialData={
@@ -238,7 +304,8 @@ export default function ItemsPage() {
                   kind: editingItem.kind,
                   size: editingItem.size,
                   color: editingItem.color,
-                  reorderLevel: editingItem.reorderLevel,
+                  reorderLevel:
+                    editingItem.reorderLevel,
                 }
               : undefined
           }
@@ -248,68 +315,143 @@ export default function ItemsPage() {
               : handleCreate
           }
         />
+
       </Modal>
+
 
       <DataTable
         columns={[
+
           {
             header: "Name",
             accessor: "name",
             sortable: true,
           },
+
           {
             header: "Brand",
             accessor: "brand",
             sortable: true,
           },
+
           {
             header: "Category",
             accessor: "category",
             sortable: true,
           },
+
           {
             header: "Kind",
             accessor: "kind",
             sortable: true,
           },
+
           {
             header: "Size",
             accessor: "size",
             sortable: true,
           },
+
           {
             header: "Color",
             accessor: "color",
             sortable: true,
           },
+
           {
             header: "Stock",
             accessor: "quantity",
             sortable: true,
           },
+
           {
-            header: "Actions",
+            header: "Status",
             render: (item: Item) => (
-              <Button
-                onClick={() => {
-                  setEditingItem(item);
-                  setShowModal(true);
+              <span
+                style={{
+                  color: item.isActive
+                    ? "#16a34a"
+                    : "#dc2626",
+                  fontWeight: 600,
                 }}
               >
-                Edit
-              </Button>
+                {item.isActive
+                  ? "● Active"
+                  : "● Inactive"}
+              </span>
             ),
           },
+
+
+          {
+            header: "Actions",
+
+            render: (item: Item) => (
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+
+                <Button
+                  disabled={!item.isActive}
+                  onClick={() => {
+                    setEditingItem(item);
+                    setShowModal(true);
+                  }}
+                >
+                  Edit
+                </Button>
+
+
+                <Button
+                  variant="danger"
+                  disabled={!item.isActive}
+                  onClick={() =>
+                    setDeletingItem(item)
+                  }
+                >
+                  Deactivate
+                </Button>
+
+              </div>
+
+            ),
+          },
+
         ]}
+
         data={filteredItems}
+
         rowKey={(item) => item.id}
+
       />
+
+
+      <ConfirmDialog
+        open={deletingItem !== null}
+        title="Deactivate Item"
+        message={
+          deletingItem
+            ? `Are you sure you want to deactivate "${deletingItem.name}"? The item will remain in the records but will be marked as inactive.`
+            : ""
+        }
+        confirmText="Deactivate"
+        onConfirm={handleDelete}
+        onCancel={() =>
+          setDeletingItem(null)
+        }
+      />
+
 
       <Toast
         visible={toastMessage !== ""}
         message={toastMessage}
         type={toastType}
       />
+
     </>
   );
 }

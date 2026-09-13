@@ -13,12 +13,11 @@ namespace JelycoWarehouse.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Item>> GetAllActiveAsync()
+        public async Task<IEnumerable<Item>> GetAllAsync()
         {
             return await _context.Items
                 .AsNoTracking()
                 .Include(i => i.Brand)
-                .Where(i => i.IsActive)
                 .OrderBy(i => i.Name)
                 .ToListAsync();
         }
@@ -38,7 +37,7 @@ namespace JelycoWarehouse.Repositories
         {
             return await _context.Items
                 .Include(i => i.Brand)
-                .FirstOrDefaultAsync(i => i.Id == id && i.IsActive);
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task AddAsync(Item item)
