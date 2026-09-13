@@ -39,6 +39,9 @@ export default function ItemsPage() {
 
   const [activatingItem, setActivatingItem] =
     useState<Item | null>(null);
+  
+  const [actionLoading, setActionLoading] =
+  useState<number | null>(null);
 
   const [toastMessage, setToastMessage] = useState("");
 
@@ -150,6 +153,8 @@ export default function ItemsPage() {
     if (!deletingItem) return;
 
     try {
+      setActionLoading(deletingItem.id);
+
       await deleteItem(deletingItem.id);
 
       await loadItems();
@@ -161,11 +166,16 @@ export default function ItemsPage() {
         "success"
       );
 
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       showToast(
         "Failed to deactivate item.",
         "error"
       );
+
+    } finally {
+      setActionLoading(null);
     }
   }
 
@@ -173,9 +183,9 @@ export default function ItemsPage() {
     if (!activatingItem) return;
 
     try {
-      await activateItem(
-        activatingItem.id
-      );
+      setActionLoading(activatingItem.id);
+
+      await activateItem(activatingItem.id);
 
       await loadItems();
 
@@ -193,6 +203,9 @@ export default function ItemsPage() {
         "Failed to activate item.",
         "error"
       );
+
+    } finally {
+      setActionLoading(null);
     }
   }
 
@@ -441,21 +454,31 @@ export default function ItemsPage() {
 
                   <Button
                     variant="danger"
+                    disabled={actionLoading === item.id}
                     onClick={() =>
                       setDeletingItem(item)
                     }
                   >
-                    Deactivate
+                    {
+                      actionLoading === item.id
+                        ? "Deactivating..."
+                        : "Deactivate"
+                    }
                   </Button>
 
                 ) : (
 
                   <Button
+                    disabled={actionLoading === item.id}
                     onClick={() =>
                       setActivatingItem(item)
                     }
                   >
-                    Activate
+                    {
+                      actionLoading === item.id
+                        ? "Activating..."
+                        : "Activate"
+                    }
                   </Button>
 
                 )}
