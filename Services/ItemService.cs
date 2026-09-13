@@ -72,6 +72,11 @@ namespace JelycoWarehouse.Services
             await _itemRepo.UpdateAsync(item);
         }
 
+        public async Task ActivateAsync(int id)
+        {
+            await _itemRepo.ActivateAsync(id);
+        }
+
         public async Task DeactivateAsync(int id)
         {
             await _itemRepo.DeactivateAsync(id);

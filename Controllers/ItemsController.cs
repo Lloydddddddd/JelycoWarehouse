@@ -139,5 +139,22 @@ namespace JelycoWarehouse.Controllers
 
             return NoContent();
         }
+
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "Admin,Manager"
+        )]
+        [HttpPatch("{id}/activate")]
+        public async Task<IActionResult> ActivateItem(int id)
+        {
+            var item = await _itemService.GetEntityByIdAsync(id);
+
+            if (item == null)
+                return NotFound();
+
+            await _itemService.ActivateAsync(id);
+
+            return NoContent();
+        }
     }
 }

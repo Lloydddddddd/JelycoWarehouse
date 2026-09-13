@@ -11,5 +11,6 @@ namespace JelycoWarehouse.Interfaces
         Task AddAsync(Item item);
         Task UpdateAsync(Item item);
         Task DeactivateAsync(int id);
+        Task ActivateAsync(int id);
     }
 }

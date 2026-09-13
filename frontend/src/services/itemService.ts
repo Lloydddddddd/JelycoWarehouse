@@ -34,3 +34,12 @@ export async function deleteItem(id: number) {
     method: "DELETE",
   });
 }
+
+export async function activateItem(id: number) {
+  await apiClient(
+    `${API.items.byId(id)}/activate`,
+    {
+      method: "PATCH",
+    }
+  );
+}

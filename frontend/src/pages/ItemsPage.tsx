@@ -15,6 +15,7 @@ import {
   createItem,
   updateItem,
   deleteItem,
+  activateItem,
 } from "../services/itemService";
 
 import { getBrands } from "../services/brandService";
@@ -34,6 +35,9 @@ export default function ItemsPage() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   const [deletingItem, setDeletingItem] =
+    useState<Item | null>(null);
+
+  const [activatingItem, setActivatingItem] =
     useState<Item | null>(null);
 
   const [toastMessage, setToastMessage] = useState("");
@@ -160,6 +164,33 @@ export default function ItemsPage() {
     } catch {
       showToast(
         "Failed to deactivate item.",
+        "error"
+      );
+    }
+  }
+
+  async function handleActivate() {
+    if (!activatingItem) return;
+
+    try {
+      await activateItem(
+        activatingItem.id
+      );
+
+      await loadItems();
+
+      setActivatingItem(null);
+
+      showToast(
+        "Item activated successfully!",
+        "success"
+      );
+
+    } catch (error) {
+      console.error(error);
+
+      showToast(
+        "Failed to activate item.",
         "error"
       );
     }
@@ -406,15 +437,28 @@ export default function ItemsPage() {
                 </Button>
 
 
-                <Button
-                  variant="danger"
-                  disabled={!item.isActive}
-                  onClick={() =>
-                    setDeletingItem(item)
-                  }
-                >
-                  Deactivate
-                </Button>
+                {item.isActive ? (
+
+                  <Button
+                    variant="danger"
+                    onClick={() =>
+                      setDeletingItem(item)
+                    }
+                  >
+                    Deactivate
+                  </Button>
+
+                ) : (
+
+                  <Button
+                    onClick={() =>
+                      setActivatingItem(item)
+                    }
+                  >
+                    Activate
+                  </Button>
+
+                )}
 
               </div>
 
@@ -442,6 +486,28 @@ export default function ItemsPage() {
         onConfirm={handleDelete}
         onCancel={() =>
           setDeletingItem(null)
+        }
+      />
+
+      <ConfirmDialog
+        open={
+          activatingItem !== null
+        }
+
+        title="Activate Item"
+
+        message={
+          activatingItem
+            ? `Are you sure you want to activate "${activatingItem.name}"? This item will become available again in inventory.`
+            : ""
+        }
+
+        confirmText="Activate"
+
+        onConfirm={handleActivate}
+
+        onCancel={() =>
+          setActivatingItem(null)
         }
       />
 

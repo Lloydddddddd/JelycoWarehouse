@@ -52,6 +52,18 @@ namespace JelycoWarehouse.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task ActivateAsync(int id)
+        {
+            var item = await _context.Items.FindAsync(id);
+
+            if (item == null)
+                throw new KeyNotFoundException("Item not found.");
+
+            item.IsActive = true;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeactivateAsync(int id)
         {
             var item = await _context.Items.FindAsync(id);
