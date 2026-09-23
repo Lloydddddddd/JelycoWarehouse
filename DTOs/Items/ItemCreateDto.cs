@@ -11,12 +11,14 @@ namespace JelycoWarehouse.DTOs.Items
         [Range(1, int.MaxValue)]
         public int BrandId { get; set; }
 
+        [Required(ErrorMessage = "Kind is required")]
         [MaxLength(50)]
         public string Kind { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string Size { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Color is required")]
         [MaxLength(50)]
         public string Color { get; set; } = string.Empty;
 
