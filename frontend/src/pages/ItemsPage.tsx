@@ -100,26 +100,39 @@ export default function ItemsPage() {
 
 
   async function handleCreate(
-    item: CreateItemRequest
+      item: CreateItemRequest
   ) {
-    try {
-      await createItem(item);
+      try {
+          await createItem(item);
 
-      await loadItems();
+          await loadItems();
 
-      closeModal();
+          closeModal();
 
-      showToast(
-        "Item added successfully!",
-        "success"
-      );
+          showToast(
+              "Item added successfully!",
+              "success"
+          );
 
-    } catch {
-      showToast(
-        "Failed to create item.",
-        "error"
-      );
-    }
+      } catch (error: any) {
+          console.error(error);
+
+          let message = "Failed to create item.";
+
+          if (error?.response?.data?.errors) {
+              const validationErrors =
+                  error.response.data.errors;
+
+              message = Object.values(validationErrors)
+                  .flat()
+                  .join(", ");
+          }
+
+          showToast(
+              message,
+              "error"
+          );
+      }
   }
 
 
