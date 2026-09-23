@@ -324,9 +324,11 @@ export default function UsersPage() {
                         : "Activate User"
                 }
                 message={
-                    selectedStatusUser?.isActive
-                        ? `Are you sure you want to deactivate ${selectedStatusUser.fullName}?`
-                        : `Are you sure you want to activate ${selectedStatusUser.fullName}?`
+                    selectedStatusUser
+                        ? selectedStatusUser.isActive
+                            ? `Are you sure you want to deactivate ${selectedStatusUser.fullName}?`
+                            : `Are you sure you want to activate ${selectedStatusUser.fullName}?`
+                        : ""
                 }
                 confirmText={
                     selectedStatusUser?.isActive
