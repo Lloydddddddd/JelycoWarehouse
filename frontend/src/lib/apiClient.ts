@@ -36,6 +36,11 @@ export async function apiClient(
 
             if (error.message) {
                 message = error.message;
+            } 
+            else if (error.errors) {
+                message = Object.values(error.errors)
+                    .flat()
+                    .join(", ");
             }
         } catch {
             // Ignore if response body is not JSON

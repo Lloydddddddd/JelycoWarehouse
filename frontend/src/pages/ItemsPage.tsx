@@ -100,39 +100,30 @@ export default function ItemsPage() {
 
 
   async function handleCreate(
-      item: CreateItemRequest
+    item: CreateItemRequest
   ) {
-      try {
-          await createItem(item);
+    try {
+      await createItem(item);
 
-          await loadItems();
+      await loadItems();
 
-          closeModal();
+      closeModal();
 
-          showToast(
-              "Item added successfully!",
-              "success"
-          );
+      showToast(
+        "Item added successfully!",
+        "success"
+      );
 
-      } catch (error: any) {
-          console.error(error);
+    } catch (error) {
+      console.error(error);
 
-          let message = "Failed to create item.";
-
-          if (error?.response?.data?.errors) {
-              const validationErrors =
-                  error.response.data.errors;
-
-              message = Object.values(validationErrors)
-                  .flat()
-                  .join(", ");
-          }
-
-          showToast(
-              message,
-              "error"
-          );
-      }
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "Failed to create item.",
+        "error"
+      );
+    }
   }
 
 
@@ -153,14 +144,17 @@ export default function ItemsPage() {
         "success"
       );
 
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       showToast(
-        "Failed to update item.",
+        error instanceof Error
+          ? error.message
+          : "Failed to update item.",
         "error"
       );
     }
   }
-
 
   async function handleDelete() {
     if (!deletingItem) return;
