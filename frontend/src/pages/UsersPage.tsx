@@ -7,6 +7,8 @@ import EmptyState from "../components/common/EmptyState";
 import SearchBar from "../components/common/SearchBar";
 import Modal from "../components/common/Modal";
 import Toast from "../components/common/Toast";
+import ConfirmDialog from "../components/common/ConfirmDialog";
+
 import DataTable, {
     type Column,
 } from "../components/common/DataTable";
@@ -36,6 +38,10 @@ export default function UsersPage() {
         useState(false);
 
     const [editingUser, setEditingUser] =
+        useState<User | null>(null);
+
+    // Stores the user waiting for activate/deactivate confirmation
+    const [selectedStatusUser, setSelectedStatusUser] =
         useState<User | null>(null);
 
     const [toast, setToast] = useState({
@@ -145,6 +151,18 @@ export default function UsersPage() {
         }
     }
 
+    async function confirmToggleStatus() {
+        if (!selectedStatusUser) return;
+
+        await handleToggleStatus(selectedStatusUser);
+
+        setSelectedStatusUser(null);
+    }
+
+    function cancelToggleStatus() {
+        setSelectedStatusUser(null);
+    }
+
     const filteredUsers = useMemo(() => {
         if (!search.trim()) {
             return users;
@@ -206,7 +224,7 @@ export default function UsersPage() {
                                 : "secondary"
                         }
                         onClick={() =>
-                            handleToggleStatus(user)
+                            setSelectedStatusUser(user)
                         }
                     >
                         {user.isActive
@@ -297,6 +315,27 @@ export default function UsersPage() {
                     onSubmit={handleSubmitUser}
                 />
             </Modal>
+
+            <ConfirmDialog
+                open={selectedStatusUser !== null}
+                title={
+                    selectedStatusUser?.isActive
+                        ? "Deactivate User"
+                        : "Activate User"
+                }
+                message={
+                    selectedStatusUser?.isActive
+                        ? `Are you sure you want to deactivate ${selectedStatusUser.fullName}?`
+                        : `Are you sure you want to activate ${selectedStatusUser.fullName}?`
+                }
+                confirmText={
+                    selectedStatusUser?.isActive
+                        ? "Deactivate"
+                        : "Activate"
+                }
+                onConfirm={confirmToggleStatus}
+                onCancel={cancelToggleStatus}
+            />
 
             <Toast
                 visible={toast.visible}
