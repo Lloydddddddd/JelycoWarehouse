@@ -90,13 +90,15 @@ export default function SupplierDeliveriesPage() {
         "success"
       );
     } catch (error) {
-      console.error(error);
+        console.error(error);
 
-      showToast(
-        "Failed to create supplier delivery.",
-        "error"
-      );
-    }
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to create supplier delivery.";
+
+        showToast(message, "error");
+      }
   }
 
   async function handleView(id: number) {
