@@ -12,15 +12,17 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 
+import {
+  canManageUsers,
+  canManageInventory,
+  canOperateWarehouse,
+  canViewReports,
+} from "../utils/permissions";
+
 import { useAuth } from "../context/AuthContext";
 
 import styles from "./Sidebar.module.css";
 import Button from "./ui/Button";
-import {
-  canManageUsers,
-  canOperateWarehouse,
-  canViewReports,
-} from "../utils/permissions";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -108,29 +110,33 @@ export default function Sidebar({
 
 
 
-          <NavLink
-            to="/brands"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiTag />
-            Brands
-          </NavLink>
+          {canManageInventory(user) && (
+            <NavLink
+              to="/brands"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiTag />
+              Brands
+            </NavLink>
+          )}
 
 
 
-          <NavLink
-            to="/items"
-            onClick={handleNavigate}
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.link
-            }
-          >
-            <FiPackage />
-            Items
-          </NavLink>
+          {canManageInventory(user) && (
+            <NavLink
+              to="/items"
+              onClick={handleNavigate}
+              className={({ isActive }) =>
+                isActive ? styles.active : styles.link
+              }
+            >
+              <FiPackage />
+              Items
+            </NavLink>
+          )}
 
 
 

@@ -19,6 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import UsersPage from "./pages/UsersPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
+import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
 export default function App() {
@@ -63,12 +64,24 @@ export default function App() {
 
           <Route
             path="/brands"
-            element={<BrandsPage />}
+            element={
+              <RoleProtectedRoute
+                allowedRoles={["Admin", "Manager"]}
+              >
+                <BrandsPage />
+              </RoleProtectedRoute>
+            }
           />
 
           <Route
             path="/items"
-            element={<ItemsPage />}
+            element={
+              <RoleProtectedRoute
+                allowedRoles={["Admin", "Manager"]}
+              >
+                <ItemsPage />
+              </RoleProtectedRoute>
+            }
           />
 
           <Route
