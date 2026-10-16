@@ -34,9 +34,9 @@ export async function apiClient(
         try {
             const error = await response.json();
 
-            if (error.message) {
-                message = error.message;
-            } 
+            if (error.message || error.Message) {
+                message = error.message || error.Message;
+            }
             else if (error.errors) {
                 message = Object.values(error.errors)
                     .flat()
