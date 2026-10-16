@@ -79,6 +79,10 @@ namespace JelycoWarehouse.Services
                 throw new InvalidOperationException(
                     "Destination is required.");
 
+            if (dto.ReleaseDate.Date < DateTime.Today)
+                throw new InvalidOperationException(
+                    "Release date cannot be in the past.");
+
             if (dto.Items.Count == 0)
                 throw new InvalidOperationException(
                     "A warehouse release must contain at least one item.");

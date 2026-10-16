@@ -86,6 +86,10 @@ namespace JelycoWarehouse.Services
                 throw new InvalidOperationException(
                     "Delivery reference is required.");
 
+            if (dto.DeliveryDate.Date < DateTime.Today)
+                throw new InvalidOperationException(
+                    "Delivery date cannot be in the past.");
+
             if (await _deliveryRepo.ExistsByReferenceAsync(dto.DeliveryReference))
                 throw new InvalidOperationException(
                     "A delivery with this reference already exists.");

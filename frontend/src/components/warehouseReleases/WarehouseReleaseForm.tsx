@@ -194,6 +194,7 @@ export default function WarehouseReleaseForm({
       <Input
         type="date"
         label="Release Date"
+        min={new Date().toISOString().split("T")[0]}
         value={releaseDate}
         onChange={(e) =>
           setReleaseDate(e.target.value)

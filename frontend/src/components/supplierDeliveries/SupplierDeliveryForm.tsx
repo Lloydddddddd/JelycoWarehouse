@@ -198,6 +198,7 @@ export default function SupplierDeliveryForm({
       <Input
         label="Delivery Date"
         type="date"
+        min={new Date().toISOString().split("T")[0]}
         value={form.deliveryDate}
         onChange={(e) =>
           update(
