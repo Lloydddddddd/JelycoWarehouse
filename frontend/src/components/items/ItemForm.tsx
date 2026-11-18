@@ -11,12 +11,8 @@ import Select from "../ui/Select";
 
 interface ItemFormProps {
   brands: Brand[];
-
   initialData?: CreateItemRequest;
-
-  onSubmit: (
-    item: CreateItemRequest
-  ) => Promise<void>;
+  onSubmit: (item: CreateItemRequest) => Promise<void>;
 }
 
 const initialForm: CreateItemRequest = {
@@ -34,13 +30,16 @@ export default function ItemForm({
   initialData,
   onSubmit,
 }: ItemFormProps) {
-  const [form, setForm] =
-    useState<CreateItemRequest>(
-      initialData ?? initialForm
-    );
+  const [form, setForm] = useState<CreateItemRequest>(
+    initialData ?? initialForm
+  );
 
+  // Only sync when we are editing an existing item.
+  // Do NOT reset to empty when initialData is undefined (prevents clearing on error toast re-render).
   useEffect(() => {
-    setForm(initialData ?? initialForm);
+    if (initialData) {
+      setForm(initialData);
+    }
   }, [initialData]);
 
   function update<K extends keyof CreateItemRequest>(
@@ -53,9 +52,7 @@ export default function ItemForm({
     }));
   }
 
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -68,40 +65,24 @@ export default function ItemForm({
   }
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={handleSubmit}
-    >
+    <form className={styles.form} onSubmit={handleSubmit}>
       <h3>Item Information</h3>
 
       <div className={styles.grid}>
         <Input
           label="Name"
           value={form.name}
-          onChange={(e) =>
-            update("name", e.target.value)
-          }
+          onChange={(e) => update("name", e.target.value)}
         />
 
         <Select
           label="Brand"
           value={form.brandId}
-          onChange={(e) =>
-            update(
-              "brandId",
-              Number(e.target.value)
-            )
-          }
+          onChange={(e) => update("brandId", Number(e.target.value))}
         >
-          <option value={0}>
-            Select Brand
-          </option>
-
+          <option value={0}>Select Brand</option>
           {brands.map((brand) => (
-            <option
-              key={brand.id}
-              value={brand.id}
-            >
+            <option key={brand.id} value={brand.id}>
               {brand.name}
             </option>
           ))}
@@ -110,33 +91,25 @@ export default function ItemForm({
         <Input
           label="Category"
           value={form.category}
-          onChange={(e) =>
-            update("category", e.target.value)
-          }
+          onChange={(e) => update("category", e.target.value)}
         />
 
         <Input
           label="Kind"
           value={form.kind}
-          onChange={(e) =>
-            update("kind", e.target.value)
-          }
+          onChange={(e) => update("kind", e.target.value)}
         />
 
         <Input
           label="Size"
           value={form.size}
-          onChange={(e) =>
-            update("size", e.target.value)
-          }
+          onChange={(e) => update("size", e.target.value)}
         />
 
         <Input
           label="Color"
           value={form.color}
-          onChange={(e) =>
-            update("color", e.target.value)
-          }
+          onChange={(e) => update("color", e.target.value)}
         />
 
         <Input
@@ -145,18 +118,13 @@ export default function ItemForm({
           min={0}
           value={form.reorderLevel}
           onChange={(e) =>
-            update(
-              "reorderLevel",
-              Number(e.target.value)
-            )
+            update("reorderLevel", Number(e.target.value))
           }
         />
       </div>
 
       <div className={styles.actions}>
-        <Button type="submit">
-          Save Item
-        </Button>
+        <Button type="submit">Save Item</Button>
       </div>
     </form>
   );
