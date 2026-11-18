@@ -22,7 +22,9 @@ const initialForm: CreateUserRequest = {
 };
 
 export default function UserForm({ user, onSubmit }: UserFormProps) {
-  const [form, setForm] = useState<CreateUserRequest>(initialForm);
+  const [form, setForm] = useState<CreateUserRequest>(
+    () => initialForm
+  );
 
   // Only sync when we are editing an existing user.
   // Do NOT force empty form when user is null/undefined on re-render.

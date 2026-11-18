@@ -345,6 +345,7 @@ export default function ItemsPage() {
       >
 
         <ItemForm
+          key={editingItem ? `edit-${editingItem.id}` : "create"}
           brands={brands}
           initialData={
             editingItem
@@ -355,16 +356,11 @@ export default function ItemsPage() {
                   kind: editingItem.kind,
                   size: editingItem.size,
                   color: editingItem.color,
-                  reorderLevel:
-                    editingItem.reorderLevel,
+                  reorderLevel: editingItem.reorderLevel,
                 }
               : undefined
           }
-          onSubmit={
-            editingItem
-              ? handleUpdate
-              : handleCreate
-          }
+          onSubmit={editingItem ? handleUpdate : handleCreate}
         />
 
       </Modal>

@@ -30,12 +30,12 @@ export default function ItemForm({
   initialData,
   onSubmit,
 }: ItemFormProps) {
+  // Initialize only once
   const [form, setForm] = useState<CreateItemRequest>(
-    initialData ?? initialForm
+    () => initialData ?? initialForm
   );
 
-  // Only sync when we are editing an existing item.
-  // Do NOT reset to empty when initialData is undefined (prevents clearing on error toast re-render).
+  // Only overwrite the form when we switch to Edit mode
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -57,10 +57,10 @@ export default function ItemForm({
 
     try {
       await onSubmit(form);
-      // only clear the form when the request actually succeeded
+      // success → clear
       setForm(initialForm);
     } catch {
-      // keep the values the user already typed
+      // error → keep values
     }
   }
 
