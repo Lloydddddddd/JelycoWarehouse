@@ -30,12 +30,11 @@ export default function ItemForm({
   initialData,
   onSubmit,
 }: ItemFormProps) {
-  // Initialize only once
   const [form, setForm] = useState<CreateItemRequest>(
     () => initialData ?? initialForm
   );
 
-  // Only overwrite the form when we switch to Edit mode
+  // Only sync when editing. Never force empty form on re-render.
   useEffect(() => {
     if (initialData) {
       setForm(initialData);

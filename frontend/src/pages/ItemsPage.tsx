@@ -34,62 +34,44 @@ export default function ItemsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
 
-  const [deletingItem, setDeletingItem] =
-    useState<Item | null>(null);
+  const [deletingItem, setDeletingItem] = useState<Item | null>(null);
+  const [activatingItem, setActivatingItem] = useState<Item | null>(null);
 
-  const [activatingItem, setActivatingItem] =
-    useState<Item | null>(null);
-  
-  const [actionLoading, setActionLoading] =
-  useState<number | null>(null);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   const [toastMessage, setToastMessage] = useState("");
-
-  const [toastType, setToastType] =
-    useState<"success" | "error">("success");
+  const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const [search, setSearch] = useState("");
-
   const [category, setCategory] = useState("All");
-
   const [status, setStatus] = useState("All");
-
 
   async function loadItems() {
     try {
-      const [itemsResult, brandsResult] =
-        await Promise.all([
-          getItems(),
-          getBrands(),
-        ]);
+      const [itemsResult, brandsResult] = await Promise.all([
+        getItems(),
+        getBrands(),
+      ]);
 
       setItems(itemsResult);
       setBrands(brandsResult);
-
     } catch (error) {
       console.error(error);
-
     } finally {
       setLoading(false);
     }
   }
 
-
   useEffect(() => {
     loadItems();
   }, []);
-
 
   function closeModal() {
     setShowModal(false);
     setEditingItem(null);
   }
 
-
-  function showToast(
-    message: string,
-    type: "success" | "error"
-  ) {
+  function showToast(message: string, type: "success" | "error") {
     setToastMessage(message);
     setToastType(type);
 
@@ -98,22 +80,14 @@ export default function ItemsPage() {
     }, 3000);
   }
 
-
-  async function handleCreate(
-    item: CreateItemRequest
-  ) {
+  async function handleCreate(item: CreateItemRequest) {
     try {
       await createItem(item);
 
       await loadItems();
-
       closeModal();
 
-      showToast(
-        "Item added successfully!",
-        "success"
-      );
-
+      showToast("Item added successfully!", "success");
     } catch (error) {
       console.error(error);
 
@@ -123,27 +97,22 @@ export default function ItemsPage() {
           : "Failed to create item.",
         "error"
       );
+
+      // re-throw so ItemForm can keep the values
+      throw error;
     }
   }
 
-
-  async function handleUpdate(
-    item: CreateItemRequest
-  ) {
+  async function handleUpdate(item: CreateItemRequest) {
     if (!editingItem) return;
 
     try {
       await updateItem(editingItem.id, item);
 
       await loadItems();
-
       closeModal();
 
-      showToast(
-        "Item updated successfully!",
-        "success"
-      );
-
+      showToast("Item updated successfully!", "success");
     } catch (error) {
       console.error(error);
 
@@ -153,6 +122,9 @@ export default function ItemsPage() {
           : "Failed to update item.",
         "error"
       );
+
+      // re-throw so ItemForm can keep the values
+      throw error;
     }
   }
 
@@ -163,24 +135,13 @@ export default function ItemsPage() {
       setActionLoading(deletingItem.id);
 
       await deleteItem(deletingItem.id);
-
       await loadItems();
 
       setDeletingItem(null);
-
-      showToast(
-        "Item deactivated successfully!",
-        "success"
-      );
-
+      showToast("Item deactivated successfully!", "success");
     } catch (error) {
       console.error(error);
-
-      showToast(
-        "Failed to deactivate item.",
-        "error"
-      );
-
+      showToast("Failed to deactivate item.", "error");
     } finally {
       setActionLoading(null);
     }
@@ -193,29 +154,17 @@ export default function ItemsPage() {
       setActionLoading(activatingItem.id);
 
       await activateItem(activatingItem.id);
-
       await loadItems();
 
       setActivatingItem(null);
-
-      showToast(
-        "Item activated successfully!",
-        "success"
-      );
-
+      showToast("Item activated successfully!", "success");
     } catch (error) {
       console.error(error);
-
-      showToast(
-        "Failed to activate item.",
-        "error"
-      );
-
+      showToast("Failed to activate item.", "error");
     } finally {
       setActionLoading(null);
     }
   }
-
 
   const categories = [
     "All",
@@ -226,9 +175,7 @@ export default function ItemsPage() {
     ),
   ];
 
-
   const filteredItems = items.filter((item) => {
-
     const searchText = search.toLowerCase();
 
     const matchesSearch =
@@ -236,30 +183,20 @@ export default function ItemsPage() {
       item.brand.toLowerCase().includes(searchText) ||
       item.category.toLowerCase().includes(searchText);
 
-
     const matchesCategory =
-      category === "All" ||
-      item.category === category;
-
+      category === "All" || item.category === category;
 
     const matchesStatus =
       status === "All" ||
       (status === "Active" && item.isActive) ||
       (status === "Inactive" && !item.isActive);
 
-
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesStatus
-    );
+    return matchesSearch && matchesCategory && matchesStatus;
   });
-
 
   if (loading) {
     return <p>Loading items...</p>;
   }
-
 
   return (
     <>
@@ -268,59 +205,36 @@ export default function ItemsPage() {
         subtitle="Manage warehouse inventory"
       />
 
-
       <div className={styles.toolbar}>
-
         <div className={styles.filters}>
-
           <SearchBar
             value={search}
             onChange={setSearch}
             placeholder="Search items..."
           />
 
-
           <select
             className={styles.categoryFilter}
             value={category}
-            onChange={(e) =>
-              setCategory(e.target.value)
-            }
+            onChange={(e) => setCategory(e.target.value)}
           >
             {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
+              <option key={category} value={category}>
                 {category}
               </option>
             ))}
           </select>
 
-
           <select
             className={styles.categoryFilter}
             value={status}
-            onChange={(e) =>
-              setStatus(e.target.value)
-            }
+            onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="All">
-              All Status
-            </option>
-
-            <option value="Active">
-              Active
-            </option>
-
-            <option value="Inactive">
-              Inactive
-            </option>
-
+            <option value="All">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
           </select>
-
         </div>
-
 
         <Button
           onClick={() => {
@@ -330,20 +244,13 @@ export default function ItemsPage() {
         >
           + Add Item
         </Button>
-
       </div>
-
 
       <Modal
         open={showModal}
-        title={
-          editingItem
-            ? "Edit Item"
-            : "Add Item"
-        }
+        title={editingItem ? "Edit Item" : "Add Item"}
         onClose={closeModal}
       >
-
         <ItemForm
           key={editingItem ? `edit-${editingItem.id}` : "create"}
           brands={brands}
@@ -362,86 +269,62 @@ export default function ItemsPage() {
           }
           onSubmit={editingItem ? handleUpdate : handleCreate}
         />
-
       </Modal>
-
 
       <DataTable
         columns={[
-
           {
             header: "Name",
             accessor: "name",
             sortable: true,
           },
-
           {
             header: "Brand",
             accessor: "brand",
             sortable: true,
           },
-
           {
             header: "Category",
             accessor: "category",
             sortable: true,
           },
-
           {
             header: "Kind",
             accessor: "kind",
             sortable: true,
           },
-
           {
             header: "Size",
             accessor: "size",
             sortable: true,
           },
-
           {
             header: "Color",
             accessor: "color",
             sortable: true,
           },
-
           {
             header: "Stock",
             accessor: "quantity",
             sortable: true,
           },
-
           {
             header: "Status",
             render: (item: Item) => (
               <span
                 style={{
-                  color: item.isActive
-                    ? "#16a34a"
-                    : "#dc2626",
+                  color: item.isActive ? "#16a34a" : "#dc2626",
                   fontWeight: 600,
                 }}
               >
-                {item.isActive
-                  ? "● Active"
-                  : "● Inactive"}
+                {item.isActive ? "● Active" : "● Inactive"}
               </span>
             ),
           },
-
-
           {
             header: "Actions",
-
             render: (item: Item) => (
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                }}
-              >
-
+              <div style={{ display: "flex", gap: "8px" }}>
                 <Button
                   disabled={!item.isActive}
                   onClick={() => {
@@ -452,53 +335,33 @@ export default function ItemsPage() {
                   Edit
                 </Button>
 
-
                 {item.isActive ? (
-
                   <Button
                     variant="danger"
                     disabled={actionLoading === item.id}
-                    onClick={() =>
-                      setDeletingItem(item)
-                    }
+                    onClick={() => setDeletingItem(item)}
                   >
-                    {
-                      actionLoading === item.id
-                        ? "Deactivating..."
-                        : "Deactivate"
-                    }
+                    {actionLoading === item.id
+                      ? "Deactivating..."
+                      : "Deactivate"}
                   </Button>
-
                 ) : (
-
                   <Button
                     disabled={actionLoading === item.id}
-                    onClick={() =>
-                      setActivatingItem(item)
-                    }
+                    onClick={() => setActivatingItem(item)}
                   >
-                    {
-                      actionLoading === item.id
-                        ? "Activating..."
-                        : "Activate"
-                    }
+                    {actionLoading === item.id
+                      ? "Activating..."
+                      : "Activate"}
                   </Button>
-
                 )}
-
               </div>
-
             ),
           },
-
         ]}
-
         data={filteredItems}
-
         rowKey={(item) => item.id}
-
       />
-
 
       <ConfirmDialog
         open={deletingItem !== null}
@@ -510,40 +373,27 @@ export default function ItemsPage() {
         }
         confirmText="Deactivate"
         onConfirm={handleDelete}
-        onCancel={() =>
-          setDeletingItem(null)
-        }
+        onCancel={() => setDeletingItem(null)}
       />
 
       <ConfirmDialog
-        open={
-          activatingItem !== null
-        }
-
+        open={activatingItem !== null}
         title="Activate Item"
-
         message={
           activatingItem
             ? `Are you sure you want to activate "${activatingItem.name}"? This item will become available again in inventory.`
             : ""
         }
-
         confirmText="Activate"
-
         onConfirm={handleActivate}
-
-        onCancel={() =>
-          setActivatingItem(null)
-        }
+        onCancel={() => setActivatingItem(null)}
       />
-
 
       <Toast
         visible={toastMessage !== ""}
         message={toastMessage}
         type={toastType}
       />
-
     </>
   );
 }
