@@ -58,9 +58,13 @@ export default function ItemForm({
   ) {
     e.preventDefault();
 
-    await onSubmit(form);
-
-    setForm(initialForm);
+    try {
+      await onSubmit(form);
+      // only clear the form when the request actually succeeded
+      setForm(initialForm);
+    } catch {
+      // keep the values the user already typed
+    }
   }
 
   return (

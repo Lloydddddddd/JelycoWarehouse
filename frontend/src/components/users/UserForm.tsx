@@ -59,15 +59,19 @@ export default function UserForm({
     }
 
     async function handleSubmit(
-        e: React.FormEvent<HTMLFormElement>
+    e: React.FormEvent<HTMLFormElement>
     ) {
-
         e.preventDefault();
 
-        await onSubmit(form);
+        try {
+            await onSubmit(form);
 
-        if (!user) {
+            // only clear when creating a new user
+            if (!user) {
             setForm(initialForm);
+            }
+        } catch {
+            // keep the values the user already typed
         }
     }
 
