@@ -33,8 +33,8 @@ export default function ItemForm({
   const [form, setForm] = useState<CreateItemRequest>(
     () => initialData ?? initialForm
   );
+  const [submitting, setSubmitting] = useState(false);
 
-  // Only sync when editing. Never force empty form on re-render.
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -54,12 +54,16 @@ export default function ItemForm({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (submitting) return; // prevent double submission
+
     try {
+      setSubmitting(true);
       await onSubmit(form);
-      // success → clear
-      setForm(initialForm);
+      setForm(initialForm); // only clear on success
     } catch {
-      // error → keep values
+      // keep values on error
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -71,6 +75,7 @@ export default function ItemForm({
         <Input
           label="Name"
           value={form.name}
+          maxLength={80}
           onChange={(e) => update("name", e.target.value)}
         />
 
@@ -123,7 +128,9 @@ export default function ItemForm({
       </div>
 
       <div className={styles.actions}>
-        <Button type="submit">Save Item</Button>
+        <Button type="submit" disabled={submitting}>
+          {submitting ? "Saving..." : "Save Item"}
+        </Button>
       </div>
     </form>
   );
