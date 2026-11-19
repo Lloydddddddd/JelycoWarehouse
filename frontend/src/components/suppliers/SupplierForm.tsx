@@ -10,10 +10,7 @@ import Input from "../ui/Input";
 
 interface SupplierFormProps {
   supplier?: Supplier | null;
-
-  onSubmit: (
-    supplier: CreateSupplierRequest
-  ) => Promise<void>;
+  onSubmit: (supplier: CreateSupplierRequest) => Promise<void>;
 }
 
 const initialForm: CreateSupplierRequest = {
@@ -23,12 +20,17 @@ const initialForm: CreateSupplierRequest = {
   email: "",
 };
 
+// Simple but solid email format check
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export default function SupplierForm({
   supplier,
   onSubmit,
 }: SupplierFormProps) {
-  const [form, setForm] =
-    useState<CreateSupplierRequest>(initialForm);
+  const [form, setForm] = useState<CreateSupplierRequest>(initialForm);
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     if (supplier) {
@@ -41,11 +43,10 @@ export default function SupplierForm({
     } else {
       setForm(initialForm);
     }
+    setEmailError("");
   }, [supplier]);
 
-  function update<
-    K extends keyof CreateSupplierRequest
-  >(
+  function update<K extends keyof CreateSupplierRequest>(
     key: K,
     value: CreateSupplierRequest[K]
   ) {
@@ -53,58 +54,58 @@ export default function SupplierForm({
       ...prev,
       [key]: value,
     }));
+
+    if (key === "email") {
+      setEmailError("");
+    }
   }
 
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!isValidEmail(form.email)) {
+      setEmailError("Please enter a valid email address (e.g. name@example.com)");
+      return;
+    }
 
     await onSubmit(form);
   }
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={handleSubmit}
-    >
+    <form className={styles.form} onSubmit={handleSubmit}>
       <Input
         label="Supplier Name"
         value={form.name}
-        onChange={(e) =>
-          update("name", e.target.value)
-        }
+        onChange={(e) => update("name", e.target.value)}
       />
 
       <Input
         label="Contact Info"
         value={form.contactInfo}
-        onChange={(e) =>
-          update("contactInfo", e.target.value)
-        }
+        onChange={(e) => update("contactInfo", e.target.value)}
       />
 
       <Input
         label="Address"
         value={form.address}
-        onChange={(e) =>
-          update("address", e.target.value)
-        }
+        onChange={(e) => update("address", e.target.value)}
       />
 
       <Input
         label="Email"
         type="email"
         value={form.email}
-        onChange={(e) =>
-          update("email", e.target.value)
-        }
+        onChange={(e) => update("email", e.target.value)}
       />
 
+      {emailError && (
+        <p style={{ color: "#dc2626", fontSize: "0.875rem", marginTop: "-8px" }}>
+          {emailError}
+        </p>
+      )}
+
       <div className={styles.actions}>
-        <Button type="submit">
-          Save Supplier
-        </Button>
+        <Button type="submit">Save Supplier</Button>
       </div>
     </form>
   );
